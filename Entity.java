@@ -2,13 +2,15 @@
   An entity is an object in the game view (excluding buttons/labels) that occupies space and holds game logic.
 */
  import java.awt.*;
- import javax.swing*;
+ import javax.swing.*;
+ import java.io.Serializable;
  /*
 	Entity is the superclass of fish and Food
-	
+
 
  */
 
+@SuppressWarnings("serial") //make the linter/compiler shut up
 public abstract class Entity extends JLabel implements Runnable{
 
 	// You put this inside t

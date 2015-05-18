@@ -12,6 +12,7 @@
 	  - Haste (speed and coin generation)
 */
 
+@SuppressWarnings("serial") //make the linter/compiler shut up
 public class Food extends Entity {
 
 }

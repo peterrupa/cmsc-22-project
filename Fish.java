@@ -3,6 +3,7 @@
 */
 import java.util.*;
 
+@SuppressWarnings("serial") //make the linter/compiler shut up
 public class Fish extends Entity {
     //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
     private int lifespan;
@@ -34,7 +35,7 @@ public class Fish extends Entity {
     public void setDestination(Point destination){
         this.destination = destination;
     }
-   
+
     public void eat(Food f){
 
     }
