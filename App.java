@@ -3,11 +3,13 @@
 */
 
 public class App {
-  //ATTRIBUTES
-  //Game ongoingGame;
-  //GameHistory history;
+	//ATTRIBUTES
+	// Current game
+	private static Game ongoingGame;
+	private static GameHistory history;
 
-  public static void main(String[] args){
-    //this will serve as the main application
-  }
+	public static void main(String[] args){
+	//this will serve as the main application
+
+	}
 }

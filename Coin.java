@@ -3,5 +3,5 @@
 */
 
 public class Coin extends Entity {
-  //int value;
+	int value;
 }
