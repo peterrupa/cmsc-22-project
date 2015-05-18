@@ -1,0 +1,29 @@
+//title: Zombiequarium
+//state: arcade style saving game
+//theme: zombie
+
+//Menu
+  - Play game
+  - Instructions
+  - High Scores
+  - Credits
+  - Exit
+  - Disable sound (Icon)
+  - *Brightness
+
+//Game
+  - Player name
+  - Fishes
+  - Coins
+  - Food count
+  - Timer
+  - Buy fish
+  - Buy bag of food
+  - Timer if no fish left
+  - Pause/Resume
+  - *Power ups
+    - Super food
+      - Pause Hunger
+      - Double coins
+      - Insta mature
+      - Haste (speed and coin generation)
