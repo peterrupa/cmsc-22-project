@@ -14,14 +14,15 @@ public class Fish extends Entity {
     private String actionPerforming;
     //Orientation tracks whether the fish faces left or right. This is for the proper rendering of its image.
     private String orientation;
-    private int maturity;
+    private String maturity;
 
     Random random = new Random();
 
     public Fish (Point x, JLabel y){
         // Constructs entity with coordinates and image
         super(x,y);
-        this.lifespan = random.nextInt(10) + 30; //30-40 seconds b4 dying
+        this.maturity = "hatchling";
+        this.lifespan = random.nextInt(10) + 30; //30-40 seconds before dying
     }
 
     public void releaseCoin(){

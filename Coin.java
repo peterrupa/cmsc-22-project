@@ -16,8 +16,4 @@ public class Coin extends Entity {
 	public void die(){
 
 	}
-
-	public void setDestination(Point destination){
-
-	}
 }

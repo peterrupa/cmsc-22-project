@@ -21,10 +21,6 @@ public class Food extends Entity {
     super(x, y);
   }
 
-  public void setDestination(Point destination){
-
-  }
-
   public void die(){
 
   }

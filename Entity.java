@@ -36,6 +36,4 @@ public abstract class Entity extends JLabel {
 	}
 
 	public abstract void die(); //WHen fish dies or food hits ground or coin is clicked
-	public abstract void setDestination(Point destination); //Sets destination of the entity per game tick. Different nature for fish, food, or coint
-
 }
