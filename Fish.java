@@ -1,35 +1,45 @@
 /*
   The fish is the core entity of the game. The player needs to feed them to let them generate coins.
 */
+import java.util.*;
 
+@SuppressWarnings("serial") //make the linter/compiler shut up
 public class Fish extends Entity {
     //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
-  //int lifespan
+    private int lifespan;
 
     //Action performing is used for identifying whatever the fish is currently doing.
-  //String actionPerforming
-
-    //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
-  //Point destination
-
+    private String actionPerforming;
     //Orientation tracks whether the fish faces left or right. This is for the proper rendering of its image.
-  //String orientation
+    private String orientation;
+    private int maturity;
 
-    //Time to mature is the time until the fish reaches the next state of maturity.
-  //int timeToMature
+    Random random = new Random();
 
-    //Release coin creates a new coin on the map at the fish's position.
-  //releaseCoin()
+    public Fish (Point x, JLabel y){
+        // Constructs entity with coordinates and image
+        super(x,y);
+        this.lifespan = random.nextInt(10) + 30; //30-40 seconds b4 dying
+    }
+
+    public void run(){
+        // Code to run
+    }
+
+    public void releaseCoin(){
+        // Released coin to App.onGoingGame
+        // Pass current location and value (based on maturity level)
+    }
 
     //Updates the destination point of the fish.
-  //setDestination()
+    public void setDestination(Point destination){
+        this.destination = destination;
+    }
 
-    //Eats the food.
-  //eat(Food f);
+    public void eat(Food f){
 
-    //Returns the position point of the fish.
-  //getPos();
-
-    //Method called when the fish dies. Will contain timer cancels.
-  //die();
+    }
+    public void die(){
+        // Death animation + kill all threads
+    }
 }
