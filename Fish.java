@@ -24,10 +24,6 @@ public class Fish extends Entity {
         this.lifespan = random.nextInt(10) + 30; //30-40 seconds b4 dying
     }
 
-    public void run(){
-        // Code to run
-    }
-
     public void releaseCoin(){
         // Released coin to App.onGoingGame
         // Pass current location and value (based on maturity level)

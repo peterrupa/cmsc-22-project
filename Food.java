@@ -25,10 +25,6 @@ public class Food extends Entity {
 
   }
 
-  public void run(){
-
-  }
-
   public void die(){
 
   }

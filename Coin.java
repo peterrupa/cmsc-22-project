@@ -13,10 +13,6 @@ public class Coin extends Entity {
 		super(x, y);
 	}
 
-	public void run(){
-
-	}
-
 	public void die(){
 
 	}
