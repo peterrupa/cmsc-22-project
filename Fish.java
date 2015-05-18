@@ -2,6 +2,8 @@
   The fish is the core entity of the game. The player needs to feed them to let them generate coins.
 */
 import java.util.*;
+import java.awt.*;
+import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Fish extends Entity {

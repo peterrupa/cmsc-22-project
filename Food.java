@@ -12,7 +12,24 @@
 	  - Haste (speed and coin generation)
 */
 
+import java.awt.*;
+import javax.swing.*;
+
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Food extends Entity {
+  public Food(Point x, JLabel y){
+    super(x, y);
+  }
 
+  public void setDestination(Point destination){
+
+  }
+
+  public void run(){
+
+  }
+
+  public void die(){
+
+  }
 }

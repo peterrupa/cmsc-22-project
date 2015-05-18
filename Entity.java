@@ -3,7 +3,6 @@
 */
  import java.awt.*;
  import javax.swing.*;
- import java.io.Serializable;
  /*
 	Entity is the superclass of fish and Food
 
