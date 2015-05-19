@@ -13,5 +13,9 @@
 */
 
 public class Food extends Entity {
-
+	
+	
+	public Food(Point position, JLabel graphic) {
+		super(position, graphic);
+	}
 }

@@ -47,6 +47,4 @@ public class Game {
 	public ArrayList<Food> getFood() {
 		return this.foods;
 	}
-	
-	
 }

@@ -3,5 +3,10 @@
 */
 
 public class Coin extends Entity {
-	int value;
+	
+	private int value;
+	
+	public Coin(Point position, JLabel graphic) {
+		super(position, graphic);
+	}
 }
