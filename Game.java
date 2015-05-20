@@ -9,19 +9,15 @@ public class Game {
 	private int foodNumber;
 	private int money;
 	private Timer timer;
-	private ArrayList<Fish> fish;		//arraylist variables are the representations of the entities in the GUI
-	private ArrayList<Coin> coins;
-	private ArrayList<Food> foods;
+	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
+	private ArrayList<Coin> coins = new ArrayList<Coin>();
+	private ArrayList<Food> foods = new ArrayList<Food>();
 
 	public Game(String name, int money, int foodNumber, Timer time) {
 		this.playerName = name;
 		this.money = money;
 		this.foodNumber = foodNumber;
 		this.timer = time;
-
-		fish = new ArrayList<Fish>();
-		coins = new ArrayList<Coin>();
-		foods = new ArrayList<Food>();
 	}
 
 	public String getPlayerName() {
