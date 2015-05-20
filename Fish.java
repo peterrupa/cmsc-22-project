@@ -15,6 +15,8 @@ public class Fish extends Entity {
     //Orientation tracks whether the fish faces left or right. This is for the proper rendering of its image.
     private String orientation;
     private String maturity;
+    //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
+  	protected Point destination;
 
     Random random = new Random();
 
@@ -22,7 +24,11 @@ public class Fish extends Entity {
         // Constructs entity with coordinates and image
         super(x,y);
         this.maturity = "hatchling";
-        this.lifespan = random.nextInt(10) + 30; //30-40 seconds before dying
+        this.lifespan = random.nextInt(11) + 30; //30-40 seconds before dying
+
+        //thread for lifespan
+        //thread for maturity
+        //thread for movement
     }
 
     public void releaseCoin(){
@@ -36,9 +42,26 @@ public class Fish extends Entity {
     }
 
     public void eat(Food f){
-
+      //food die(this)
+      //set new destination if no food
+      //reset proper image if it was hungry
     }
     public void die(){
-        // Death animation + kill all threads
+        //cancel all threads
+        //create death animation effect (or smoke puff) at current position
+        //remove from ongoing game fish list
+    }
+
+    //sets the maturity one level up
+    public void mature(){
+      //cute particle here (smoke effect? or sparks? glitters?)
+      switch(maturity){
+        case "hatchling":
+          maturity = "juvenile";
+          break;
+        case "juvenile":
+          maturity = "adult";
+          break;
+      }
     }
 }

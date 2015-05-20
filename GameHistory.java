@@ -3,6 +3,19 @@
 */
 
 public class GameHistory {
-  //String playerName;
-  //int points;
+  private String playerName;
+  private int points;
+
+  public GameHistory(String playerName, int points){
+    this.playerName = playerName;
+    this.points = points;
+  }
+
+  public String getPlayerName(){
+    return playerName;
+  }
+
+  public int getPoints(){
+    return points;
+  }
 }

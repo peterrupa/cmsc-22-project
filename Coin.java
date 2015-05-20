@@ -11,9 +11,15 @@ public class Coin extends Entity {
 
 	public Coin(Point x, JLabel y){
 		super(x, y);
+
+		//add event listener
+			//on click
+			//add coin value to player coins
+			//die
 	}
 
 	public void die(){
-
+		//remove from view
+		//remove from current game coin list
 	}
 }

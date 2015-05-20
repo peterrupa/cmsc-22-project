@@ -22,6 +22,13 @@ public class Food extends Entity {
   }
 
   public void die(){
+    //create something particle at current position
+    //remove from ongoing game food list
+  }
 
+  //when eaten by a fish
+  public void die(Fish f){
+    //refresh lifespan value
+    //remove from ongoing game food list
   }
 }

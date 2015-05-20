@@ -11,18 +11,11 @@
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public abstract class Entity extends JLabel {
-
-	// You put this inside t
-	protected Thread t;
-
     // Image of the entity
 	protected JLabel image;
 
 	// Position of the Entity on the screen
 	protected Point position;
-	// Destination of our entity. Checked every game tick
-	//Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
-	protected Point destination;
 
 	public Entity(Point x, JLabel y){
 		// Instantiate with current location and image
