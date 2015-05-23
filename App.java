@@ -4,7 +4,8 @@
 
 import java.awt.*;
 import javax.swing.*;
-
+import java.applet.*;
+import java.net.URL;
 
 public class App {
 	//ATTRIBUTES
@@ -12,8 +13,12 @@ public class App {
 	private static Game ongoingGame;
 	private static GameHistory history;
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception{
 		//this will serve as the main application
+		URL ingameBG = null;
+		ingameBG = new URL("assets/sounds/bgm/ingame.mp3");
+		System.out.println(ingameBG.toString());
+
 		JFrame frame = new JFrame();
 		//set frame settings
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
