@@ -6,7 +6,7 @@ import java.awt.image.*;
 import javax.imageio.*;
 import java.util.Random;
 
-@SuppressWarnings("serial") //make the linter/compiler shut up
+@SuppressWarnings("serial") //make the linter/compiler shut up          
 public abstract class Entity {
 	private Random r = new Random();
 

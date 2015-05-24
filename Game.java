@@ -23,11 +23,13 @@ public class Game extends JPanel{
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
 	private ArrayList<Food> foods = new ArrayList<Food>();
+	private boolean scaryMode = false;
 
 	// Used to carry out the affine transform on images
   private AffineTransform transform = new AffineTransform();
 
 	private Random r = new Random();
+	private java.util.Timer scary = new java.util.Timer();
 
 	public Game(String name) {
 		this.playerName = name;
@@ -78,6 +80,12 @@ public class Game extends JPanel{
 		}
 		catch(Exception e){}
 
+		scary.schedule(new TimerTask(){
+			public void run(){
+				scaryMode = true;
+			}
+		}, 1000 * 213);
+
 		Thread timerThread = new Thread () {
        @Override
        public void run() {
@@ -98,19 +106,26 @@ public class Game extends JPanel{
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);  // paint background
-    setBackground(timer > 88? Color.GREEN: Color.RED);
+    setBackground(!scaryMode? Color.GREEN: Color.RED);
     Graphics2D g2d = (Graphics2D) g;
 
 		//fish
 		for(int i = 0; i < fish.size(); i++){
-				Fish current = fish.get(i);
-				transform.setToIdentity();
+			Fish current = fish.get(i);
+			transform.setToIdentity();
 
-				transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
+			// Flip the image vertically
+			transform = AffineTransform.getScaleInstance(1, -1);
+			transform.translate(0, -current.getImg().getHeight(null));
+			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+			BufferedImage image = op.filter(current.getImg(), null);
 
-				transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
+			transform.setToIdentity();
+			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 
-		    g2d.drawImage(current.getImg(), transform, null);
+			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
+
+	    g2d.drawImage(image, transform, null);
 		}
 
 		//coin
