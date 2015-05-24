@@ -1,24 +1,123 @@
 /*
-  Game object stores all data specific to the whole game.
+  Game object stores all data specific to the whole game. This is also the view that contains all gameplay objects for the GUI.
 */
-
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import javax.swing.*;
+import javax.imageio.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.*;
 import java.util.*;
 
-public class Game {
+@SuppressWarnings("serial") //make the linter/compiler shut up
+public class Game extends JPanel{
+
 	private String playerName;
 	private int foodNumber;
 	private int money;
-	private Timer timer;
+	private int timer;
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
 	private ArrayList<Food> foods = new ArrayList<Food>();
 
-	public Game(String name, int money, int foodNumber, Timer time) {
+	// Used to carry out the affine transform on images
+  private AffineTransform transform = new AffineTransform();
+
+	private Random r = new Random();
+
+	public Game(String name) {
 		this.playerName = name;
-		this.money = money;
-		this.foodNumber = foodNumber;
-		this.timer = time;
+		this.money = 0;
+		this.foodNumber = 25;
+		this.timer = 300;
+
+		this.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e){
+				fish.add(new Fish(new Point2D.Double(e.getX(), e.getY())));
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e){}
+
+			@Override
+			public void mouseExited(MouseEvent e){}
+
+			@Override
+			public void mouseEntered(MouseEvent e){}
+
+			@Override
+			public void mousePressed(MouseEvent e){}
+		});
+
+		Thread updateThread = new Thread () {
+       @Override
+       public void run() {
+          while (true) {
+						repaint();
+
+            try {
+              Thread.sleep(1000 / App.FRAME_RATE); // delay and yield to other threads
+            } catch (InterruptedException ex) { }
+          }
+       }
+    };
+    updateThread.start();  // start the thread to run updates
+
+		//start bgm
+		try{
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/ingame.wav"));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+			// clip.loop(Clip.LOOP_CONTINUOUSLY); //IF NEEDED LOOP, MOST LIKELY FOR MENU BGM
+		}
+		catch(Exception e){}
+
+		Thread timerThread = new Thread () {
+       @Override
+       public void run() {
+          while (true) {
+						try {
+              Thread.sleep(1000); // delay and yield to other threads
+            } catch (InterruptedException ex) { }
+
+						timer--;
+						System.out.println(timer);
+          }
+       }
+    };
+    timerThread.start();  // start the thread to run updates
 	}
+
+	/** Custom painting codes on this JPanel */
+  @Override
+  public void paintComponent(Graphics g) {
+    super.paintComponent(g);  // paint background
+    setBackground(timer > 88? Color.GREEN: Color.RED);
+    Graphics2D g2d = (Graphics2D) g;
+
+		//fish
+		for(int i = 0; i < fish.size(); i++){
+				Fish current = fish.get(i);
+				transform.setToIdentity();
+
+				transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
+
+				transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
+
+		    g2d.drawImage(current.getImg(), transform, null);
+		}
+
+		//coin
+
+		//food
+  }
+
 
 	public String getPlayerName() {
 		return this.playerName;

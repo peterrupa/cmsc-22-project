@@ -3,13 +3,14 @@
 */
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public abstract class InstaMature extends Powerup {
   //String type (of powerup)
-  public InstaMature(Point x, JLabel y){
-    super(x, y);
+  public InstaMature(Point2D.Double x){
+    super(x);
   }
 
   public void effect(Fish f){

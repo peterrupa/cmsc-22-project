@@ -3,6 +3,7 @@
 */
 import java.util.*;
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
@@ -20,9 +21,20 @@ public class Fish extends Entity {
 
     Random random = new Random();
 
-    public Fish (Point x, JLabel y){
+    public Fish (Point2D.Double x){
         // Constructs entity with coordinates and image
-        super(x,y);
+        super(x);
+        this.maturity = "hatchling";
+        this.lifespan = random.nextInt(11) + 30; //30-40 seconds before dying
+
+        //thread for lifespan
+        //thread for maturity
+        //thread for movement
+    }
+
+    public Fish (){
+        // Constructs entity with coordinates and image
+        super(new Point2D.Double(100, 100));
         this.maturity = "hatchling";
         this.lifespan = random.nextInt(11) + 30; //30-40 seconds before dying
 

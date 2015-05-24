@@ -3,13 +3,14 @@
 */
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public abstract class Powerup extends Food {
   //String type (of powerup)
-  public Powerup(Point x, JLabel y){
-    super(x, y);
+  public Powerup(Point2D.Double x){
+    super(x);
   }
 
   public abstract void effect(Fish f);

@@ -3,14 +3,15 @@
 */
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Coin extends Entity {
 	int value;
 
-	public Coin(Point x, JLabel y){
-		super(x, y);
+	public Coin(Point2D.Double x){
+		super(x);
 
 		//add event listener
 			//on click

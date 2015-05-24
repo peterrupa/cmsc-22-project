@@ -13,12 +13,13 @@
 */
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Food extends Entity {
-  public Food(Point x, JLabel y){
-    super(x, y);
+  public Food(Point2D.Double x){
+    super(x);
   }
 
   public void die(){
