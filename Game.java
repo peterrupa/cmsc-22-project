@@ -23,13 +23,11 @@ public class Game extends JPanel{
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
 	private ArrayList<Food> foods = new ArrayList<Food>();
-	private boolean scaryMode = false;
 
 	// Used to carry out the affine transform on images
   private AffineTransform transform = new AffineTransform();
 
 	private Random r = new Random();
-	private java.util.Timer scary = new java.util.Timer();
 
 	public Game(String name) {
 		this.playerName = name;
@@ -40,7 +38,13 @@ public class Game extends JPanel{
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e){
-				fish.add(new Fish(new Point2D.Double(e.getX(), e.getY())));
+				// Gonna be a long code
+				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
+				if(e.getY()>200){
+					fish.add(new Fish(pointClicked));
+				} else {
+					foods.add(new Food(pointClicked));
+				}
 			}
 
 			@Override
@@ -80,22 +84,16 @@ public class Game extends JPanel{
 		}
 		catch(Exception e){}
 
-		scary.schedule(new TimerTask(){
-			public void run(){
-				scaryMode = true;
-			}
-		}, 1000 * 213);
-
 		Thread timerThread = new Thread () {
        @Override
        public void run() {
           while (true) {
-						try {
+			try {
               Thread.sleep(1000); // delay and yield to other threads
             } catch (InterruptedException ex) { }
 
-						timer--;
-						System.out.println(timer);
+				timer--;
+				// System.out.println(timer);
           }
        }
     };
@@ -103,36 +101,57 @@ public class Game extends JPanel{
 	}
 
 	/** Custom painting codes on this JPanel */
-  @Override
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);  // paint background
-    setBackground(!scaryMode? Color.GREEN: Color.RED);
-    Graphics2D g2d = (Graphics2D) g;
+	@Override
+	public void paintComponent(Graphics g) {
+	super.paintComponent(g);  // paint background
+	setBackground(timer > 88? Color.GREEN: Color.RED);
+	Graphics2D g2d = (Graphics2D) g;
+
+
+		//food
+		for(int i = 0; i < foods.size(); i++){
+			Food current = foods.get(i);
+			// Check if food is dead
+			if(!current.isAlive()) {
+				foods.remove(current);
+				continue;
+			}
+			BufferedImage image = current.getImg();
+			transform.setToIdentity();
+			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
+	    	g2d.drawImage(image, transform, null);
+
+		}
 
 		//fish
 		for(int i = 0; i < fish.size(); i++){
 			Fish current = fish.get(i);
+			BufferedImage image = current.getImg();
 			transform.setToIdentity();
-
-			// Flip the image vertically
-			transform = AffineTransform.getScaleInstance(1, -1);
-			transform.translate(0, -current.getImg().getHeight(null));
-			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-			BufferedImage image = op.filter(current.getImg(), null);
+			if(current.getDirection()>=90 || current.getDirection()<-90){
+				// Flip the image vertically
+				transform = AffineTransform.getScaleInstance(1, -1);
+				transform.translate(0, -current.getImg().getHeight(null));
+				AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+				image = op.filter(current.getImg(), null);
+			}
 
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
 
-	    g2d.drawImage(image, transform, null);
+	    	g2d.drawImage(image, transform, null);
+
 		}
 
 		//coin
 
-		//food
-  }
+	}
 
+	public ArrayList<Food> getFoods() {
+		return this.foods;
+	}
 
 	public String getPlayerName() {
 		return this.playerName;

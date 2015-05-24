@@ -11,7 +11,7 @@ public class Coin extends Entity {
 	int value;
 
 	public Coin(Point2D.Double x){
-		super(x);
+		super(x, null);
 
 		//add event listener
 			//on click
@@ -22,5 +22,9 @@ public class Coin extends Entity {
 	public void die(){
 		//remove from view
 		//remove from current game coin list
+	}
+
+	public void update(){
+
 	}
 }

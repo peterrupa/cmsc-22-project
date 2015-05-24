@@ -10,42 +10,57 @@ public class App {
 	public static final int FRAME_RATE = 50;
 
 	// Current game
-	private Game ongoingGame;
+	private static Game ongoingGame;
 	private GameHistory history;
-
+	// private static int screenWidth;
+	// private static int screenHeight;
+	public static JFrame frame;
 	public App() throws Exception{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-					//this will serve as the main application
-					JFrame frame = new JFrame();
-					//set frame settings
-					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					frame.setFocusable(true);
-					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-					frame.setUndecorated(true);
+				//this will serve as the main application
+				frame = new JFrame();
+				//set frame settings
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setFocusable(true);
+				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				frame.setUndecorated(true);
 
-					frame.pack();
+				frame.pack();
+				// Do not refactor this!
 
-					Container cp = frame.getContentPane();
+				Container cp = frame.getContentPane();
+				ongoingGame = new Game("Zombiequarium");
 
-					Game gameScreen = new Game("Peter");
+				cp.add(ongoingGame);
 
-					cp.add(gameScreen);
+				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
+				ongoingGame.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
 
-					//get screen pixels
-					int screenWidth = frame.getWidth();
-					int screenHeight = frame.getHeight();
+				//get screen pixels
+				// screenWidth = frame.getWidth();
+				// screenHeight = frame.getHeight();
 
-					//debug
-					System.out.println(screenHeight);
-					System.out.println(screenWidth);
+				//debug
+				System.out.println(getScreenHeight());
+				System.out.println(getScreenWidth());
 
-					cp.setSize(new Dimension(screenWidth, screenHeight));
-					gameScreen.setSize(new Dimension(screenWidth, screenHeight));
 
-					frame.setVisible(true);
+				frame.setVisible(true);
 			}
 		});
+	}
+
+	public static int getScreenWidth() {
+		return frame.getWidth();
+	}
+
+	public static int getScreenHeight() {
+		return frame.getHeight();
+	}
+
+	public static Game getOngoingGame() {
+		return ongoingGame;
 	}
 }
