@@ -111,11 +111,6 @@ public class Game extends JPanel{
 		//food
 		for(int i = 0; i < foods.size(); i++){
 			Food current = foods.get(i);
-			// Check if food is dead
-			if(!current.isAlive()) {
-				foods.remove(current);
-				continue;
-			}
 			BufferedImage image = current.getImg();
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
@@ -146,7 +141,14 @@ public class Game extends JPanel{
 		}
 
 		//coin
+		for(int i = 0; i < coins.size(); i++){
+			Coin current = coins.get(i);
+			BufferedImage image = current.getImg();
+			transform.setToIdentity();
+			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
+	    	g2d.drawImage(image, transform, null);
 
+		}
 	}
 
 	public ArrayList<Food> getFoods() {
