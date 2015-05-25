@@ -45,7 +45,7 @@ public class Game extends JPanel{
 					if(x.isWithinRange(pointClicked)) {
 						x.die();
 						clickedCoin = true;
-						System.out.println("Clicked a coin");
+						System.out.println("You have " + money + " coins");
 						break;
 					} else {
 						clickedCoin = false;
@@ -176,8 +176,8 @@ public class Game extends JPanel{
 		return this.foodNumber;
 	}
 
-	public int getMoney() {
-		return this.money;
+	public int addMoney() {
+		return this.money++;
 	}
 
 	public ArrayList<Fish> getFish() {
