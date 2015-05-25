@@ -8,31 +8,43 @@ import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Coin extends Entity {
-<<<<<<< HEAD
-	
-	private int value;
-	
-	public Coin(Point position, JLabel graphic) {
-		super(position, graphic);
-=======
 	int value;
 
-	public Coin(Point2D.Double x){
-		super(x, null);
-
+	public Coin(Point2D.Double x) {
+		super(x, "assets/img/coins/coin1.png");
+		this.speed = 0.5;
+		this.value = 3; //value dropped by the fish depending on maturity
+			//temp value //should change depending on maturity
+		
+		
 		//add event listener
 			//on click
 			//add coin value to player coins
 			//die
+			
+		imgWidth = img.getWidth();
+	    imgHeight = img.getHeight();
+		startThread();
 	}
 
 	public void die(){
 		//remove from view
 		//remove from current game coin list
+		isAlive = false;
 	}
 
 	public void update(){
-
->>>>>>> 569dc5af3f9ac8041890abe65f58b91c7e6cc54c
+		double x = this.position.getX(), y = this.position.getY();
+        if(this.position.getY() >= App.getScreenHeight() - (App.getScreenHeight() * 0.2)) {
+        	try {
+        		Thread.sleep(3000);
+        	}
+        	catch(InterruptedException ex) {}
+			die();
+        }
+        else {
+        	y += this.speed;  // y-position
+        }
+        this.position.setLocation(x, y);
 	}
 }
