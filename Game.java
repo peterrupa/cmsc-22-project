@@ -121,7 +121,7 @@ public class Game extends JPanel{
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 	    	g2d.drawImage(image, transform, null);
 
-		}
+			}
 
 		//fish
 		for(int i = 0; i < fish.size(); i++){
@@ -141,7 +141,7 @@ public class Game extends JPanel{
 
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
 
-	    	g2d.drawImage(image, transform, null);
+    	g2d.drawImage(image, transform, null);
 
 		}
 

@@ -3,6 +3,7 @@
 */
 import java.util.*;
 import java.awt.*;
+import java.awt.image.*;
 import java.awt.geom.*;
 import javax.imageio.*;
 import javax.swing.*;
@@ -14,6 +15,9 @@ public class Fish extends Entity {
     private final double FOOD_ZONE_MODIFIER = 0.7;
     private final double FISH_EAT_ZONE_MODIFIER = 3;
 
+    private static BufferedImage closed_mouth = null;
+    private static BufferedImage open_mouth = null;
+
     //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
     private int lifespan;
 
@@ -21,31 +25,36 @@ public class Fish extends Entity {
     private String actionPerforming;
 
     private String maturity;
-    
+
     //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
   	protected Point2D.Double destination;
 
     Random random = new Random();
 
     public Fish (Point2D.Double x){
-        // Constructs entity with coordinates and image
+      // Constructs entity with coordinates and image
+      super(x, "assets/img/fish/test.png");
 
-        super(x, "assets/img/fish/test.png");
-        // this.speed;
-        this.maturity = "hatchling";
-        this.lifespan = random.nextInt(11) + 30; //30-40 seconds before dying
-        this.actionPerforming = "idle";
-        this.speed = SLOW;
-        setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
-        //thread for lifespan
-        //thread for maturity
-        //thread for movement
+      // load images if not yet loaded
+      if(closed_mouth == null || open_mouth == null){
+        try{
+          closed_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test.png"));
+          open_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test_eat.png"));
+        }
+        catch(Exception e){}
+      }
 
-        imgWidth = img.getWidth();
+      this.maturity = "hatchling";
+      this.lifespan = random.nextInt(11) + 30; //30-40 seconds before dying
+      this.actionPerforming = "idle";
+      this.speed = SLOW;
+      setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
+
+      imgWidth = img.getWidth();
 	    imgHeight = img.getHeight();
 
-		startThread();
-        this.die();
+		  startThread();
+      this.die();
     }
 
     public void releaseCoin(){
@@ -154,17 +163,11 @@ public class Fish extends Entity {
     }
 
     private void openMouth(){
-        try{
-            this.img = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test_eat.png"));
-        }
-        catch(Exception e){}
+        img = open_mouth;
     }
 
     private void closeMouth(){
-        try{
-            this.img = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test.png"));
-        }
-        catch(Exception e){}
+        img = closed_mouth;
     }
 
     // Returns the point of the nearest food. If none, returns null.
