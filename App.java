@@ -42,11 +42,6 @@ public class App {
 				// screenWidth = frame.getWidth();
 				// screenHeight = frame.getHeight();
 
-				//debug
-				System.out.println(getScreenHeight());
-				System.out.println(getScreenWidth());
-
-
 				frame.setVisible(true);
 			}
 		});

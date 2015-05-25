@@ -4,23 +4,26 @@
 import java.util.*;
 import java.awt.*;
 import java.awt.geom.*;
+import javax.imageio.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Fish extends Entity {
     private final int SLOW = 3;
-    private final int FAST = 12;
+    private final int FAST = 10;
+    private final double FOOD_ZONE_MODIFIER = 0.7;
+    private final double FISH_EAT_ZONE_MODIFIER = 3;
 
     //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
     private int lifespan;
+
     //Action performing is used for identifying whatever the fish is currently doing.
     private String actionPerforming;
-    //Orientation tracks whether the fish faces left or right. This is for the proper rendering of its image.
-    private String orientation;
+
     private String maturity;
+    
     //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
   	protected Point2D.Double destination;
-
 
     Random random = new Random();
 
@@ -56,8 +59,7 @@ public class Fish extends Entity {
     }
 
     public void eat(Food f){
-      //food die(this)
-      //set new destination if no food
+      f.die(this);
       //reset proper image if it was hungry
     }
     public void die(){
@@ -81,19 +83,37 @@ public class Fish extends Entity {
 
     public void update() {
         // Search for nearby foods
-        Point2D.Double nearestFood = findNearestFood();
+        Food nearestFood = findNearestFood();
+        double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
 
         if(nearestFood != null){
             // Set destination location to the nearest food
-            this.destination.setLocation(nearestFood.getX(), nearestFood.getY());
+            this.destination.setLocation(nearestFood.getPosition().getX(), nearestFood.getPosition().getY());
             this.actionPerforming = "food";
             this.speed = FAST;
 
+            double fishEatLeftBound = fishX + (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER , fishEatRightBound = fishX - (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER;
+            double fishEatUpBound = fishY - (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER, fishEatDownBound = fishY + (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER;
+
+            double foodX = nearestFood.getPosition().getX(), foodY = nearestFood.getPosition().getY();
+            double foodLeftBound = foodX + (nearestFood.getWidth() / 2) - (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (nearestFood.getWidth() / 2) + (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER;
+            double foodUpBound = foodY - (nearestFood.getHeight() / 2) + (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (nearestFood.getHeight() / 2) - (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER;
+
+            // check if food is within eating range
+            if(fishEatLeftBound >= foodRightBound && fishEatRightBound <= foodLeftBound && fishEatDownBound >= foodUpBound && fishEatUpBound <= foodDownBound){
+                // change img to open mouth
+                openMouth();
+            }
+            else{
+                closeMouth();
+            }
         }
         else if(nearestFood == null && actionPerforming == "food"){
             // Case when from "food" to "idle"
             this.actionPerforming = "idle";
             this.speed = SLOW;
+            // change img to close mouth
+            closeMouth();
             setRandomDestination();
         }
 
@@ -109,22 +129,54 @@ public class Fish extends Entity {
         y += this.speed * Math.sin(Math.toRadians(direction));  // y-position
         this.position.setLocation(x, y);
 
+        // check if there's a collision between fish and a food
+        ArrayList<Food> foods = App.getOngoingGame().getFoods();
+
+        for(int i = 0; i < foods.size(); i++){
+            Food current = foods.get(i);
+            double fishLeftBound = fishX + (imgWidth / 2), fishRightBound = fishX - (imgWidth / 2);
+            double fishUpBound = fishY - (imgHeight / 2), fishDownBound = fishY + (imgHeight / 2);
+
+            double foodX = current.getPosition().getX(), foodY = current.getPosition().getY();
+            double foodLeftBound = foodX + (current.getWidth() / 2) - (current.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (current.getWidth() / 2) + (current.getWidth() / 2) * FOOD_ZONE_MODIFIER;
+            double foodUpBound = foodY - (current.getHeight() / 2) + (current.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (current.getHeight() / 2) - (current.getHeight() / 2) * FOOD_ZONE_MODIFIER;
+
+            // check if food is within eating range
+            if(fishLeftBound >= foodRightBound && fishRightBound <= foodLeftBound && fishDownBound >= foodUpBound && fishUpBound <= foodDownBound){
+                this.eat(current);
+            }
+        }
+
     	// check if fish is at the destination point
         if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
             setRandomDestination();
         }
     }
 
+    private void openMouth(){
+        try{
+            this.img = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test_eat.png"));
+        }
+        catch(Exception e){}
+    }
+
+    private void closeMouth(){
+        try{
+            this.img = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test.png"));
+        }
+        catch(Exception e){}
+    }
+
     // Returns the point of the nearest food. If none, returns null.
-    private Point2D.Double findNearestFood(){
+    private Food findNearestFood(){
         ArrayList<Food> foods = App.getOngoingGame().getFoods();
-        Point2D.Double nearestPoint = null;
+        Food nearestPoint = null;
         double x1 = this.position.getX(), y1 = this.position.getY();
         for(int i = 0; i < foods.size(); i++){
             Food current = foods.get(i);
 
-            if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint))
-                nearestPoint = current.getPosition();
+            if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
+                nearestPoint = current;
         }
         return nearestPoint;
     }
@@ -138,7 +190,7 @@ public class Fish extends Entity {
     // Sets the fish destination to a new random point.
     private void setRandomDestination(){
         double newPointX = r.nextInt(App.getScreenWidth());
-        double newPointY = r.nextInt(App.getScreenHeight()) + 200;
+        double newPointY = r.nextInt(App.getScreenHeight());
 
         this.destination.setLocation(newPointX, newPointY);
     }

@@ -35,13 +35,12 @@ public class Food extends Entity {
         imgWidth = img.getWidth();
 	    imgHeight = img.getHeight();
         startThread();
-        this.die();
     }
 
 
     public void die() {
-    //create something particle at current position
-    //remove from ongoing game food list
+        //create something particle at current position
+        isAlive = false;
         // System.out.println("Food die!");
         // // not working
         // App.getOngoingGame().getFoods().remove(this);
@@ -50,16 +49,16 @@ public class Food extends Entity {
 
     //when eaten by a fish
     public void die(Fish f) {
-    //refresh lifespan value
-    //remove from ongoing game food list
+        //refresh lifespan value
+        isAlive = false;
         // System.out.println("Food die!");
     }
     public void update() {
         double x = this.position.getX(), y = this.position.getY();
         y += this.speed;  // y-position
         this.position.setLocation(x, y);
-        if(this.position.getY() >= App.getScreenHeight()-300)
-            isAlive = false;
+        if(this.position.getY() >= App.getScreenHeight() - (App.getScreenHeight() * 0.2))
+            die();
         // System.out.println(y);
     }
 
