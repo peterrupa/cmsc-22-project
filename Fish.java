@@ -2,7 +2,10 @@
   The fish is the core entity of the game. The player needs to feed them to let them generate coins.
 */
 import java.util.*;
+import java.awt.*;
+import javax.swing.*;
 
+@SuppressWarnings("serial") //make the linter/compiler shut up
 public class Fish extends Entity {
     //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
     private int lifespan;
@@ -11,18 +14,15 @@ public class Fish extends Entity {
     private String actionPerforming;
     //Orientation tracks whether the fish faces left or right. This is for the proper rendering of its image.
     private String orientation;
-    private int maturity;
+    private String maturity;
 
     Random random = new Random();
 
     public Fish (Point x, JLabel y){
         // Constructs entity with coordinates and image
         super(x,y);
-        this.lifespan = random.nextInt(10) + 30; //30-40 seconds b4 dying
-    }
-
-    public void run(){
-        // Code to run
+        this.maturity = "hatchling";
+        this.lifespan = random.nextInt(10) + 30; //30-40 seconds before dying
     }
 
     public void releaseCoin(){
@@ -34,7 +34,7 @@ public class Fish extends Entity {
     public void setDestination(Point destination){
         this.destination = destination;
     }
-   
+
     public void eat(Food f){
 
     }
