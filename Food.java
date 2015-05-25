@@ -13,23 +13,52 @@
 */
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Food extends Entity {
-<<<<<<< HEAD
-	
-	
-	public Food(Point position, JLabel graphic) {
-		super(position, graphic);
-	}
-=======
-  public Food(Point x, JLabel y){
-    super(x, y);
-  }
 
-  public void die(){
+    public Food(Point2D.Double x, String imageFileLocation) {
+        super(x, imageFileLocation);
+        this.speed = 5;
 
+        imgWidth = img.getWidth();
+	    imgHeight = img.getHeight();
+        startThread();
+    }
+
+    public Food(Point2D.Double x) {
+        super(x, "assets/img/food/food1.png");
+        this.speed = 2;
+
+        imgWidth = img.getWidth();
+	    imgHeight = img.getHeight();
+        startThread();
+    }
+
+
+    public void die() {
+        //create something particle at current position
+        isAlive = false;
+        // System.out.println("Food die!");
+        // // not working
+        // App.getOngoingGame().getFoods().remove(this);
+        // System.out.println("Removed food!");
+    }
+
+    //when eaten by a fish
+    public void die(Fish f) {
+        //refresh lifespan value
+        isAlive = false;
+        // System.out.println("Food die!");
+    }
+    public void update() {
+        double x = this.position.getX(), y = this.position.getY();
+        y += this.speed;  // y-position
+        this.position.setLocation(x, y);
+        if(this.position.getY() >= App.getScreenHeight() - (App.getScreenHeight() * 0.2))
+            die();
+        // System.out.println(y);
+    }
   }
->>>>>>> 569dc5af3f9ac8041890abe65f58b91c7e6cc54c
-}

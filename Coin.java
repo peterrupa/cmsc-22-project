@@ -3,6 +3,7 @@
 */
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
@@ -16,11 +17,21 @@ public class Coin extends Entity {
 =======
 	int value;
 
-	public Coin(Point x, JLabel y){
-		super(x, y);
+	public Coin(Point2D.Double x){
+		super(x, null);
+
+		//add event listener
+			//on click
+			//add coin value to player coins
+			//die
 	}
 
 	public void die(){
+		//remove from view
+		//remove from current game coin list
+	}
+
+	public void update(){
 
 >>>>>>> 569dc5af3f9ac8041890abe65f58b91c7e6cc54c
 	}
