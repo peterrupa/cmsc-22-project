@@ -50,6 +50,27 @@ public class Fish extends Entity {
       this.speed = SLOW;
       setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
 
+      //thread for lifespan
+      new Thread(new Runnable() {
+        public void run() {
+
+        }
+      }).start();
+
+      //thread for maturity
+      //thread for releasing coins
+      new Thread(new Runnable() {
+        public void run() {
+          while(isAlive) {
+            try {
+              Thread.sleep(2000);
+            }
+            catch(InterruptedException ex) {}
+            releaseCoin();
+          }
+        }
+      }).start();
+
       imgWidth = img.getWidth();
 	    imgHeight = img.getHeight();
 
@@ -59,6 +80,9 @@ public class Fish extends Entity {
 
     public void releaseCoin(){
         // Released coin to App.onGoingGame
+        //System.out.println("Release");
+        Point2D.Double pos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
+        App.getOngoingGame().getCoins().add(new Coin(pos));
         // Pass current location and value (based on maturity level)
     }
 

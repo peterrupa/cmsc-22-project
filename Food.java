@@ -61,6 +61,4 @@ public class Food extends Entity {
             die();
         // System.out.println(y);
     }
-
-
-}
+  }
