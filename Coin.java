@@ -15,15 +15,15 @@ public class Coin extends Entity {
 		this.speed = 0.5;
 		this.value = 3; //value dropped by the fish depending on maturity
 			//temp value //should change depending on maturity
-		
-		
+
+
 		//add event listener
 			//on click
 			//add coin value to player coins
 			//die
-			
+
 		imgWidth = img.getWidth();
-	    imgHeight = img.getHeight();
+    	imgHeight = img.getHeight();
 		startThread();
 	}
 

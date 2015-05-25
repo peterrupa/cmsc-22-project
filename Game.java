@@ -123,15 +123,14 @@ public class Game extends JPanel{
 			Fish current = fish.get(i);
 			BufferedImage image = current.getImg();
 			transform.setToIdentity();
-			if(current.getDirection()>=90 || current.getDirection()<-90){
+			// if(current.getDirection()>=90 || current.getDirection()<-90){
 				// Flip the image vertically
-				transform = AffineTransform.getScaleInstance(1, -1);
-				transform.translate(0, -current.getImg().getHeight(null));
-				AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-				image = op.filter(current.getImg(), null);
-			}
+				// transform = AffineTransform.getScaleInstance(1, -1);
+				// transform.translate(0, -current.getImg().getHeight(null));
+				// AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+				// image = op.filter(current.getImg(), null);
+			// }
 
-			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
