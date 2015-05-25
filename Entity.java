@@ -27,7 +27,7 @@ public abstract class Entity {
 		// this.image = y;
 		this.position = x;
 		this.isAlive = true;
-		//this should not be here, let the subclass do this
+
 	    try{
 	    	img = ImageIO.read(getClass().getClassLoader().getResource(imageFileLocation));
 	    }
