@@ -39,12 +39,26 @@ public class Game extends JPanel{
 			@Override
 			public void mouseReleased(MouseEvent e){
 				// Gonna be a long code
+				boolean clickedCoin = false;
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
-				if(e.getY()>200){
-					fish.add(new Fish(pointClicked));
-				} else {
-					foods.add(new Food(pointClicked));
+				for(Coin x : coins) {
+					if(x.isWithinRange(pointClicked)) {
+						x.die();
+						clickedCoin = true;
+						System.out.println("Clicked a coin");
+						break;
+					} else {
+						clickedCoin = false;
+					}
 				}
+				if(!clickedCoin) {
+					if(e.getY()>200){
+						fish.add(new Fish(pointClicked));
+					} else {
+						foods.add(new Food(pointClicked));
+					}
+				}
+
 			}
 
 			@Override
@@ -135,7 +149,7 @@ public class Game extends JPanel{
 
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
 
-    	g2d.drawImage(image, transform, null);
+    		g2d.drawImage(image, transform, null);
 
 		}
 

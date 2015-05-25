@@ -137,7 +137,7 @@ public class Fish extends Entity {
                     // Search for nearby foods
                     Food nearestFood = findNearestFood();
                     double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
-                    System.out.println(direction);
+                    // System.out.println(direction);
                     if(nearestFood != null){
                         // Set destination location to the nearest food
                         this.destination.setLocation(nearestFood.getPosition().getX(), nearestFood.getPosition().getY());
@@ -164,7 +164,7 @@ public class Fish extends Entity {
                         }
                         else{
                             if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-                                System.out.println("Must Flip");
+                                // System.out.println("Must Flip");
                                 closedMouthInverted();
                             } else {
                                 closeMouth();
@@ -177,7 +177,7 @@ public class Fish extends Entity {
                         this.speed = SLOW;
                         // change img to close mouth
                         if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-                            System.out.println("Must Flip");
+                            // System.out.println("Must Flip");
                             closedMouthInverted();
                         } else {
                             closeMouth();
@@ -185,7 +185,7 @@ public class Fish extends Entity {
                         setRandomDestination();
                     } else {
                         if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-                            System.out.println("Must Flip");
+                            // System.out.println("Must Flip");
                             closedMouthInverted();
                         } else {
                             closeMouth();

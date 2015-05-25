@@ -8,7 +8,22 @@ import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Coin extends Entity {
+
 	int value;
+
+	public boolean isWithinRange(Point2D.Double testPoint) {
+		/*
+			checks if testPoint is within the vicinity of the coin's clickbox
+		*/
+		if(testPoint.getX() >= this.position.getX()-imgWidth/2 && testPoint.getX()<= this.position.getX() + imgWidth/2 && testPoint.getY() >= this.position.getY()-imgHeight/2 && testPoint.getY()<= this.position.getY() + imgHeight/2) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
+
+	}
 
 	public Coin(Point2D.Double x) {
 		super(x, "assets/img/coins/coin1.png");
@@ -45,6 +60,7 @@ public class Coin extends Entity {
         }
         else {
         	y += this.speed;  // y-position
+			// System.out.println("Location of Coin: " + y);
         }
         this.position.setLocation(x, y);
 	}
