@@ -25,7 +25,7 @@ public class Fish extends Entity {
     //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
   	protected Point2D.Double destination;
 
-    Random random = new Random();
+    final Random random = new Random();
 
     public Fish (Point2D.Double x){
         // Constructs entity with coordinates and image
@@ -40,7 +40,16 @@ public class Fish extends Entity {
         //thread for lifespan
         new Thread(new Runnable() {
         	public void run() {
-        		
+        		while(isAlive) {
+        			try {
+        				Thread.sleep(1000);
+        			}
+        			catch(InterruptedException ex){}
+        			lifespan-=1;
+        			if(lifespan == 0) {
+        				die();
+        			}
+        		}
         	}
         }).start();
         
@@ -50,7 +59,7 @@ public class Fish extends Entity {
         	public void run() {
         		while(isAlive) {
 	        		try {
-	        			Thread.sleep(2000);
+	        			Thread.sleep((random.nextInt(11)+20)*1000); //drops a coin every 20-30 seconds
 	        		}
 	        		catch(InterruptedException ex) {}
 	        		releaseCoin();
@@ -62,7 +71,7 @@ public class Fish extends Entity {
 	    imgHeight = img.getHeight();
 
 		startThread();
-        this.die();
+        //this.die();
     }
 
     public void releaseCoin(){
@@ -83,9 +92,12 @@ public class Fish extends Entity {
       //reset proper image if it was hungry
     }
     public void die(){
+    	//System.out.println("Shinjae");
+    	isAlive = false;
         //cancel all threads
         //create death animation effect (or smoke puff) at current position
         //remove from ongoing game fish list
+        App.getOngoingGame().getFish().remove(this);
     }
 
     //sets the maturity one level up
@@ -213,5 +225,9 @@ public class Fish extends Entity {
         double newPointY = r.nextInt(App.getScreenHeight());
 
         this.destination.setLocation(newPointX, newPointY);
+    }
+    
+    public void renew() {
+    	this.lifespan = random.nextInt(11)+30;
     }
 }

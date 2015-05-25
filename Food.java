@@ -41,6 +41,7 @@ public class Food extends Entity {
     public void die() {
         //create something particle at current position
         isAlive = false;
+        App.getOngoingGame().getFoods().remove(this);
         // System.out.println("Food die!");
         // // not working
         // App.getOngoingGame().getFoods().remove(this);
@@ -50,7 +51,9 @@ public class Food extends Entity {
     //when eaten by a fish
     public void die(Fish f) {
         //refresh lifespan value
+        f.renew();
         isAlive = false;
+        App.getOngoingGame().getFoods().remove(this);
         // System.out.println("Food die!");
     }
     public void update() {
