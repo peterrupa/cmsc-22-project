@@ -26,10 +26,8 @@ public class App {
 				frame.setFocusable(true);
 				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				frame.setUndecorated(true);
-
 				frame.pack();
 				// Do not refactor this!
-
 				Container cp = frame.getContentPane();
 				ongoingGame = new Game("Zombiequarium");
 

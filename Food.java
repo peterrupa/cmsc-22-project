@@ -58,12 +58,6 @@ public class Food extends Entity {
     }
     public void update() {
 
-        while(!App.getOngoingGame().isPlaying()) {
-            try {
-                Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
-            } catch (InterruptedException ex) { }
-        }
-
         double x = this.position.getX(), y = this.position.getY();
         y += this.speed;  // y-position
         this.position.setLocation(x, y);
