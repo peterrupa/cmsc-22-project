@@ -54,14 +54,7 @@ public class Game extends JPanel{
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
 				if(pointClicked.getX()<100) { //just sets location for the pause. FIX!
-					if(isPlaying){
-						clipTime = clip.getMicrosecondPosition();
-						clip.stop();
-					} else {
-						clip.setMicrosecondPosition(clipTime);
-						clip.start();
-					}
-					isPlaying = isPlaying?false:true;
+					gamePause();
 					clickedCoin = true;
 				}
 				else {
@@ -158,11 +151,22 @@ public class Game extends JPanel{
 		timerThread.start();  // start the thread to run updates
 	}
 
+	public void gamePause() {
+		if(isPlaying){
+			clipTime = clip.getMicrosecondPosition();
+			clip.stop();
+		} else {
+			clip.setMicrosecondPosition(clipTime);
+			clip.start();
+		}
+		isPlaying = isPlaying?false:true;
+	}
+
 	/** Custom painting codes on this JPanel */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);  // paint background
-		setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
+		// setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
 		BufferedImage bgImg = null;
 		try {
@@ -171,9 +175,9 @@ public class Game extends JPanel{
 			bgImg = ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/Aquaruim.png"));
 		}
 		catch(Exception e) {}
-		
+
 		g2d.drawImage(bgImg, 0, 0, null);
-		
+
 		//paint food
 		for(int i = 0; i < foods.size(); i++){
 			Food current = foods.get(i);
@@ -227,15 +231,15 @@ public class Game extends JPanel{
 	private float redTintModifier(int x){
 		return 0.3f + (8 - x) * 0.07f;
 	}
-	
+
 	private BufferedImage resizeFish(BufferedImage image) {
 		int scaling = 200;
 		BufferedImage resized = new BufferedImage((image.getWidth()*scaling)/100, (image.getHeight()*scaling)/100, BufferedImage.TYPE_INT_ARGB);
-		
+
 		Graphics2D g2d = (Graphics2D) resized.getGraphics();
-		
+
 		g2d.drawImage(image, 0, 0, (image.getWidth()*scaling)/100, (image.getHeight()*scaling)/100, null);
-		
+
 		return resized;
 	}
 
