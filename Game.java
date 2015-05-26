@@ -25,9 +25,10 @@ public class Game extends JPanel{
 	private ArrayList<Food> foods = new ArrayList<Food>();
 	private static boolean isPlaying; //if the game is paused or running
 	private static boolean gameOver; //if gameOver
-
+	private long clipTime; //to determine where the clip has paused
+	private Clip clip;
 	// Used to carry out the affine transform on images
-  private AffineTransform transform = new AffineTransform();
+  	private AffineTransform transform = new AffineTransform();
 
 	private Random r = new Random();
 
@@ -49,6 +50,13 @@ public class Game extends JPanel{
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
 				if(pointClicked.getX()<100) {
+					if(isPlaying){
+						clipTime = clip.getMicrosecondPosition();
+						clip.stop();
+					} else {
+						clip.setMicrosecondPosition(clipTime);
+						clip.start();
+					}
 					isPlaying = isPlaying?false:true;
 					clickedCoin = true;
 				}
@@ -112,7 +120,7 @@ public class Game extends JPanel{
 		//start bgm
 		try{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/ingame.wav"));
-			Clip clip = AudioSystem.getClip();
+			clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
 			// clip.loop(Clip.LOOP_CONTINUOUSLY); //IF NEEDED LOOP, MOST LIKELY FOR MENU BGM
@@ -127,11 +135,15 @@ public class Game extends JPanel{
 						Thread.sleep(1000); // delay and yield to other threads
 					} catch (InterruptedException ex) { }
 					timer--;
-					// System.out.println(timer);
+					while(!isPlaying) {
+						try {
+							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
+						} catch (InterruptedException ex) { }
+					}
+					System.out.println(timer);
 				}
 			}
 		};
-
 		timerThread.start();  // start the thread to run updates
 	}
 

@@ -138,9 +138,9 @@ public class Fish extends Entity {
 
     public void update() {
         // Search for nearby foods
-        System.out.println("age: " + this.age);
-        System.out.println("Coin Timer: " + this.coinTimer);
-        System.out.println("maturePoint: " + this.maturePoint);
+        // System.out.println("age: " + this.age);
+        // System.out.println("Coin Timer: " + this.coinTimer);
+        // System.out.println("maturePoint: " + this.maturePoint);
         if(this.age == this.maturePoint ) { //Maturing
             mature();
         }
@@ -151,6 +151,7 @@ public class Fish extends Entity {
             System.out.println("I'm DYINGGG!");
         }
         if(this.lifespan == 0) { //On lifespan
+            System.out.println("AAAACK!");
             die();
         }
         Food nearestFood = findNearestFood();
@@ -247,7 +248,7 @@ public class Fish extends Entity {
 
         this.age+=1;;
         this.lifespan-=1;
-        System.out.println("lifespan: " + this.lifespan);
+        // System.out.println("lifespan: " + this.lifespan);
     }
 
     private void openMouth(){
