@@ -41,7 +41,7 @@ public class Game extends JPanel{
 		this.timer = 300;
 		isPlaying = true; //run the game
 		gameOver = false;
-		Random rng = new Random();
+		final Random rng = new Random();
 		Point2D.Double randomPoint;
 
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
@@ -50,19 +50,11 @@ public class Game extends JPanel{
 			@Override
 			public void mouseReleased(MouseEvent e){
 				// Gonna be a long code
-
 				boolean clickedCoin = false; //flagger for click priority
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
 				if(pointClicked.getX()<100) { //just sets location for the pause. FIX!
-					if(isPlaying){
-						clipTime = clip.getMicrosecondPosition();
-						clip.stop();
-					} else {
-						clip.setMicrosecondPosition(clipTime);
-						clip.start();
-					}
-					isPlaying = isPlaying?false:true;
+					gamePause();
 					clickedCoin = true;
 				}
 				else {
@@ -158,11 +150,22 @@ public class Game extends JPanel{
 		timerThread.start();  // start the thread to run updates
 	}
 
+	public void gamePause() {
+		if(isPlaying){
+			clipTime = clip.getMicrosecondPosition();
+			clip.stop();
+		} else {
+			clip.setMicrosecondPosition(clipTime);
+			clip.start();
+		}
+		isPlaying = isPlaying?false:true;
+	}
+
 	/** Custom painting codes on this JPanel */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);  // paint background
-		setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
+		// setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
 		BufferedImage bgImg = null;
 		try {
