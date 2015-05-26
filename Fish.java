@@ -35,19 +35,19 @@ public class Fish extends Entity {
 
     public Fish (Point2D.Double x){
         // Constructs entity with coordinates and image
-        super(x, "assets/img/fish/test.png");
+        super(x, "assets/img/fish/fishClose.png");
 
         // load images if not yet loaded
         if(closed_mouth == null || open_mouth == null || closed_mouth_inverted == null || open_mouth_inverted == null){
             try{
-                closed_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test.png"));
-                System.out.println("Loaded test.png");
-                open_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test_eat.png"));
-                System.out.println("Loaded test_eat.png");
-                closed_mouth_inverted = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test_inverse.png"));
-                System.out.println("Loaded test_inverse.png");
-                open_mouth_inverted = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/test_eat_inverse.png"));
-                System.out.println("Loaded test_eat_inverse.png");
+                closed_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png"));
+                System.out.println("Loaded fishClose.png");
+                open_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png"));
+                System.out.println("Loaded fishOpen.png");
+                closed_mouth_inverted = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png"));
+                System.out.println("Loaded fishInvert.png");
+                open_mouth_inverted = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png"));
+                System.out.println("Loaded fishInvertOpen.png");
             }
             catch(Exception e){}
         }
@@ -59,35 +59,6 @@ public class Fish extends Entity {
         this.actionPerforming = "idle";
         this.speed = SLOW;
         setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
-
-        // //thread for lifespans
-        // new Thread(new Runnable() {
-        //     public void run() {
-        //         while(isAlive) {
-        //             try {
-        //                 Thread.sleep(1000);
-        //             }
-        //             catch(InterruptedException ex){}
-        //             lifespan-=1;
-        //             if(lifespan == 0) {
-        //                 die();
-        //             }
-        //         }
-        //     }
-        // }).start();
-        // //thread for maturity
-        // //thread for releasing coins
-        // new Thread(new Runnable() {
-        //     public void run() {
-        //         while(isAlive) {
-        //             try {
-        //                 Thread.sleep((random.nextInt(11)+20)*1000); //drops a coin every 20-30 seconds
-        //             }
-        //             catch(InterruptedException ex) {}
-        //                 releaseCoin();
-        //             }
-        //         }
-        // }).start();
 
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
@@ -244,7 +215,7 @@ public class Fish extends Entity {
         this.age+=1;
         this.lifespan-=1;
     }
-//  Functions that change image to render/rotate. Please 
+//  Functions that change image to render/rotate. Please
     private void openMouth(){
         img = open_mouth;
     }
