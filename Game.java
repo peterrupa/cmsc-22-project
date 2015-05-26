@@ -64,23 +64,26 @@ public class Game extends JPanel{
 				else {
 					clickedCoin = false;
 				}
-				for(Coin x : coins) {
-					if(x.isWithinRange(pointClicked)) {
-						x.die();
-						clickedCoin = true;
-						System.out.println("You have " + money + " coins");
-						break;
-					} else {
-						clickedCoin = false;
+				if(isPlaying) {
+					for(Coin x : coins) {
+						if(x.isWithinRange(pointClicked)) {
+							x.die();
+							clickedCoin = true;
+							System.out.println("You have " + money + " coins");
+							break;
+						} else {
+							clickedCoin = false;
+						}
+					}
+					if(!clickedCoin) {
+						if(e.getY()>200){
+							fish.add(new Fish(pointClicked));
+						} else {
+							foods.add(new Food(pointClicked));
+						}
 					}
 				}
-				if(!clickedCoin) {
-					if(e.getY()>200){
-						fish.add(new Fish(pointClicked));
-					} else {
-						foods.add(new Food(pointClicked));
-					}
-				}
+
 
 			}
 			@Override
