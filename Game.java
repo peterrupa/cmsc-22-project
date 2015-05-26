@@ -32,6 +32,7 @@ public class Game extends JPanel{
   	private AffineTransform transform = new AffineTransform();
 
 	private Random r = new Random();
+	private BufferedImage bgImg = null; //background image
 
 	public Game(String name) {
 
@@ -45,6 +46,16 @@ public class Game extends JPanel{
 		Point2D.Double randomPoint;
 
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
+
+		// Background Image
+		try {
+			bgImg = ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png"));
+			System.out.println("Loaded Aquaruim successfully");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("Error in loading Aquaruim");
+		}
 
 		this.addMouseListener(new MouseListener() {
 			@Override
@@ -167,15 +178,9 @@ public class Game extends JPanel{
 		super.paintComponent(g);  // paint background
 		// setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
-		BufferedImage bgImg = null;
-		try {
-			//bgImg = Toolkit.getDefaultToolkit().createImage("assets/img/bg/Aquarium.png");
-			//System.out.println("BG Image Loaded");
-			bgImg = ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/Aquaruim.png"));
-		}
-		catch(Exception e) {}
-
-		g2d.drawImage(bgImg, 0, 0, null);
+		
+		transform.setToIdentity();
+		g2d.drawImage(bgImg, transform, null);
 
 		//paint food
 		for(int i = 0; i < foods.size(); i++){
