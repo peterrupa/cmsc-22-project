@@ -25,16 +25,16 @@ public class App {
 				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				frame.setUndecorated(true);
 				frame.pack();
+				frame.setVisible(true);
 				// Do not refactor this!
 				Container cp = frame.getContentPane();
+				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
+				
 				ongoingGame = new Game("Zombiequarium");
 
 				cp.add(ongoingGame);
 
-				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
-				ongoingGame.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
-
-				frame.setVisible(true);
+				
 			}
 		});
 	}

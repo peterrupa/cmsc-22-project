@@ -36,11 +36,15 @@ public class Game extends JPanel{
 	public Game(String name) {
 
 		this.playerName = name;
-		this.money = 0;
+		this.money = 50;
 		this.foodNumber = 25;
 		this.timer = 300;
 		isPlaying = true; //run the game
 		gameOver = false;
+		Random rng = new Random();
+		Point2D.Double randomPoint;
+		
+		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
 		this.addMouseListener(new MouseListener() {
 			@Override
@@ -78,9 +82,15 @@ public class Game extends JPanel{
 					}
 					if(!clickedCoin) {
 						if(e.getY()>200){
-							fish.add(new Fish(pointClicked)); //add fish below a certain point
+							if(money >= 20) {
+								fish.add(new Fish(pointClicked)); //add fish below a certain point
+								money-=20;
+							}
 						} else {
-							foods.add(new Food(pointClicked));
+							if(foodNumber > 0) {
+								foods.add(new Food(pointClicked));
+								foodNumber-=1;
+							}
 						}
 					}
 				}
@@ -98,6 +108,11 @@ public class Game extends JPanel{
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
+				for(int i=0; i<2; i+=1) {
+					//randomPoint = new Point2D.Double(0, 0);
+					fish.add(new Fish(new Point2D.Double(rng.nextInt(App.getScreenWidth()/2)+200, rng.nextInt(App.getScreenHeight()/2)+200)));
+				}	//bounds: width / 2 && height / 2
+
 				while (!gameOver) { //While not yet game over
 					repaint();
 					try {

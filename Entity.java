@@ -26,6 +26,8 @@ public abstract class Entity {
 		// Instantiate with current location and image
 		// this.image = y;
 		this.position = x;
+		System.out.println(position.getX());
+		System.out.println(position.getY());
 		this.isAlive = true;
 		//this should not be here, let the subclass do this
 	    try{

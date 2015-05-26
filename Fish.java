@@ -60,35 +60,6 @@ public class Fish extends Entity {
         this.speed = SLOW;
         setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
 
-        // //thread for lifespans
-        // new Thread(new Runnable() {
-        //     public void run() {
-        //         while(isAlive) {
-        //             try {
-        //                 Thread.sleep(1000);
-        //             }
-        //             catch(InterruptedException ex){}
-        //             lifespan-=1;
-        //             if(lifespan == 0) {
-        //                 die();
-        //             }
-        //         }
-        //     }
-        // }).start();
-        // //thread for maturity
-        // //thread for releasing coins
-        // new Thread(new Runnable() {
-        //     public void run() {
-        //         while(isAlive) {
-        //             try {
-        //                 Thread.sleep((random.nextInt(11)+20)*1000); //drops a coin every 20-30 seconds
-        //             }
-        //             catch(InterruptedException ex) {}
-        //                 releaseCoin();
-        //             }
-        //         }
-        // }).start();
-
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
 
@@ -266,12 +237,14 @@ public class Fish extends Entity {
         ArrayList<Food> foods = App.getOngoingGame().getFoods();
         Food nearestPoint = null;
         double x1 = this.position.getX(), y1 = this.position.getY();
-        for(int i = 0; i < foods.size(); i++){
-            Food current = foods.get(i);
-
-            if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
-            nearestPoint = current;
-        }
+        if(foods.size() > 0) {
+	        for(int i = 0; i < foods.size(); i++){
+	            Food current = foods.get(i);
+	
+	            if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
+	            nearestPoint = current;
+	        }
+	    }
         return nearestPoint;
     }
 
