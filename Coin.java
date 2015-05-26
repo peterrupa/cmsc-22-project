@@ -47,8 +47,8 @@ public class Coin extends Entity {
 		//remove from view
 		//remove from current game coin list
 		isAlive = false;
-		App.getOngoingGame().addMoney();
 		App.getOngoingGame().getCoins().remove(this);
+		App.getOngoingGame().addMoney();
 	}
 
 	public void update(){

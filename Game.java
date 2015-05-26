@@ -47,10 +47,10 @@ public class Game extends JPanel{
 			public void mouseReleased(MouseEvent e){
 				// Gonna be a long code
 
-				boolean clickedCoin = false;
+				boolean clickedCoin = false; //flagger for click priority
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
-				if(pointClicked.getX()<100) {
+				if(pointClicked.getX()<100) { //just sets location for the pause. FIX!
 					if(isPlaying){
 						clipTime = clip.getMicrosecondPosition();
 						clip.stop();
@@ -64,10 +64,11 @@ public class Game extends JPanel{
 				else {
 					clickedCoin = false;
 				}
-				if(isPlaying) {
+				if(isPlaying) { //clicks will only register if game is not paused
 					for(Coin x : coins) {
+						// checks each coin in the coin array for first instance where the click is within bounds
 						if(x.isWithinRange(pointClicked)) {
-							x.die();
+							x.die(); // Auto increments money variable of player
 							clickedCoin = true;
 							System.out.println("You have " + money + " coins");
 							break;
@@ -77,41 +78,33 @@ public class Game extends JPanel{
 					}
 					if(!clickedCoin) {
 						if(e.getY()>200){
-							fish.add(new Fish(pointClicked));
+							fish.add(new Fish(pointClicked)); //add fish below a certain point
 						} else {
 							foods.add(new Food(pointClicked));
 						}
 					}
 				}
 
-
 			}
 			@Override
 			public void mouseClicked(MouseEvent e){}
-
 			@Override
-			public void mouseExited(MouseEvent e){
-				// isPlaying = false;
-			}
-
+			public void mouseExited(MouseEvent e){}
 			@Override
-			public void mouseEntered(MouseEvent e){
-				// isPlaying = true;
-			}
-
+			public void mouseEntered(MouseEvent e){}
 			@Override
 			public void mousePressed(MouseEvent e){}
 		});
 		Thread updateThread = new Thread () {
 			@Override
-			public void run() {
-				while (!gameOver) {
+			public void run() { //Main game loop
+				while (!gameOver) { //While not yet game over
 					repaint();
 					try {
 						Thread.sleep(1000 / App.FRAME_RATE); // delay and yield to other threads
 					} catch (InterruptedException ex) { }
 					// loop thread sleep until game if the game is paused
-					while(!isPlaying) {
+					while(!isPlaying) { // if paused, sleep indefinitely
 						try {
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
 						} catch (InterruptedException ex) { }
@@ -131,7 +124,7 @@ public class Game extends JPanel{
 		}
 		catch(Exception e){}
 
-		Thread timerThread = new Thread () {
+		Thread timerThread = new Thread () { //thread for timer for game triggers and events (bgm triggers, etc)
 			@Override
 			public void run() {
 				while (true) {
@@ -157,7 +150,7 @@ public class Game extends JPanel{
 		super.paintComponent(g);  // paint background
 		setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
-		//food
+		//paint food
 		for(int i = 0; i < foods.size(); i++){
 			Food current = foods.get(i);
 			BufferedImage image = current.getImg();
@@ -166,22 +159,11 @@ public class Game extends JPanel{
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
     	g2d.drawImage(image, transform, null);
 		}
-		//fish
+		//paint fish
 		for(int i = 0; i < fish.size(); i++){
 			Fish current = fish.get(i);
 			BufferedImage image = current.getImg();
 			transform.setToIdentity();
-			/*
-				* Original Affine Transform to flip image. SLOW!
-
-				if(current.getDirection()>=90 || current.getDirection()<-90){
-					// Flip the image vertically
-					transform = AffineTransform.getScaleInstance(1, -1);
-					transform.translate(0, -current.getImg().getHeight(null));
-					AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-					image = op.filter(current.getImg(), null);
-				}
-			*/
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2); //rotates image based on direction
   		g2d.drawImage(image, transform, null);
@@ -192,7 +174,7 @@ public class Game extends JPanel{
 			}
 		}
 
-		//coin
+		// paint coin
 		for(int i = 0; i < coins.size(); i++){
 			Coin current = coins.get(i);
 			BufferedImage image = current.getImg();

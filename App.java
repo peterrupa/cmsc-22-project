@@ -12,8 +12,6 @@ public class App {
 	// Current game
 	private static Game ongoingGame;
 	private GameHistory history;
-	// private static int screenWidth;
-	// private static int screenHeight;
 	public static JFrame frame;
 	public App() throws Exception{
 		SwingUtilities.invokeLater(new Runnable() {
@@ -26,10 +24,8 @@ public class App {
 				frame.setFocusable(true);
 				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				frame.setUndecorated(true);
-
 				frame.pack();
 				// Do not refactor this!
-
 				Container cp = frame.getContentPane();
 				ongoingGame = new Game("Zombiequarium");
 
@@ -37,10 +33,6 @@ public class App {
 
 				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
 				ongoingGame.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
-
-				//get screen pixels
-				// screenWidth = frame.getWidth();
-				// screenHeight = frame.getHeight();
 
 				frame.setVisible(true);
 			}

@@ -42,10 +42,6 @@ public class Food extends Entity {
         //create something particle at current position
         isAlive = false;
         App.getOngoingGame().getFoods().remove(this);
-        // System.out.println("Food die!");
-        // // not working
-        // App.getOngoingGame().getFoods().remove(this);
-        // System.out.println("Removed food!");
     }
 
     //when eaten by a fish
@@ -58,17 +54,11 @@ public class Food extends Entity {
     }
     public void update() {
 
-        while(!App.getOngoingGame().isPlaying()) {
-            try {
-                Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
-            } catch (InterruptedException ex) { }
-        }
-
         double x = this.position.getX(), y = this.position.getY();
+
         y += this.speed;  // y-position
         this.position.setLocation(x, y);
         if(this.position.getY() >= App.getScreenHeight() - (App.getScreenHeight() * 0.2))
             die();
-        // System.out.println(y);
     }
   }

@@ -138,9 +138,6 @@ public class Fish extends Entity {
 
     public void update() {
         // Search for nearby foods
-        // System.out.println("age: " + this.age);
-        // System.out.println("Coin Timer: " + this.coinTimer);
-        // System.out.println("maturePoint: " + this.maturePoint);
         if(this.age == this.maturePoint ) { //Maturing
             mature();
         }
@@ -183,7 +180,6 @@ public class Fish extends Entity {
             }
             else{
                 if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-                    // System.out.println("Must Flip");
                     closedMouthInverted();
                 } else {
                     closeMouth();
@@ -196,7 +192,6 @@ public class Fish extends Entity {
             this.speed = SLOW;
             // change img to close mouth
             if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-                // System.out.println("Must Flip");
                 closedMouthInverted();
             } else {
                 closeMouth();
@@ -204,7 +199,6 @@ public class Fish extends Entity {
             setRandomDestination();
         } else {
             if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-                // System.out.println("Must Flip");
                 closedMouthInverted();
             } else {
                 closeMouth();
@@ -226,7 +220,7 @@ public class Fish extends Entity {
         ArrayList<Food> foods = App.getOngoingGame().getFoods();
 
         for(int i = 0; i < foods.size(); i++){
-
+            //setting boundatries for fish collision with food
             Food current = foods.get(i);
             double fishLeftBound = fishX + (imgWidth / 2), fishRightBound = fishX - (imgWidth / 2);
             double fishUpBound = fishY - (imgHeight / 2), fishDownBound = fishY + (imgHeight / 2);
@@ -246,11 +240,11 @@ public class Fish extends Entity {
             setRandomDestination();
         }
 
-        this.age+=1;;
+        //update fish statistics
+        this.age+=1;
         this.lifespan-=1;
-        // System.out.println("lifespan: " + this.lifespan);
     }
-
+//  Functions that change image to render/rotate. Please 
     private void openMouth(){
         img = open_mouth;
     }
