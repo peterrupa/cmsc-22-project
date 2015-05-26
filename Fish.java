@@ -40,10 +40,10 @@ public class Fish extends Entity {
     // load images if not yet loaded
     if(closed_mouth == null || open_mouth == null || closed_mouth_inverted == null || open_mouth_inverted == null){
       try{
-        closed_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png"));
-        open_mouth = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png"));
-        closed_mouth_inverted = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png"));
-        open_mouth_inverted = ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png"));
+        closed_mouth = flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), 0.0613f);
+        open_mouth = flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")),0.0613f);
+        closed_mouth_inverted = flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")),0.0613f);
+        open_mouth_inverted = flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")),0.0613f);
       }
       catch(Exception e){}
       }
@@ -220,6 +220,35 @@ public class Fish extends Entity {
       this.age+=1;
       this.lifespan-=1;
     }
+
+    private BufferedImage flexImageSquare(BufferedImage image, float f) {
+  		int scaling = 100;
+  		int finalWidth = (int)(App.getScreenWidth() * f);
+  		int finalHeight = (int)(App.getScreenWidth() * f);
+
+  		BufferedImage resized = new BufferedImage(finalWidth, finalHeight, BufferedImage.TYPE_INT_ARGB);
+
+  		Graphics2D g2d = (Graphics2D) resized.getGraphics();
+
+  		g2d.drawImage(image, 0, 0, finalWidth, finalHeight, null);
+
+  		return resized;
+  	}
+
+    private BufferedImage flexImage(BufferedImage image, float f) {
+  		int scaling = 100;
+  		int finalWidth = (int)(App.getScreenWidth() * f);
+  		int finalHeight = (int)(App.getScreenHeight() * f);
+
+  		BufferedImage resized = new BufferedImage(finalWidth, finalHeight, BufferedImage.TYPE_INT_ARGB);
+
+  		Graphics2D g2d = (Graphics2D) resized.getGraphics();
+
+  		g2d.drawImage(image, 0, 0, finalWidth, finalHeight, null);
+
+  		return resized;
+  	}
+
     //  Functions that change image to render/rotate. Please
     private void openMouth(){
       img = open_mouth;
