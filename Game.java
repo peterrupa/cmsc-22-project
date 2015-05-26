@@ -15,6 +15,7 @@ import java.util.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Game extends JPanel{
+	private final long SCARY_TIMESTAMP = 214 * 1000000;
 
 	private String playerName;
 	private int foodNumber;
@@ -151,7 +152,7 @@ public class Game extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);  // paint background
-		setBackground(timer > 88? Color.GREEN: Color.RED);
+		setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
 		//food
 		for(int i = 0; i < foods.size(); i++){
