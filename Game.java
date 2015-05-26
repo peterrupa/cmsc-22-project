@@ -152,7 +152,7 @@ public class Game extends JPanel{
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
 						} catch (InterruptedException ex) { }
 					}
-					System.out.println(timer);
+					// System.out.println(timer);
 				}
 			}
 		};
@@ -169,9 +169,10 @@ public class Game extends JPanel{
 		for(int i = 0; i < foods.size(); i++){
 			Food current = foods.get(i);
 			BufferedImage image = current.getImg();
+
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
-	    	g2d.drawImage(image, transform, null);
+    	g2d.drawImage(image, transform, null);
 		}
 		//paint fish
 		for(int i = 0; i < fish.size(); i++){
@@ -180,8 +181,12 @@ public class Game extends JPanel{
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2); //rotates image based on direction
-    		g2d.drawImage(image, transform, null);
+  		g2d.drawImage(image, transform, null);
 
+			// check if fish is dying, apply red tint
+			if(current.getLifespan() <= 8){
+				g2d.drawImage(createRedVersion(image, redTintModifier(current.getLifespan())), transform, null);
+			}
 		}
 
 		// paint coin
@@ -191,8 +196,27 @@ public class Game extends JPanel{
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 	    	g2d.drawImage(image, transform, null);
-
 		}
+
+		g2d.dispose();
+	}
+
+	private BufferedImage createRedVersion(BufferedImage image, float f){
+		// create red image
+		BufferedImage redVersion = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d2 = (Graphics2D) redVersion.getGraphics();
+		g2d2.setColor(Color.RED);
+		g2d2.fillRect(0, 0, image.getWidth(), image.getHeight());
+
+		// paint original with composite
+		g2d2.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN, f));
+		g2d2.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), null);
+
+		return redVersion;
+	}
+
+	private float redTintModifier(int x){
+		return 0.3f + (8 - x) * 0.07f;
 	}
 
 	public ArrayList<Food> getFoods() {

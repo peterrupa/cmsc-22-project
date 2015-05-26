@@ -265,4 +265,8 @@ public class Fish extends Entity {
     public void renew() {
         this.lifespan = 50*(random.nextInt(11)+30);
     }
+
+    public int getLifespan(){
+      return lifespan/50;
+    }
 }
