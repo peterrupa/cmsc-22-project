@@ -64,10 +64,11 @@ public class Game extends JPanel{
 				else {
 					clickedCoin = false;
 				}
-				if(isPlaying) { //clicks will only register if 
+				if(isPlaying) { //clicks will only register if game is not paused
 					for(Coin x : coins) {
+						// checks each coin in the coin array for first instance where the click is within bounds
 						if(x.isWithinRange(pointClicked)) {
-							x.die();
+							x.die(); // Auto increments money variable of player
 							clickedCoin = true;
 							System.out.println("You have " + money + " coins");
 							break;
