@@ -237,12 +237,14 @@ public class Fish extends Entity {
         ArrayList<Food> foods = App.getOngoingGame().getFoods();
         Food nearestPoint = null;
         double x1 = this.position.getX(), y1 = this.position.getY();
-        for(int i = 0; i < foods.size(); i++){
-            Food current = foods.get(i);
-
-            if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
-            nearestPoint = current;
-        }
+        if(foods.size() > 0) {
+	        for(int i = 0; i < foods.size(); i++){
+	            Food current = foods.get(i);
+	
+	            if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
+	            nearestPoint = current;
+	        }
+	    }
         return nearestPoint;
     }
 
@@ -262,5 +264,9 @@ public class Fish extends Entity {
 
     public void renew() {
         this.lifespan = 50*(random.nextInt(11)+30);
+    }
+
+    public int getLifespan(){
+      return lifespan/50;
     }
 }
