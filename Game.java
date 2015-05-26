@@ -36,14 +36,14 @@ public class Game extends JPanel{
 	public Game(String name) {
 
 		this.playerName = name;
-		this.money = 50;
+		this.money = 0;
 		this.foodNumber = 25;
 		this.timer = 300;
 		isPlaying = true; //run the game
 		gameOver = false;
 		Random rng = new Random();
 		Point2D.Double randomPoint;
-		
+
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
 		this.addMouseListener(new MouseListener() {
@@ -152,7 +152,6 @@ public class Game extends JPanel{
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
 						} catch (InterruptedException ex) { }
 					}
-					// System.out.println(timer);
 				}
 			}
 		};
@@ -231,8 +230,8 @@ public class Game extends JPanel{
 		return this.foodNumber;
 	}
 
-	public int addMoney() { //Unsafe. TO UPDATE!
-		return this.money++;
+	public int addMoney(int value) {
+		return this.money += value;
 	}
 
 	public boolean isPlaying() {
