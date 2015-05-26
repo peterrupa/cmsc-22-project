@@ -26,17 +26,13 @@ public class Coin extends Entity {
 
 	}
 
-	public Coin(Point2D.Double x) {
+	public Coin(Point2D.Double x, int value) {
 		super(x, "assets/img/coins/coin1.png");
 		this.speed = 0.5;
-		this.value = 3; //value dropped by the fish depending on maturity
+		this.value = value; //value dropped by the fish depending on maturity
 			//temp value //should change depending on maturity
 
-
-		//add event listener
-			//on click
-			//add coin value to player coins
-			//die
+		System.out.println("New coin: "+value);
 
 		imgWidth = img.getWidth();
     	imgHeight = img.getHeight();
@@ -48,7 +44,7 @@ public class Coin extends Entity {
 		//remove from current game coin list
 		isAlive = false;
 		App.getOngoingGame().getCoins().remove(this);
-		App.getOngoingGame().addMoney();
+		App.getOngoingGame().addMoney(value);
 	}
 
 	public void update(){

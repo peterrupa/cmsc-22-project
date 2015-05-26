@@ -144,7 +144,6 @@ public class Game extends JPanel{
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
 						} catch (InterruptedException ex) { }
 					}
-					// System.out.println(timer);
 				}
 			}
 		};
@@ -255,8 +254,8 @@ public class Game extends JPanel{
 		return this.foodNumber;
 	}
 
-	public int addMoney() { //Unsafe. TO UPDATE!
-		return this.money++;
+	public int addMoney(int value) {
+		return this.money += value;
 	}
 
 	public boolean isPlaying() {
