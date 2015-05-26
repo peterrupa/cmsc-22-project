@@ -175,7 +175,7 @@ public class Game extends JPanel{
 				* Original Affine Transform to flip image. SLOW!
 
 				if(current.getDirection()>=90 || current.getDirection()<-90){
-					Flip the image vertically
+					// Flip the image vertically
 					transform = AffineTransform.getScaleInstance(1, -1);
 					transform.translate(0, -current.getImg().getHeight(null));
 					AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
