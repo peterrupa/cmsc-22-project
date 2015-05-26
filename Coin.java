@@ -15,7 +15,8 @@ public class Coin extends Entity {
 		/*
 			checks if testPoint is within the vicinity of the coin's clickbox
 		*/
-		if(testPoint.getX() >= this.position.getX()-imgWidth/2 && testPoint.getX()<= this.position.getX() + imgWidth/2 && testPoint.getY() >= this.position.getY()-imgHeight/2 && testPoint.getY()<= this.position.getY() + imgHeight/2) {
+		if(	testPoint.getX() >= this.position.getX()-imgWidth/2 && testPoint.getX()<= this.position.getX() + imgWidth/2 &&
+			testPoint.getY() >= this.position.getY()-imgHeight/2 && testPoint.getY()<= this.position.getY() + imgHeight/2	) {
 			return true;
 		}
 		else {

@@ -15,22 +15,21 @@ public class Fish extends Entity {
     private final double FOOD_ZONE_MODIFIER = 0.7;
     private final double FISH_EAT_ZONE_MODIFIER = 3;
 
+    private int age;
+    private int maturePoint; //age when fish shall mature;
+    private int coinTimer; // age when fish shall spitCoin
+    private String maturity;
+    //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
+    private int lifespan; //how many seconds before fish dies
+    //Action performing is used for identifying whatever the fish is currently doing.
+    private String actionPerforming;
+
+    //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
+    protected Point2D.Double destination;
     private static BufferedImage closed_mouth = null;
     private static BufferedImage open_mouth = null;
     private static BufferedImage closed_mouth_inverted = null;
     private static BufferedImage open_mouth_inverted = null;
-
-
-    //Hunger is measured by the variable lifespan. Lifespan is the time before the fish dies, meaning the player has to feed the fish within this set time. If the lifespan reaches 0, the fish dies.
-    private int lifespan;
-
-    //Action performing is used for identifying whatever the fish is currently doing.
-    private String actionPerforming;
-
-    private String maturity;
-
-    //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
-    protected Point2D.Double destination;
 
     final Random random = new Random();
 
@@ -51,42 +50,44 @@ public class Fish extends Entity {
                 System.out.println("Loaded test_eat_inverse.png");
             }
             catch(Exception e){}
-            }
+        }
+        this.age = 0; //age starts at 0
+        this.maturePoint = 50*(age + random.nextInt(21) + 40); // maturity will occur 40-60 seconds later
+        this.maturity = "hatchling";
+        this.coinTimer = 50*(20 + random.nextInt(11)); //first coin will spawn 20-30 seconds later
+        this.lifespan = 50*(random.nextInt(11) + 30); //30-40 seconds before dying
+        this.actionPerforming = "idle";
+        this.speed = SLOW;
+        setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
 
-            this.maturity = "hatchling";
-            this.lifespan = random.nextInt(11) + 30; //30-40 seconds before dying
-            this.actionPerforming = "idle";
-            this.speed = SLOW;
-            setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
-
-            //thread for lifespan
-        new Thread(new Runnable() {
-            public void run() {
-                while(isAlive) {
-                    try {
-                        Thread.sleep(1000);
-                    }
-                    catch(InterruptedException ex){}
-                    lifespan-=1;
-                    if(lifespan == 0) {
-                        die();
-                    }
-                }
-            }
-        }).start();
-                //thread for maturity
-                //thread for releasing coins
-        new Thread(new Runnable() {
-            public void run() {
-                while(isAlive) {
-                    try {
-                        Thread.sleep((random.nextInt(11)+20)*1000); //drops a coin every 20-30 seconds
-                    }
-                    catch(InterruptedException ex) {}
-                        releaseCoin();
-                    }
-                }
-        }).start();
+        // //thread for lifespans
+        // new Thread(new Runnable() {
+        //     public void run() {
+        //         while(isAlive) {
+        //             try {
+        //                 Thread.sleep(1000);
+        //             }
+        //             catch(InterruptedException ex){}
+        //             lifespan-=1;
+        //             if(lifespan == 0) {
+        //                 die();
+        //             }
+        //         }
+        //     }
+        // }).start();
+        // //thread for maturity
+        // //thread for releasing coins
+        // new Thread(new Runnable() {
+        //     public void run() {
+        //         while(isAlive) {
+        //             try {
+        //                 Thread.sleep((random.nextInt(11)+20)*1000); //drops a coin every 20-30 seconds
+        //             }
+        //             catch(InterruptedException ex) {}
+        //                 releaseCoin();
+        //             }
+        //         }
+        // }).start();
 
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
@@ -99,6 +100,7 @@ public class Fish extends Entity {
         //System.out.println("Release");
         Point2D.Double coinPos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
         App.getOngoingGame().getCoins().add(new Coin(coinPos));
+        coinTimer = age + 20*50 + random.nextInt(11)*50; //next coin will spawn 20-30 seconds later
         // Pass current location and value (based on maturity level)
     }
 
@@ -111,7 +113,7 @@ public class Fish extends Entity {
         f.die(this);
         //reset proper image if it was hungry
     }
-    public void die(){
+    public void die() {
         //System.out.println("Shinjae");
         isAlive = false;
         //cancel all threads
@@ -131,10 +133,26 @@ public class Fish extends Entity {
             maturity = "adult";
             break;
         }
+        maturePoint = (age + random.nextInt(21)*50 + 40*50); //fish shall mature 40-60 seconds later
     }
 
     public void update() {
         // Search for nearby foods
+        System.out.println("age: " + this.age);
+        System.out.println("Coin Timer: " + this.coinTimer);
+        System.out.println("maturePoint: " + this.maturePoint);
+        if(this.age == this.maturePoint ) { //Maturing
+            mature();
+        }
+        if(this.age == this.coinTimer) { //On releasing coins
+            releaseCoin();
+        }
+        if(this.lifespan == 8*50) { //On lifespan
+            System.out.println("I'm DYINGGG!");
+        }
+        if(this.lifespan == 0) { //On lifespan
+            die();
+        }
         Food nearestFood = findNearestFood();
         double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
         // System.out.println(direction);
@@ -191,7 +209,6 @@ public class Fish extends Entity {
                 closeMouth();
             }
         }
-
         // Updating the direction used for image rendering
         double x = this.position.getX(), y = this.position.getY();
         double x2 = this.destination.getX(), y2 = this.destination.getY();
@@ -227,6 +244,10 @@ public class Fish extends Entity {
         if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
             setRandomDestination();
         }
+
+        this.age+=1;;
+        this.lifespan-=1;
+        System.out.println("lifespan: " + this.lifespan);
     }
 
     private void openMouth(){
@@ -274,6 +295,6 @@ public class Fish extends Entity {
     }
 
     public void renew() {
-        this.lifespan = random.nextInt(11)+30;
+        this.lifespan = 50*(random.nextInt(11)+30);
     }
 }

@@ -1,5 +1,11 @@
 /*
   A food that gives special powers to whatever fish ate it.
+  - *Power ups
+    - Super food
+      - Pause Hunger
+      - Double coins
+      - Insta mature
+      - Haste (speed and coin generation)
 */
 
 import java.awt.*;

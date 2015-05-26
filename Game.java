@@ -23,6 +23,8 @@ public class Game extends JPanel{
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
 	private ArrayList<Food> foods = new ArrayList<Food>();
+	private static boolean isPlaying; //if the game is paused or running
+	private static boolean gameOver; //if gameOver
 
 	// Used to carry out the affine transform on images
   private AffineTransform transform = new AffineTransform();
@@ -30,17 +32,29 @@ public class Game extends JPanel{
 	private Random r = new Random();
 
 	public Game(String name) {
+
 		this.playerName = name;
 		this.money = 0;
 		this.foodNumber = 25;
 		this.timer = 300;
+		isPlaying = true; //run the game
+		gameOver = false;
 
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e){
 				// Gonna be a long code
+
 				boolean clickedCoin = false;
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
+
+				if(pointClicked.getX()<100) {
+					isPlaying = isPlaying?false:true;
+					clickedCoin = true;
+				}
+				else {
+					clickedCoin = false;
+				}
 				for(Coin x : coins) {
 					if(x.isWithinRange(pointClicked)) {
 						x.die();
@@ -60,33 +74,40 @@ public class Game extends JPanel{
 				}
 
 			}
-
 			@Override
 			public void mouseClicked(MouseEvent e){}
 
 			@Override
-			public void mouseExited(MouseEvent e){}
+			public void mouseExited(MouseEvent e){
+				// isPlaying = false;
+			}
 
 			@Override
-			public void mouseEntered(MouseEvent e){}
+			public void mouseEntered(MouseEvent e){
+				// isPlaying = true;
+			}
 
 			@Override
 			public void mousePressed(MouseEvent e){}
 		});
-
 		Thread updateThread = new Thread () {
-       @Override
-       public void run() {
-          while (true) {
-						repaint();
-
-            try {
-              Thread.sleep(1000 / App.FRAME_RATE); // delay and yield to other threads
-            } catch (InterruptedException ex) { }
-          }
-       }
-    };
-    updateThread.start();  // start the thread to run updates
+			@Override
+			public void run() {
+				while (!gameOver) {
+					repaint();
+					try {
+						Thread.sleep(1000 / App.FRAME_RATE); // delay and yield to other threads
+					} catch (InterruptedException ex) { }
+					// loop thread sleep until game if the game is paused
+					while(!isPlaying) {
+						try {
+							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
+						} catch (InterruptedException ex) { }
+					}
+				}
+			}
+	    };
+	    updateThread.start();  // start the thread to run updates
 
 		//start bgm
 		try{
@@ -99,29 +120,27 @@ public class Game extends JPanel{
 		catch(Exception e){}
 
 		Thread timerThread = new Thread () {
-       @Override
-       public void run() {
-          while (true) {
-			try {
-              Thread.sleep(1000); // delay and yield to other threads
-            } catch (InterruptedException ex) { }
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(1000); // delay and yield to other threads
+					} catch (InterruptedException ex) { }
+					timer--;
+					// System.out.println(timer);
+				}
+			}
+		};
 
-				timer--;
-				// System.out.println(timer);
-          }
-       }
-    };
-    timerThread.start();  // start the thread to run updates
+		timerThread.start();  // start the thread to run updates
 	}
 
 	/** Custom painting codes on this JPanel */
 	@Override
 	public void paintComponent(Graphics g) {
-	super.paintComponent(g);  // paint background
-	setBackground(timer > 88? Color.GREEN: Color.RED);
-	Graphics2D g2d = (Graphics2D) g;
-
-
+		super.paintComponent(g);  // paint background
+		setBackground(timer > 88? Color.GREEN: Color.RED);
+		Graphics2D g2d = (Graphics2D) g;
 		//food
 		for(int i = 0; i < foods.size(); i++){
 			Food current = foods.get(i);
@@ -129,26 +148,25 @@ public class Game extends JPanel{
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 	    	g2d.drawImage(image, transform, null);
-
-			}
-
+		}
 		//fish
 		for(int i = 0; i < fish.size(); i++){
 			Fish current = fish.get(i);
 			BufferedImage image = current.getImg();
 			transform.setToIdentity();
-			// if(current.getDirection()>=90 || current.getDirection()<-90){
-				// Flip the image vertically
-				// transform = AffineTransform.getScaleInstance(1, -1);
-				// transform.translate(0, -current.getImg().getHeight(null));
-				// AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-				// image = op.filter(current.getImg(), null);
-			// }
+			/*
+				* Original Affine Transform to flip image. SLOW!
 
+				if(current.getDirection()>=90 || current.getDirection()<-90){
+					Flip the image vertically
+					transform = AffineTransform.getScaleInstance(1, -1);
+					transform.translate(0, -current.getImg().getHeight(null));
+					AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+					image = op.filter(current.getImg(), null);
+				}
+			*/
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
-
-			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2);
-
+			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2); //rotates image based on direction
     		g2d.drawImage(image, transform, null);
 
 		}
@@ -176,8 +194,12 @@ public class Game extends JPanel{
 		return this.foodNumber;
 	}
 
-	public int addMoney() {
+	public int addMoney() { //Unsafe. TO UPDATE!
 		return this.money++;
+	}
+
+	public boolean isPlaying() {
+		return isPlaying;
 	}
 
 	public ArrayList<Fish> getFish() {

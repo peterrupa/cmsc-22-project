@@ -1,7 +1,7 @@
 /*
   Food is an important element in the game. This is the personal goal of the fish, wherein it replenishes their lifespan.
 */
-  /*
+ /*
 	Food is extendable, and has special features (to be extended)
 	Powerups extend food, and they feed the fish as well.
 
@@ -57,6 +57,13 @@ public class Food extends Entity {
         // System.out.println("Food die!");
     }
     public void update() {
+
+        while(!App.getOngoingGame().isPlaying()) {
+            try {
+                Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
+            } catch (InterruptedException ex) { }
+        }
+
         double x = this.position.getX(), y = this.position.getY();
         y += this.speed;  // y-position
         this.position.setLocation(x, y);

@@ -68,6 +68,12 @@ public abstract class Entity {
 					try {
 					  Thread.sleep(1000 / App.FRAME_RATE); // delay and yield to other threads
 					} catch (InterruptedException ex) { }
+					// Pause updating
+					while(!App.getOngoingGame().isPlaying()) {
+						try {
+							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
+						} catch (InterruptedException ex) { }
+					}
 				}
 			}
 		};

@@ -7,9 +7,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
-public abstract class InstaMature extends Powerup {
+public abstract class InstaMaturePowerup extends Powerup {
   //String type (of powerup)
-  public InstaMature(Point2D.Double x){
+  public InstaMaturePowerup(Point2D.Double x){
     super(x);
   }
 
