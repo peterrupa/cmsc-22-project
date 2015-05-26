@@ -42,14 +42,12 @@ public class Game extends JPanel{
 		this.timer = 300;
 		isPlaying = true; //run the game
 		gameOver = false;
-		final Random rng = new Random();
-		Point2D.Double randomPoint;
 
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
 		// Background Image
 		try {
-			bgImg = ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png"));
+			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
 			System.out.println("Loaded Aquaruim successfully");
 		}
 		catch(Exception e) {
@@ -111,11 +109,6 @@ public class Game extends JPanel{
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
-				for(int i=0; i<2; i+=1) {
-					//randomPoint = new Point2D.Double(0, 0);
-					fish.add(new Fish(new Point2D.Double(rng.nextInt(App.getScreenWidth()/2)+200, rng.nextInt(App.getScreenHeight()/2)+200)));
-				}	//bounds: width / 2 && height / 2
-
 				while (!gameOver) { //While not yet game over
 					repaint();
 					try {
@@ -178,7 +171,7 @@ public class Game extends JPanel{
 		super.paintComponent(g);  // paint background
 		// setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		transform.setToIdentity();
 		g2d.drawImage(bgImg, transform, null);
 
@@ -216,6 +209,16 @@ public class Game extends JPanel{
 		}
 
 		g2d.dispose();
+	}
+
+	public void start(){
+		// starting game logic goes here, only called once
+		final Random rng = new Random();
+
+		for(int i=0; i<2; i+=1) {
+			//randomPoint = new Point2D.Double(0, 0);
+			fish.add(new Fish(new Point2D.Double(rng.nextInt(App.getScreenWidth()/2)+200, rng.nextInt(App.getScreenHeight()/2)+200)));
+		}	//bounds: width / 2 && height / 2
 	}
 
 	private BufferedImage createRedVersion(BufferedImage image, float f){

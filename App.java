@@ -29,12 +29,13 @@ public class App {
 				// Do not refactor this!
 				Container cp = frame.getContentPane();
 				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
-				
+
 				ongoingGame = new Game("Zombiequarium");
+				ongoingGame.start();
 
 				cp.add(ongoingGame);
 
-				
+
 			}
 		});
 	}
