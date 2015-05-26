@@ -64,7 +64,7 @@ public class Game extends JPanel{
 				else {
 					clickedCoin = false;
 				}
-				if(isPlaying) {
+				if(isPlaying) { //clicks will only register if 
 					for(Coin x : coins) {
 						if(x.isWithinRange(pointClicked)) {
 							x.die();
