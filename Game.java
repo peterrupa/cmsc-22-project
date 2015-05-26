@@ -36,21 +36,20 @@ public class Game extends JPanel{
 	public Game(String name) {
 
 		this.playerName = name;
-		this.money = 50;
+		this.money = 0;
 		this.foodNumber = 25;
 		this.timer = 300;
 		isPlaying = true; //run the game
 		gameOver = false;
-		Random rng = new Random();
+		final Random rng = new Random();
 		Point2D.Double randomPoint;
-		
+
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e){
 				// Gonna be a long code
-
 				boolean clickedCoin = false; //flagger for click priority
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
