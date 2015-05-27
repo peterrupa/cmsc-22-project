@@ -34,7 +34,21 @@ public class Coin extends Entity {
 
 		// load asset
 		try{
-			img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/coins/coin.png")),0.04f);
+			switch(value) {
+				case 1:
+				case 2: {
+					img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/coins/bronzeMini4.png")),0.04f);
+				} break;
+				case 3:
+				case 6: {
+					img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/coins/silverMini4.png")),0.04f);
+				} break;
+				case 5:
+				case 10: {
+					img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/coins/goldMini4.png")),0.04f);
+				} break;
+			}
+
 		}
 		catch(Exception e){}
 

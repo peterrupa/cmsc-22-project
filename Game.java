@@ -24,7 +24,7 @@ public class Game extends JPanel{
 
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
-	private ArrayList<Food> foods = new ArrayList<Food>();
+	private ArrayList<Food> foods = new ArrayList<Food>(); // Food and poweruups go here
 	private static String mouseState; //to determine what kind of food shall be instantiated when the user clicks
 	private static boolean isPlaying; //if the game is paused or running
 	private static boolean gameOver; //if gameOver
@@ -36,6 +36,8 @@ public class Game extends JPanel{
 	private Random r = new Random();
 	private BufferedImage bgImg = null; //background image
 	private BufferedImage bgImgScary = null; //background image
+
+	private String panelMode; //Game, MainMenu, Shop,
 
 
 	public Game(String name) {
@@ -257,9 +259,9 @@ public class Game extends JPanel{
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2); //rotates image based on direction
-  		g2d.drawImage(image, transform, null);
+			g2d.drawImage(image, transform, null);
 
-			// check if fish is dying, apply red tint
+			// check if fish is dying, apply green tint
 			if(current.getLifespan() <= 8){
 				g2d.drawImage(createGreenVersion(image, redTintModifier(current.getLifespan())), transform, null);
 			}
