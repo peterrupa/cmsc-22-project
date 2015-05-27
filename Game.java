@@ -33,6 +33,7 @@ public class Game extends JPanel{
 
 	private Random r = new Random();
 	private BufferedImage bgImg = null; //background image
+	private BufferedImage bgImg2 = null; //background image2
 
 	public Game(String name) {
 
@@ -48,6 +49,9 @@ public class Game extends JPanel{
 		// Background Image
 		try {
 			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
+			System.out.println("Loaded Aquaruim1 successfully");
+			bgImg2 = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/Aquarium102.png")), 1f, 1f);
+			System.out.println("Loaded Aquaruim2 successfully");
 			System.out.println("Loaded Aquaruim successfully");
 		}
 		catch(Exception e) {
@@ -173,7 +177,7 @@ public class Game extends JPanel{
 		Graphics2D g2d = (Graphics2D) g;
 
 		transform.setToIdentity();
-		g2d.drawImage(bgImg, transform, null);
+		g2d.drawImage(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? bgImg: bgImg2, transform, null);
 
 		//paint food
 		for(int i = 0; i < foods.size(); i++){
