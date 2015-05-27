@@ -259,8 +259,6 @@ public class Fish extends Entity {
     if(coinModifyTimer > 0) {
       coinModifyTimer-=1;
     }
-    //System.out.println("Lifespan: " + lifespan + "; Timer: " +hungerNulledTimer);
-    // System.out.println("Modifier: " + coinValueModifier + "; Timer: " + coinModifyTimer);
   }
 
   public void nullHunger() {

@@ -52,7 +52,6 @@ public class Game extends JPanel{
 		try {
 			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
 			bgImgScary = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test2.png")), 1f, 1f);
-			System.out.println("Loaded Aquaruim successfully");
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -81,9 +80,8 @@ public class Game extends JPanel{
 					}
 					if(!clickedCoin) {
 						if(foodNumber > 0) {
-							foods.add(new PowerupDoubleCoins(pointClicked));
+							foods.add(new Food(pointClicked));
 							foodNumber-=1;
-							System.out.println(foodNumber);
 						}
 					}
 				}

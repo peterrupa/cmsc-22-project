@@ -15,7 +15,7 @@ public class PowerupDoubleCoins extends Food {
         super(x);
         // load asset
         try{
-    			img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/food/doubleCoins.png")),0.04f);
+    			img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/food/doubleCoins.png")),0.02f);
     		}
     		catch(Exception e){}
     }
