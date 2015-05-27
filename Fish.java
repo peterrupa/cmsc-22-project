@@ -223,6 +223,9 @@ public class Fish extends Entity {
       this.lifespan-=1;
     }
 
+
+
+
     //  Functions that change image to render/rotate. Please
     private void openMouth(){
       img = open_mouth;
