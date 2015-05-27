@@ -21,9 +21,11 @@ public class Game extends JPanel{
 	private int foodNumber;
 	private int money;
 	private int timer;
+
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
 	private ArrayList<Food> foods = new ArrayList<Food>();
+	private static String mouseState; //to determine what kind of food shall be instantiated when the user clicks
 	private static boolean isPlaying; //if the game is paused or running
 	private static boolean gameOver; //if gameOver
 	private long clipTime; //to determine where the clip has paused
@@ -35,8 +37,10 @@ public class Game extends JPanel{
 	private BufferedImage bgImg = null; //background image
 	private BufferedImage bgImgScary = null; //background image
 
+
 	public Game(String name) {
 
+		mouseState = "Food";
 		this.playerName = name;
 		this.money = 1000;
 		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
@@ -80,7 +84,23 @@ public class Game extends JPanel{
 					}
 					if(!clickedCoin) {
 						if(foodNumber > 0) {
-							foods.add(new Food(pointClicked));
+							switch(mouseState) {
+								case "Food": {
+									foods.add(new Food(pointClicked));
+								} break;
+
+								case "PowerupInstaMature": {
+									foods.add(new PowerupInstaMature(pointClicked));
+								} break;
+
+								case "PowerupNullHunger": {
+									foods.add(new PowerupNullHunger(pointClicked));
+								} break;
+
+								case "PowerupDoubleCoins": {
+									foods.add(new PowerupDoubleCoins(pointClicked));
+								} break;
+							}
 							foodNumber-=1;
 						}
 					}
@@ -108,12 +128,48 @@ public class Game extends JPanel{
 			}
 		});
 
-		// TEMPORARY, PARA LANG MAKAPAGLAGAY TAYO NG FOOD
+		// Pause
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "pause");
 		this.getActionMap().put("pause", new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent e){
 				gamePause();
+			}
+		});
+
+		// Food
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("Z"), "Food");
+		this.getActionMap().put("Food", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mouseState = "Food";
+			}
+		});
+
+		// PowerupInstaMature
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("X"), "PowerupInstaMature");
+		this.getActionMap().put("PowerupInstaMature", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mouseState = "PowerupInstaMature";
+			}
+		});
+
+		// PowerupNullHunger
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("C"), "PowerupNullHunger");
+		this.getActionMap().put("PowerupNullHunger", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mouseState = "PowerupNullHunger";
+			}
+		});
+
+		// PowerupDoubleCoins
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("V"), "PowerupDoubleCoins");
+		this.getActionMap().put("PowerupDoubleCoins", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mouseState = "PowerupDoubleCoins";
 			}
 		});
 
