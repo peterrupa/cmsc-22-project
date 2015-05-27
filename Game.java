@@ -29,16 +29,19 @@ public class Game extends JPanel{
 	private long clipTime; //to determine where the clip has paused
 	private Clip clip;
 	// Used to carry out the affine transform on images
-  	private AffineTransform transform = new AffineTransform();
+	private AffineTransform transform = new AffineTransform();
 
 	private Random r = new Random();
 	private BufferedImage bgImg = null; //background image
+	private BufferedImage bgImgScary = null; //background image
 
 	public Game(String name) {
 
 		this.playerName = name;
-		this.money = 0;
-		this.foodNumber = 25;
+		this.money = 1000;
+		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
+		this.foodNumber = 1000;
+		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
 		this.timer = 300;
 		isPlaying = true; //run the game
 		gameOver = false;
@@ -48,6 +51,7 @@ public class Game extends JPanel{
 		// Background Image
 		try {
 			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
+			bgImgScary = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test2.png")), 1f, 1f);
 			System.out.println("Loaded Aquaruim successfully");
 		}
 		catch(Exception e) {
@@ -169,11 +173,10 @@ public class Game extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);  // paint background
-		// setBackground(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? Color.GREEN: Color.RED);
 		Graphics2D g2d = (Graphics2D) g;
 
 		transform.setToIdentity();
-		g2d.drawImage(bgImg, transform, null);
+		g2d.drawImage(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? bgImg: bgImgScary, transform, null);
 
 		//paint food
 		for(int i = 0; i < foods.size(); i++){
@@ -212,13 +215,9 @@ public class Game extends JPanel{
 	}
 
 	public void start(){
-		// starting game logic goes here, only called once
-		final Random rng = new Random();
-
-		for(int i=0; i<2; i+=1) {
-			//randomPoint = new Point2D.Double(0, 0);
-			fish.add(new Fish(new Point2D.Double(rng.nextInt(App.getScreenWidth()/2)+200, rng.nextInt(App.getScreenHeight()/2)+200)));
-		}	//bounds: width / 2 && height / 2
+		for(int i=0; i<2; i++) {
+			fish.add(new Fish(new Point2D.Double(r.nextInt(App.getScreenWidth()/2)+200, r.nextInt(App.getScreenHeight()/2)+200)));
+		}
 	}
 
 	private BufferedImage createRedVersion(BufferedImage image, float f){

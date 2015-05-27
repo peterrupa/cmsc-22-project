@@ -22,16 +22,11 @@ public abstract class Entity {
 	protected Thread updateThread;
 	// protected Point2D.Double position2 = new Point2D.Double(r.nextInt(1300), r.nextInt(700));
 
-	public Entity(Point2D.Double x, String imageFileLocation){
+	public Entity(Point2D.Double x){
 		// Instantiate with current location and image
 		// this.image = y;
 		this.position = x;
 		this.isAlive = true;
-		//this should not be here, let the subclass do this
-	    try{
-	    	img = ImageIO.read(getClass().getClassLoader().getResource(imageFileLocation));
-	    }
-	    catch(Exception e){}
 	}
 
 	public Point2D.Double getPosition(){

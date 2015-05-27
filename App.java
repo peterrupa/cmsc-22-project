@@ -34,8 +34,6 @@ public class App {
 				ongoingGame.start();
 
 				cp.add(ongoingGame);
-
-
 			}
 		});
 	}

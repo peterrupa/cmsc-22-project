@@ -16,7 +16,9 @@ import javax.swing.*;
 public abstract class Powerup extends Food {
   //String type (of powerup)
   public Powerup(Point2D.Double x){
-    super(x, "destinationtoPowerup");
+    super(x);
+
+    // load asset
   }
 
   public abstract void effect(Fish f);

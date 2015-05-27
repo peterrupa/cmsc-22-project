@@ -35,247 +35,252 @@ public class Fish extends Entity {
 
   public Fish (Point2D.Double x){
     // Constructs entity with coordinates and image
-    super(x, "assets/img/fish/fishClose.png");
+    super(x);
 
     // load images if not yet loaded
     if(closed_mouth == null || open_mouth == null || closed_mouth_inverted == null || open_mouth_inverted == null){
       try{
-        closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), 0.0613f);
-        open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")),0.0613f);
-        closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")),0.0613f);
-        open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")),0.0613f);
+        closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), 0.0631f);
+        open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")),0.0631f);
+        closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")),0.0631f);
+        open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")),0.0631f);
       }
       catch(Exception e){}
+    }
+    this.img = closed_mouth;
+    this.age = 0; //age starts at 0
+    this.maturePoint = 50*(age + random.nextInt(21) + 40); // maturity will occur 40-60 seconds later
+    this.maturity = "hatchling";
+    this.coinTimer = 50*(20 + random.nextInt(11)); //first coin will spawn 20-30 seconds later
+    this.lifespan = 50*(random.nextInt(11) + 30); //30-40 seconds before dying
+    this.actionPerforming = "idle";
+    this.speed = SLOW;
+
+    imgWidth = img.getWidth();
+    imgHeight = img.getHeight();
+
+    double newPointX = r.nextInt(App.getScreenWidth() - (int)this.getWidth()) + this.getWidth() / 2;
+    double newPointY = r.nextInt(App.getScreenHeight() - (int)(App.getScreenHeight() * 0.186f) - (int)this.getWidth()) + this.getHeight() / 2;
+
+    this.destination = new Point2D.Double(newPointX, newPointY);
+
+    startThread();
+  }
+
+  public void releaseCoin(){
+    // Released coin to App.onGoingGame
+    int coinValue = 0;
+
+    switch(maturity){
+      case "hatchling":
+      coinValue = 1;
+      break;
+      case "juvenile":
+      coinValue = 3;
+      break;
+      case "adult":
+      coinValue = 5;
+      break;
+    }
+
+    Point2D.Double coinPos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
+    App.getOngoingGame().getCoins().add(new Coin(coinPos, coinValue));
+    coinTimer = age + 20*50 + random.nextInt(11)*50; //next coin will spawn 20-30 seconds later
+    // Pass current location and value (based on maturity level)
+  }
+
+  //Updates the destination point of the fish.
+  public void setDestination(Point2D.Double destination){
+    this.destination = destination;
+  }
+
+  public void eat(Food f){
+    f.die(this);
+    //reset proper image if it was hungry
+  }
+  public void die() {
+    isAlive = false;
+    //cancel all threads
+    //create death animation effect (or smoke puff) at current position
+    //remove from ongoing game fish list
+    App.getOngoingGame().getFish().remove(this);
+  }
+
+  //sets the maturity one level up
+  public void mature(){
+    //cute particle here (smoke effect? or sparks? glitters?)
+    switch(maturity){
+      case "hatchling":
+      maturity = "juvenile";
+      break;
+      case "juvenile":
+      maturity = "adult";
+      break;
+    }
+    System.out.println(this+" is maturing to "+maturity+"!");
+    maturePoint = (age + random.nextInt(21)*50 + 40*50); //fish shall mature 40-60 seconds later
+  }
+
+  public void update() {
+    // Search for nearby foods
+    if(this.age == this.maturePoint ) { //Maturing
+      mature();
+    }
+    if(this.age == this.coinTimer) { //On releasing coins
+      releaseCoin();
+    }
+    if(this.lifespan == 0) { //On lifespan
+      die();
+    }
+    Food nearestFood = findNearestFood();
+    double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
+
+    if(nearestFood != null){
+      // Set destination location to the nearest food
+      this.destination.setLocation(nearestFood.getPosition().getX(), nearestFood.getPosition().getY());
+      this.actionPerforming = "food";
+      this.speed = FAST;
+
+      double fishEatLeftBound = fishX + (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER , fishEatRightBound = fishX - (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER;
+      double fishEatUpBound = fishY - (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER, fishEatDownBound = fishY + (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER;
+
+      double foodX = nearestFood.getPosition().getX(), foodY = nearestFood.getPosition().getY();
+      double foodLeftBound = foodX + (nearestFood.getWidth() / 2) - (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (nearestFood.getWidth() / 2) + (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER;
+      double foodUpBound = foodY - (nearestFood.getHeight() / 2) + (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (nearestFood.getHeight() / 2) - (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER;
+
+      // check if food is within eating range
+
+      if(fishEatLeftBound >= foodRightBound && fishEatRightBound <= foodLeftBound && fishEatDownBound >= foodUpBound && fishEatUpBound <= foodDownBound){
+        // change img to open mouth
+        if(getDirection()>=90 || getDirection()<-90) { //check direction if we need to flip
+          openMouthInverted();
+        } else {
+          openMouth();
+        }
+
       }
-      this.age = 0; //age starts at 0
-      this.maturePoint = 50*(age + random.nextInt(21) + 40); // maturity will occur 40-60 seconds later
-      this.maturity = "hatchling";
-      this.coinTimer = 50*(20 + random.nextInt(11)); //first coin will spawn 20-30 seconds later
-      this.lifespan = 50*(random.nextInt(11) + 30); //30-40 seconds before dying
+      else{
+        if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
+          closedMouthInverted();
+        } else {
+          closeMouth();
+        }
+      }
+    }
+    else if(nearestFood == null && actionPerforming == "food"){
+      // Case when from "food" to "idle"
       this.actionPerforming = "idle";
       this.speed = SLOW;
-      setDestination(new Point2D.Double(r.nextInt(App.getScreenWidth()), 200+r.nextInt(App.getScreenHeight()-200)));
-
-      imgWidth = img.getWidth();
-      imgHeight = img.getHeight();
-
-      startThread();
-    }
-
-    public void releaseCoin(){
-      // Released coin to App.onGoingGame
-      int coinValue = 0;
-
-      switch(maturity){
-        case "hatchling":
-        coinValue = 1;
-        break;
-        case "juvenile":
-        coinValue = 3;
-        break;
-        case "adult":
-        coinValue = 5;
-        break;
-      }
-
-      Point2D.Double coinPos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
-      App.getOngoingGame().getCoins().add(new Coin(coinPos, coinValue));
-      coinTimer = age + 20*50 + random.nextInt(11)*50; //next coin will spawn 20-30 seconds later
-      // Pass current location and value (based on maturity level)
-    }
-
-    //Updates the destination point of the fish.
-    public void setDestination(Point2D.Double destination){
-      this.destination = destination;
-    }
-
-    public void eat(Food f){
-      f.die(this);
-      //reset proper image if it was hungry
-    }
-    public void die() {
-      isAlive = false;
-      //cancel all threads
-      //create death animation effect (or smoke puff) at current position
-      //remove from ongoing game fish list
-      App.getOngoingGame().getFish().remove(this);
-    }
-
-    //sets the maturity one level up
-    public void mature(){
-      //cute particle here (smoke effect? or sparks? glitters?)
-      switch(maturity){
-        case "hatchling":
-        maturity = "juvenile";
-        break;
-        case "juvenile":
-        maturity = "adult";
-        break;
-      }
-      System.out.println(this+" is maturing to "+maturity+"!");
-      maturePoint = (age + random.nextInt(21)*50 + 40*50); //fish shall mature 40-60 seconds later
-    }
-
-    public void update() {
-      // Search for nearby foods
-      if(this.age == this.maturePoint ) { //Maturing
-        mature();
-      }
-      if(this.age == this.coinTimer) { //On releasing coins
-        releaseCoin();
-      }
-      if(this.lifespan == 0) { //On lifespan
-        die();
-      }
-      Food nearestFood = findNearestFood();
-      double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
-
-      if(nearestFood != null){
-        // Set destination location to the nearest food
-        this.destination.setLocation(nearestFood.getPosition().getX(), nearestFood.getPosition().getY());
-        this.actionPerforming = "food";
-        this.speed = FAST;
-
-        double fishEatLeftBound = fishX + (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER , fishEatRightBound = fishX - (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER;
-        double fishEatUpBound = fishY - (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER, fishEatDownBound = fishY + (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER;
-
-        double foodX = nearestFood.getPosition().getX(), foodY = nearestFood.getPosition().getY();
-        double foodLeftBound = foodX + (nearestFood.getWidth() / 2) - (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (nearestFood.getWidth() / 2) + (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER;
-        double foodUpBound = foodY - (nearestFood.getHeight() / 2) + (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (nearestFood.getHeight() / 2) - (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER;
-
-        // check if food is within eating range
-
-        if(fishEatLeftBound >= foodRightBound && fishEatRightBound <= foodLeftBound && fishEatDownBound >= foodUpBound && fishEatUpBound <= foodDownBound){
-          // change img to open mouth
-          if(getDirection()>=90 || getDirection()<-90) { //check direction if we need to flip
-            openMouthInverted();
-          } else {
-            openMouth();
-          }
-
-        }
-        else{
-          if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-            closedMouthInverted();
-          } else {
-            closeMouth();
-          }
-        }
-      }
-      else if(nearestFood == null && actionPerforming == "food"){
-        // Case when from "food" to "idle"
-        this.actionPerforming = "idle";
-        this.speed = SLOW;
-        // change img to close mouth
-        if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-          closedMouthInverted();
-        } else {
-          closeMouth();
-        }
-        setRandomDestination();
+      // change img to close mouth
+      if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
+        closedMouthInverted();
       } else {
-        if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-          closedMouthInverted();
-        } else {
-          closeMouth();
-        }
+        closeMouth();
       }
-      // Updating the direction used for image rendering
-      double x = this.position.getX(), y = this.position.getY();
-      double x2 = this.destination.getX(), y2 = this.destination.getY();
-      double dx = x2 - x, dy = y2 - y;
-      direction = Math.atan2(dy,dx) * 180 / Math.PI;
-
-      // moving the fish
-      // updates position
-      x += this.speed * Math.cos(Math.toRadians(direction));  // x-position
-      y += this.speed * Math.sin(Math.toRadians(direction));  // y-position
-      this.position.setLocation(x, y);
-
-      // check if there's a collision between fish and a food
-      ArrayList<Food> foods = App.getOngoingGame().getFoods();
-
-      for(int i = 0; i < foods.size(); i++){
-        //setting boundatries for fish collision with food
-        Food current = foods.get(i);
-        double fishLeftBound = fishX + (imgWidth / 2), fishRightBound = fishX - (imgWidth / 2);
-        double fishUpBound = fishY - (imgHeight / 2), fishDownBound = fishY + (imgHeight / 2);
-
-        double foodX = current.getPosition().getX(), foodY = current.getPosition().getY();
-        double foodLeftBound = foodX + (current.getWidth() / 2) - (current.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (current.getWidth() / 2) + (current.getWidth() / 2) * FOOD_ZONE_MODIFIER;
-        double foodUpBound = foodY - (current.getHeight() / 2) + (current.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (current.getHeight() / 2) - (current.getHeight() / 2) * FOOD_ZONE_MODIFIER;
-
-        // check if food is within eating range
-        if(fishLeftBound >= foodRightBound && fishRightBound <= foodLeftBound && fishDownBound >= foodUpBound && fishUpBound <= foodDownBound){
-          this.eat(current);
-        }
+      setRandomDestination();
+    } else {
+      if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
+        closedMouthInverted();
+      } else {
+        closeMouth();
       }
+    }
+    // Updating the direction used for image rendering
+    double x = this.position.getX(), y = this.position.getY();
+    double x2 = this.destination.getX(), y2 = this.destination.getY();
+    double dx = x2 - x, dy = y2 - y;
+    direction = Math.atan2(dy,dx) * 180 / Math.PI;
 
-      // check if fish is at the destination point
-      if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
-        setRandomDestination();
+    // moving the fish
+    // updates position
+    x += this.speed * Math.cos(Math.toRadians(direction));  // x-position
+    y += this.speed * Math.sin(Math.toRadians(direction));  // y-position
+    this.position.setLocation(x, y);
+
+    // check if there's a collision between fish and a food
+    ArrayList<Food> foods = App.getOngoingGame().getFoods();
+
+    for(int i = 0; i < foods.size(); i++){
+      //setting boundatries for fish collision with food
+      Food current = foods.get(i);
+      double fishLeftBound = fishX + (imgWidth / 2), fishRightBound = fishX - (imgWidth / 2);
+      double fishUpBound = fishY - (imgHeight / 2), fishDownBound = fishY + (imgHeight / 2);
+
+      double foodX = current.getPosition().getX(), foodY = current.getPosition().getY();
+      double foodLeftBound = foodX + (current.getWidth() / 2) - (current.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (current.getWidth() / 2) + (current.getWidth() / 2) * FOOD_ZONE_MODIFIER;
+      double foodUpBound = foodY - (current.getHeight() / 2) + (current.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (current.getHeight() / 2) - (current.getHeight() / 2) * FOOD_ZONE_MODIFIER;
+
+      // check if food is within eating range
+      if(fishLeftBound >= foodRightBound && fishRightBound <= foodLeftBound && fishDownBound >= foodUpBound && fishUpBound <= foodDownBound){
+        this.eat(current);
       }
-
-      //update fish statistics
-      this.age+=1;
-      this.lifespan-=1;
     }
 
-    //  Functions that change image to render/rotate. Please
-    private void openMouth(){
-      img = open_mouth;
+    // check if fish is at the destination point
+    if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
+      setRandomDestination();
     }
 
-    private void closeMouth(){
-      img = closed_mouth;
-    }
-
-    private void openMouthInverted(){
-      img = open_mouth_inverted;
-    }
-
-    private void closedMouthInverted(){
-      img = closed_mouth_inverted;
-    }
-
-    // Returns the point of the nearest food. If none, returns null.
-    private Food findNearestFood(){
-      if(App.getOngoingGame() == null){
-        System.out.println("FUCK MY LIFE");
-      }
-      ArrayList<Food> foods = App.getOngoingGame().getFoods();
-      Food nearestPoint = null;
-      double x1 = this.position.getX(), y1 = this.position.getY();
-      if(foods.size() > 0) {
-        for(int i = 0; i < foods.size(); i++){
-          Food current = foods.get(i);
-
-          if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
-          nearestPoint = current;
-        }
-      }
-      return nearestPoint;
-    }
-
-    // Computes for the distance between the two given points.
-    private double getDistance(Point2D.Double p, Point2D.Double q){
-      double x1 = p.getX(), y1 = p.getY(), x2 = q.getX(), y2 = q.getY();
-      return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-    }
-
-    // Sets the fish destination to a new random point.
-    private void setRandomDestination(){
-      double newPointX = r.nextInt(App.getScreenWidth());
-      double newPointY = r.nextInt(App.getScreenHeight());
-
-      this.destination.setLocation(newPointX, newPointY);
-    }
-
-    public void renew() {
-      this.lifespan = 50*(random.nextInt(11)+30);
-    }
-
-    public int getLifespan(){
-      return lifespan/50;
-    }
+    //update fish statistics
+    this.age+=1;
+    this.lifespan-=1;
   }
+
+  //  Functions that change image to render/rotate. Please
+  private void openMouth(){
+    img = open_mouth;
+  }
+
+  private void closeMouth(){
+    img = closed_mouth;
+  }
+
+  private void openMouthInverted(){
+    img = open_mouth_inverted;
+  }
+
+  private void closedMouthInverted(){
+    img = closed_mouth_inverted;
+  }
+
+  // Returns the point of the nearest food. If none, returns null.
+  private Food findNearestFood(){
+    if(App.getOngoingGame() == null){
+      System.out.println("FUCK MY LIFE");
+    }
+    ArrayList<Food> foods = App.getOngoingGame().getFoods();
+    Food nearestPoint = null;
+    double x1 = this.position.getX(), y1 = this.position.getY();
+    if(foods.size() > 0) {
+      for(int i = 0; i < foods.size(); i++){
+        Food current = foods.get(i);
+
+        if(nearestPoint == null || this.getDistance(this.getPosition(), current.getPosition()) < this.getDistance(this.getPosition(), nearestPoint.getPosition()))
+        nearestPoint = current;
+      }
+    }
+    return nearestPoint;
+  }
+
+  // Computes for the distance between the two given points.
+  private double getDistance(Point2D.Double p, Point2D.Double q){
+    double x1 = p.getX(), y1 = p.getY(), x2 = q.getX(), y2 = q.getY();
+    return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+  }
+
+  // Sets the fish destination to a new random point.
+  private void setRandomDestination(){
+    double newPointX = r.nextInt(App.getScreenWidth() - (int)this.getWidth()) + this.getWidth() / 2;
+    double newPointY = r.nextInt(App.getScreenHeight() - (int)(App.getScreenHeight() * 0.186f) - (int)this.getWidth()) + this.getHeight() / 2;
+
+    this.destination.setLocation(newPointX, newPointY);
+  }
+
+  public void renew() {
+    this.lifespan = 50*(random.nextInt(11)+30);
+  }
+
+  public int getLifespan(){
+    return lifespan/50;
+  }
+}
