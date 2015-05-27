@@ -129,9 +129,10 @@ public class Fish extends Entity {
     if(this.age == this.coinTimer) { //On releasing coins
       releaseCoin();
     }
-    if(this.lifespan == 0) { //On lifespan
+    if(this.lifespan < 0){
       die();
     }
+
     Food nearestFood = findNearestFood();
     double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
 

@@ -38,31 +38,31 @@ public class Coin extends Entity {
 		}
 		catch(Exception e){}
 
-			imgWidth = img.getWidth();
-			imgHeight = img.getHeight();
-			startThread();
-		}
+		imgWidth = img.getWidth();
+		imgHeight = img.getHeight();
+		startThread();
+	}
 
-		public void die(){
-			//remove from view
-			//remove from current game coin list
-			isAlive = false;
-			App.getOngoingGame().getCoins().remove(this);
-			App.getOngoingGame().addMoney(value);
-		}
+	public void die(){
+		//remove from view
+		//remove from current game coin list
+		isAlive = false;
+		App.getOngoingGame().getCoins().remove(this);
+		App.getOngoingGame().addMoney(value);
+	}
 
-		public void update(){
-			double x = this.position.getX(), y = this.position.getY();
-			if(this.position.getY() >= App.getScreenHeight() - (App.getScreenHeight() * 0.186f)) {
-				try {
-					Thread.sleep(3000);
-				}
-				catch(InterruptedException ex) {}
-					die();
+	public void update(){
+		double x = this.position.getX(), y = this.position.getY();
+		if(this.position.getY() >= App.getScreenHeight() - (App.getScreenHeight() * 0.186f)) {
+			try {
+				Thread.sleep(3000);
 			}
-			else {
-				y += this.speed;  // y-position
-			}
-			this.position.setLocation(x, y);
+			catch(InterruptedException ex) {}
+				die();
 		}
+		else {
+			y += this.speed;  // y-position
+		}
+		this.position.setLocation(x, y);
+	}
 }
