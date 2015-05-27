@@ -89,7 +89,7 @@ public class Game extends JPanel{
 							}
 						} else {
 							if(foodNumber > 0) {
-								foods.add(new Food(pointClicked));
+								foods.add(new PowerupInstaMature(pointClicked));
 								foodNumber-=1;
 							}
 						}

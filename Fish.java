@@ -111,6 +111,8 @@ public class Fish extends Entity {
         case "juvenile":
         maturity = "adult";
         break;
+        case "adult":
+            System.out.println("adult already");
       }
       System.out.println(this+" is maturing to "+maturity+"!");
       maturePoint = (age + random.nextInt(21)*50 + 40*50); //fish shall mature 40-60 seconds later
