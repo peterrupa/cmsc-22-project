@@ -36,7 +36,15 @@ public class Fish extends Entity {
   public Fish (Point2D.Double x){
     // Constructs entity with coordinates and image
     super(x);
+    this.initialize();
+  }
 
+  public Fish (){
+    super();
+    this.initialize();
+  }
+
+  public void initialize(){
     // load images if not yet loaded
     if(closed_mouth == null || open_mouth == null || closed_mouth_inverted == null || open_mouth_inverted == null){
       try{
@@ -213,6 +221,7 @@ public class Fish extends Entity {
 
       // check if food is within eating range
       if(fishLeftBound >= foodRightBound && fishRightBound <= foodLeftBound && fishDownBound >= foodUpBound && fishUpBound <= foodDownBound){
+        Utilities.playSFX("assets/sounds/sfx/bite_"+this.maturity+".wav");
         this.eat(current);
       }
     }
@@ -246,9 +255,6 @@ public class Fish extends Entity {
 
   // Returns the point of the nearest food. If none, returns null.
   private Food findNearestFood(){
-    if(App.getOngoingGame() == null){
-      System.out.println("FUCK MY LIFE");
-    }
     ArrayList<Food> foods = App.getOngoingGame().getFoods();
     Food nearestPoint = null;
     double x1 = this.position.getX(), y1 = this.position.getY();

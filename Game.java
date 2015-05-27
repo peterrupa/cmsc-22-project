@@ -66,19 +66,13 @@ public class Game extends JPanel{
 				boolean clickedCoin = false; //flagger for click priority
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
-				if(pointClicked.getX()<100) { //just sets location for the pause. FIX!
-					gamePause();
-					clickedCoin = true;
-				}
-				else {
-					clickedCoin = false;
-				}
 				if(isPlaying) { //clicks will only register if game is not paused
 					for(Coin x : coins) {
 						// checks each coin in the coin array for first instance where the click is within bounds
 						if(x.isWithinRange(pointClicked)) {
 							x.die(); // Auto increments money variable of player
 							clickedCoin = true;
+							Utilities.playSFX("assets/sounds/sfx/coin_click.wav");
 							System.out.println("You have " + money + " coins");
 							break;
 						} else {
@@ -86,20 +80,12 @@ public class Game extends JPanel{
 						}
 					}
 					if(!clickedCoin) {
-						if(e.getY()>200){
-							if(money >= 20) {
-								fish.add(new Fish(pointClicked)); //add fish below a certain point
-								money-=20;
-							}
-						} else {
-							if(foodNumber > 0) {
-								foods.add(new PowerupInstaMature(pointClicked));
-								foodNumber-=1;
-							}
+						if(foodNumber > 0) {
+							foods.add(new PowerupInstaMature(pointClicked));
+							foodNumber-=1;
 						}
 					}
 				}
-
 			}
 			@Override
 			public void mouseClicked(MouseEvent e){}
@@ -110,6 +96,28 @@ public class Game extends JPanel{
 			@Override
 			public void mousePressed(MouseEvent e){}
 		});
+
+		// TEMPORARY, PARA LANG MAKAPAGLAGAY TAYO NG FOOD
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("A"), "newFish");
+		this.getActionMap().put("newFish", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(money >= 20) {
+					fish.add(new Fish());
+					money-=20;
+				}
+			}
+		});
+
+		// TEMPORARY, PARA LANG MAKAPAGLAGAY TAYO NG FOOD
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("S"), "pause");
+		this.getActionMap().put("pause", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				gamePause();
+			}
+		});
+
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
@@ -126,8 +134,8 @@ public class Game extends JPanel{
 					}
 				}
 			}
-	    };
-	    updateThread.start();  // start the thread to run updates
+    };
+    updateThread.start();  // start the thread to run updates
 
 		//start bgm
 		try{
@@ -198,7 +206,7 @@ public class Game extends JPanel{
 
 			// check if fish is dying, apply red tint
 			if(current.getLifespan() <= 8){
-				g2d.drawImage(createRedVersion(image, redTintModifier(current.getLifespan())), transform, null);
+				g2d.drawImage(createGreenVersion(image, redTintModifier(current.getLifespan())), transform, null);
 			}
 		}
 
@@ -220,18 +228,18 @@ public class Game extends JPanel{
 		}
 	}
 
-	private BufferedImage createRedVersion(BufferedImage image, float f){
+	private BufferedImage createGreenVersion(BufferedImage image, float f){
 		// create red image
-		BufferedImage redVersion = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d2 = (Graphics2D) redVersion.getGraphics();
-		g2d2.setColor(Color.RED);
+		BufferedImage greenVersion = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d2 = (Graphics2D) greenVersion.getGraphics();
+		g2d2.setColor(new Color(0, 65, 11));
 		g2d2.fillRect(0, 0, image.getWidth(), image.getHeight());
 
 		// paint original with composite
 		g2d2.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN, f));
 		g2d2.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), null);
 
-		return redVersion;
+		return greenVersion;
 	}
 
 	private float redTintModifier(int x){

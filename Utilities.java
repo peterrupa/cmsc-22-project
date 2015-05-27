@@ -1,5 +1,8 @@
 import java.awt.*;
 import java.awt.image.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class Utilities {
   public static BufferedImage flexImageSquare(BufferedImage image, float f) {
@@ -28,5 +31,15 @@ public class Utilities {
     g2d.drawImage(image, 0, 0, finalWidth, finalHeight, null);
 
     return resized;
+  }
+
+  public static void playSFX(String fileName){
+    try{
+      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Utilities.class.getResource(fileName));
+      Clip clip = AudioSystem.getClip();
+      clip.open(audioInputStream);
+      clip.start();
+    }
+    catch(Exception e){}
   }
 }

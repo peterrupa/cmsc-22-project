@@ -24,8 +24,13 @@ public abstract class Entity {
 
 	public Entity(Point2D.Double x){
 		// Instantiate with current location and image
-		// this.image = y;
 		this.position = x;
+		this.isAlive = true;
+	}
+
+	public Entity(){
+		// Instantiate with current location and image
+		this.position = new Point2D.Double(r.nextInt(App.getScreenWidth()), r.nextInt(App.getScreenHeight()));
 		this.isAlive = true;
 	}
 
