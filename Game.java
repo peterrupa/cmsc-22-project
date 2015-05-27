@@ -111,7 +111,7 @@ public class Game extends JPanel{
 		});
 
 		// TEMPORARY, PARA LANG MAKAPAGLAGAY TAYO NG FOOD
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("S"), "pause");
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "pause");
 		this.getActionMap().put("pause", new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent e){
