@@ -50,7 +50,7 @@ public class Game extends JPanel{
 		try {
 			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
 			System.out.println("Loaded Aquaruim1 successfully");
-			bgImg2 = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/Aquarium102.png")), 1f, 1f);
+			bgImg2 = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/Aquarium101010.png")), 1f, 1f);
 			System.out.println("Loaded Aquaruim2 successfully");
 			System.out.println("Loaded Aquaruim successfully");
 		}
