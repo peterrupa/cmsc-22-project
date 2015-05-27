@@ -81,8 +81,9 @@ public class Game extends JPanel{
 					}
 					if(!clickedCoin) {
 						if(foodNumber > 0) {
-							foods.add(new PowerupInstaMature(pointClicked));
+							foods.add(new PowerupDoubleCoins(pointClicked));
 							foodNumber-=1;
+							System.out.println(foodNumber);
 						}
 					}
 				}

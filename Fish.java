@@ -23,6 +23,12 @@ public class Fish extends Entity {
   private int lifespan; //how many seconds before fish dies
   //Action performing is used for identifying whatever the fish is currently doing.
   private String actionPerforming;
+  private int hungerNulledTimer;
+  	//attribute to show hunger is nullified for the powerup
+  private int coinModifyTimer;
+  	//timer for duration of double coin power up
+  private int coinValueModifier;
+  	//attribute to increase coin value when powerup is used
 
   //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
   protected Point2D.Double destination;
@@ -63,14 +69,20 @@ public class Fish extends Entity {
     this.lifespan = 50*(random.nextInt(11) + 30); //30-40 seconds before dying
     this.actionPerforming = "idle";
     this.speed = SLOW;
+    this.hungerNulledTimer = 0;
+      //timer for nullified hunger set to 0 seconds at start
+    this.coinModifyTimer = 0;
+      //timer for double coin powerup
+    this.coinValueModifier = 1;
+      //multiplier for double coin powerup
 
     imgWidth = img.getWidth();
     imgHeight = img.getHeight();
 
     double newPointX = r.nextInt(App.getScreenWidth() - (int)this.getWidth()) + this.getWidth() / 2;
     double newPointY = r.nextInt(App.getScreenHeight() - (int)(App.getScreenHeight() * 0.186f) - (int)this.getWidth()) + this.getHeight() / 2;
-
-    this.destination = new Point2D.Double(newPointX, newPointY);
+    //this.destination = ;
+    setDestination(new Point2D.Double(newPointX, newPointY));
 
     startThread();
   }
@@ -92,7 +104,7 @@ public class Fish extends Entity {
     }
 
     Point2D.Double coinPos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
-    App.getOngoingGame().getCoins().add(new Coin(coinPos, coinValue));
+    App.getOngoingGame().getCoins().add(new Coin(coinPos, coinValue*coinValueModifier));
     coinTimer = age + 20*50 + random.nextInt(11)*50; //next coin will spawn 20-30 seconds later
     // Pass current location and value (based on maturity level)
   }
@@ -233,7 +245,30 @@ public class Fish extends Entity {
 
     //update fish statistics
     this.age+=1;
-    this.lifespan-=1;
+    if(!(hungerNulledTimer > 0)) { //for abstraction
+      this.lifespan-=1;
+    }
+    coinValueModifier = 1;
+    if(coinModifyTimer > 0) {
+      coinValueModifier = 2;
+    }
+
+    if(hungerNulledTimer > 0) {
+      hungerNulledTimer-=1;
+    }
+    if(coinModifyTimer > 0) {
+      coinModifyTimer-=1;
+    }
+    //System.out.println("Lifespan: " + lifespan + "; Timer: " +hungerNulledTimer);
+    System.out.println("Modifier: " + coinValueModifier + "; Timer: " + coinModifyTimer);
+  }
+
+  public void nullHunger() {
+    this.hungerNulledTimer = 50*(30);
+  }
+
+  public void doubledCoins() {
+    this.coinModifyTimer = 50*(30);
   }
 
   //  Functions that change image to render/rotate. Please
