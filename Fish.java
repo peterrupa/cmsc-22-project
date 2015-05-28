@@ -138,7 +138,7 @@ public class Fish extends Entity {
                 maturity = "adult";
                 break;
             }
-            System.out.println(this+" is maturing to "+maturity+"!");
+            // System.out.println(this+" is maturing to "+maturity+"!");
             maturePoint = (age + random.nextInt(21)*50 + 40*50); //fish shall mature 40-60 seconds later
         }
 
@@ -245,19 +245,16 @@ public class Fish extends Entity {
 
             //update fish statistics
             this.age+=1;
-            if(!(hungerNulledTimer > 0)) { //for abstraction
+            if(hungerNulledTimer <= 0) { //for abstraction
                 this.lifespan-=1;
             } else {
                 hungerNulledTimer-=1;
             }
-            
-            coinValueModifier = 1;
             if(coinModifyTimer > 0) {
                 coinValueModifier = 2;
-            }
-
-            if(coinModifyTimer > 0) {
                 coinModifyTimer-=1;
+            } else {
+                coinValueModifier = 1;
             }
         }
 

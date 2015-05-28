@@ -23,7 +23,7 @@ public class Player implements Serializable {
     private int powerupHasteBought;
     private int powerupHasteUsed;
 
-    private int gameTime; //possible if tank empties before 5 minutes is over.
+    private int gameTime; //possible if tank empties before 5 minutes is over. Does not count pauses.
 
     public Player(String name, int score, int totalFishBought, int fishAlive, int fishDied, int coinsSpent, int foodBought, int foodUsed, int powerupInstaMatureBought,
     int powerupInstaMatureUsed, int powerupDoubleCoinsBought, int powerupDoubleCoinsUsed, int powerupNullHungerBought, int powerupNullHungerUsed, int powerupHasteBought,
@@ -49,8 +49,17 @@ public class Player implements Serializable {
 
     }
 
-    public int score() {
+    public Player (String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    public int getScore() {
         return this.score;
+    }
+
+    public String toString() {
+        return "Name: " + this.name + " Score: " + this.score + "\n";
     }
 
 }

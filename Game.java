@@ -17,6 +17,24 @@ import java.util.*;
 public class Game extends JPanel{
 	private final long SCARY_TIMESTAMP = 214 * 1000000;
 
+    private int totalFishBought;
+    private int fishDied;
+
+    private int coinsSpent;
+    private int foodBought;
+    private int foodUsed;
+
+    private int powerupInstaMatureBought;
+    private int powerupInstaMatureUsed;
+    private int powerupDoubleCoinsBought;
+    private int powerupDoubleCoinsUsed;
+    private int powerupNullHungerBought;
+    private int powerupNullHungerUsed;
+    private int powerupHasteBought;
+    private int powerupHasteUsed;
+
+    private int gameTime; //possible if tank empties before 5 minutes is over. Does not count pauses.
+
 	private String playerName;
 	private int foodNumber;
 	private int money;
@@ -42,20 +60,23 @@ public class Game extends JPanel{
 	private BufferedImage instructionsBackground = null; //Instructions image
 
 	private String panelMode; //Game, MainMenu, Shop,
+	public static GameHistory gameHistory;
 
 
 	public Game(String name) {
 
+		gameHistory = readGameHistory(); //Load game history
+
 		mouseState = "Food";
 		this.playerName = name;
-		this.money = 1000;
-		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
-		this.foodNumber = 1000;
-		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
 		this.timer = 300;
 		isPlaying = true; //start the game paused
 		gameOver = false;
 		this.panelMode = "mainMenu";
+		this.money = 1000;
+		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
+		this.foodNumber = 1000;
+		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
 
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
@@ -84,7 +105,7 @@ public class Game extends JPanel{
 							x.die(); // Auto increments money variable of player
 							clickedCoin = true;
 							Utilities.playSFX("assets/sounds/sfx/coin_click.wav");
-							System.out.println("You have " + money + " coins");
+							// System.out.println("You have " + money + " coins");
 							break;
 						} else {
 							clickedCoin = false;
@@ -196,9 +217,10 @@ public class Game extends JPanel{
 						} catch (InterruptedException ex) { }
 					}
 				}
+				saveGame();
 			}
-    };
-    updateThread.start();  // start the thread to run updates
+	    };
+	    updateThread.start();  // start the thread to run updates
 
 		//start bgm
 		try{
@@ -213,11 +235,14 @@ public class Game extends JPanel{
 		Thread timerThread = new Thread () { //thread for timer for game triggers and events (bgm triggers, etc)
 			@Override
 			public void run() {
-				while (true) {
+				while (!gameOver) {
 					try {
 						Thread.sleep(1000); // delay and yield to other threads
 					} catch (InterruptedException ex) { }
 					timer--;
+					System.out.println(timer);
+					if(timer==0)
+						gameOver = true;  //END GAME AFTER 5 MINS
 					while(!isPlaying) {
 						try {
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
@@ -229,6 +254,49 @@ public class Game extends JPanel{
 		timerThread.start();  // start the thread to run updates
 	}
 
+	public void endGame() {
+		// Stops the Running game by flagging gameOver variable
+		// End game when tank is empty or if timer runs out.
+		gameOver = true;
+	}
+
+	public void saveGame() {
+
+		gameHistory.addPlayer(new Player("Matthew Marcos69" , this.money));
+
+		try{
+			FileOutputStream fos = new FileOutputStream("gameHistory.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(gameHistory);
+			oos.close();
+			System.out.println("Game saved successfully!");
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException Line 261 Game.java");
+		} catch (IOException e) {
+			System.out.println("IOException Line 263 Game.java");
+		}
+
+		return;
+	}
+
+	private GameHistory readGameHistory() {
+		// Read game history.ser. else return new instance
+		try{
+			FileInputStream fis = new FileInputStream("gameHistory.ser");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			GameHistory temp = (GameHistory)ois.readObject();
+			ois.close();
+			temp.printPlayers();
+			return temp;
+		}catch (FileNotFoundException e) {
+			System.out.println("Game History not found. A new one will be created when you exit");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return new GameHistory();
+	}
 	public void gamePause() {
 		if(isPlaying){
 			clipTime = clip.getMicrosecondPosition();
