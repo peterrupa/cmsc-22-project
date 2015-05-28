@@ -36,6 +36,10 @@ public class Game extends JPanel{
 	private Random r = new Random();
 	private BufferedImage bgImg = null; //background image
 	private BufferedImage bgImgScary = null; //background image
+	private BufferedImage mainMenuBackground = null; //Main Menu image
+	private BufferedImage highScoresBackground = null; //Highscores image
+	private BufferedImage creditsBackground = null; //Credits image
+	private BufferedImage instructionsBackground = null; //Instructions image
 
 	private String panelMode; //Game, MainMenu, Shop,
 
@@ -49,8 +53,9 @@ public class Game extends JPanel{
 		this.foodNumber = 1000;
 		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
 		this.timer = 300;
-		isPlaying = true; //run the game
+		isPlaying = true; //start the game paused
 		gameOver = false;
+		this.panelMode = "mainMenu";
 
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
@@ -71,7 +76,8 @@ public class Game extends JPanel{
 				boolean clickedCoin = false; //flagger for click priority
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
-				if(isPlaying) { //clicks will only register if game is not paused
+				// Panel Mode checker
+				if(isPlaying) { //clicks will only register if game is not paused and if is in game panel
 					for(Coin x : coins) {
 						// checks each coin in the coin array for first instance where the click is within bounds
 						if(x.isWithinRange(pointClicked)) {
@@ -250,7 +256,7 @@ public class Game extends JPanel{
 
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
-    	g2d.drawImage(image, transform, null);
+			g2d.drawImage(image, transform, null);
 		}
 		//paint fish
 		for(int i = 0; i < fish.size(); i++){
@@ -273,7 +279,7 @@ public class Game extends JPanel{
 			BufferedImage image = current.getImg();
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
-	    	g2d.drawImage(image, transform, null);
+			g2d.drawImage(image, transform, null);
 		}
 
 		g2d.dispose();
@@ -334,4 +340,8 @@ public class Game extends JPanel{
 	public ArrayList<Food> getFood() {
 		return this.foods;
 	}
+
+	// public Point2D.Double setPoint(double x, double y) {
+	// 	return new Point(100*x*App.getScreenWidth() , 100*y*App.getScreenHeight());
+	// }
 }
