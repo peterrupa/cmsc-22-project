@@ -10,10 +10,15 @@ import javax.swing.*;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class Fish extends Entity {
-  private final int SLOW = 3;
-  private final int FAST = 7;
+  private final int SLOW = 3; //3
+  private final int FAST = 7; //7
   private final double FOOD_ZONE_MODIFIER = 0.7;
   private final double FISH_EAT_ZONE_MODIFIER = 3;
+
+  private final float HATCHLING_SIZE = 0.0431f;
+  private final float JUVENILE_SIZE = 0.0631f;
+  private final float ADULT_SIZE = 0.0831f;
+
 
   private int age;
   private int maturePoint; //age when fish shall mature;
@@ -32,10 +37,27 @@ public class Fish extends Entity {
 
   //Destination is the point where the fish intends to go. At idle state, a fish will go to a randomly generated point. If food is present, the fish will go to the nearest food.
   protected Point2D.Double destination;
-  private static BufferedImage closed_mouth = null;
-  private static BufferedImage open_mouth = null;
-  private static BufferedImage closed_mouth_inverted = null;
-  private static BufferedImage open_mouth_inverted = null;
+
+  private BufferedImage open_mouth = null;
+  private BufferedImage open_mouth_inverted = null;
+  private BufferedImage closed_mouth = null;
+  private BufferedImage closed_mouth_inverted = null;
+
+  private static BufferedImage hatchling_closed_mouth = null;
+  private static BufferedImage hatchling_open_mouth = null;
+  private static BufferedImage hatchling_closed_mouth_inverted = null;
+  private static BufferedImage hatchling_open_mouth_inverted = null;
+
+  private static BufferedImage juvenile_closed_mouth = null;
+  private static BufferedImage juvenile_open_mouth = null;
+  private static BufferedImage juvenile_closed_mouth_inverted = null;
+  private static BufferedImage juvenile_open_mouth_inverted = null;
+
+  private static BufferedImage adult_closed_mouth = null;
+  private static BufferedImage adult_open_mouth = null;
+  private static BufferedImage adult_closed_mouth_inverted = null;
+  private static BufferedImage adult_open_mouth_inverted = null;
+
 
   final Random random = new Random();
 
@@ -52,21 +74,41 @@ public class Fish extends Entity {
 
   public void initialize(){
     // load images if not yet loaded
-    if(closed_mouth == null || open_mouth == null || closed_mouth_inverted == null || open_mouth_inverted == null){
+    if(hatchling_closed_mouth == null || hatchling_open_mouth == null || hatchling_closed_mouth_inverted == null || hatchling_open_mouth_inverted == null){
       try{
-        closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), 0.0631f);
-        open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")),0.0631f);
-        closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")),0.0631f);
-        open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")),0.0631f);
+        //hatchling
+        hatchling_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), HATCHLING_SIZE);
+        hatchling_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")), HATCHLING_SIZE);
+        hatchling_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")), HATCHLING_SIZE);
+        hatchling_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")), HATCHLING_SIZE);
+
+        //juvenile
+        juvenile_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), JUVENILE_SIZE);
+        juvenile_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")), JUVENILE_SIZE);
+        juvenile_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")), JUVENILE_SIZE);
+        juvenile_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")), JUVENILE_SIZE);
+
+        //adult
+        adult_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), ADULT_SIZE);
+        adult_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")), ADULT_SIZE);
+        adult_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")), ADULT_SIZE);
+        adult_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")), ADULT_SIZE);
       }
       catch(Exception e){}
     }
-    this.img = closed_mouth;
+
+    this.img = hatchling_closed_mouth;
+    this.imgWidth = img.getWidth();
+    this.imgHeight = img.getHeight();
+
+    //set fish assets to hatchling assets
+    setAsset("hatchling");
+
     this.age = 0; //age starts at 0
-    this.maturePoint = 50*(age + random.nextInt(21) + 40); // maturity will occur 40-60 seconds later
+    this.maturePoint = App.FRAME_RATE*(age + random.nextInt(21) + 40); // maturity will occur 40-60 seconds later
     this.maturity = "hatchling";
-    this.coinTimer = 50*(20 + random.nextInt(11)); //first coin will spawn 20-30 seconds later
-    this.lifespan = 50*(random.nextInt(11) + 30); //30-40 seconds before dying
+    this.coinTimer = App.FRAME_RATE*(20 + random.nextInt(11)); //first coin will spawn 20-30 seconds later
+    this.lifespan = App.FRAME_RATE*(random.nextInt(11) + 30); //30-40 seconds before dying
     this.actionPerforming = "idle";
     this.speed = SLOW;
     this.hungerNulledTimer = 0;
@@ -75,9 +117,6 @@ public class Fish extends Entity {
       //timer for double coin powerup
     this.coinValueModifier = 1;
       //multiplier for double coin powerup
-
-    imgWidth = img.getWidth();
-    imgHeight = img.getHeight();
 
     double newPointX = r.nextInt(App.getScreenWidth() - (int)this.getWidth()) + this.getWidth() / 2;
     double newPointY = r.nextInt(App.getScreenHeight() - (int)(App.getScreenHeight() * 0.186f) - (int)this.getWidth()) + this.getHeight() / 2;
@@ -105,7 +144,7 @@ public class Fish extends Entity {
 
     Point2D.Double coinPos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
     App.getOngoingGame().getCoins().add(new Coin(coinPos, coinValue*coinValueModifier));
-    coinTimer = age + 20*50 + random.nextInt(11)*50; //next coin will spawn 20-30 seconds later
+    coinTimer = age + 20*App.FRAME_RATE + random.nextInt(11)*App.FRAME_RATE; //next coin will spawn 20-30 seconds later
     // Pass current location and value (based on maturity level)
   }
 
@@ -131,14 +170,42 @@ public class Fish extends Entity {
     //cute particle here (smoke effect? or sparks? glitters?)
     switch(maturity){
       case "hatchling":
-      maturity = "juvenile";
-      break;
+        maturity = "juvenile";
+        setAsset("juvenile");
+        break;
       case "juvenile":
-      maturity = "adult";
-      break;
+        maturity = "adult";
+        setAsset("adult");
+        break;
     }
     System.out.println(this+" is maturing to "+maturity+"!");
-    maturePoint = (age + random.nextInt(21)*50 + 40*50); //fish shall mature 40-60 seconds later
+    maturePoint = (age + random.nextInt(21)*App.FRAME_RATE + 40*App.FRAME_RATE); //fish shall mature 40-60 seconds later
+  }
+
+  private void setAsset(String s){
+    switch(s){
+      case "hatchling":
+        open_mouth = hatchling_open_mouth;
+        open_mouth_inverted = hatchling_open_mouth_inverted;
+        closed_mouth = hatchling_closed_mouth;
+        closed_mouth_inverted = hatchling_closed_mouth_inverted;
+        break;
+      case "juvenile":
+        open_mouth = juvenile_open_mouth;
+        open_mouth_inverted = juvenile_open_mouth_inverted;
+        closed_mouth = juvenile_closed_mouth;
+        closed_mouth_inverted = juvenile_closed_mouth_inverted;
+        break;
+      case "adult":
+        open_mouth = adult_open_mouth;
+        open_mouth_inverted = adult_open_mouth_inverted;
+        closed_mouth = adult_closed_mouth;
+        closed_mouth_inverted = adult_closed_mouth_inverted;
+        break;
+    }
+    img = closed_mouth;
+    this.imgWidth = img.getWidth();
+    this.imgHeight = img.getHeight();
   }
 
   public void update() {
@@ -262,11 +329,11 @@ public class Fish extends Entity {
   }
 
   public void nullHunger() {
-    this.hungerNulledTimer = 50*(30);
+    this.hungerNulledTimer = App.FRAME_RATE*(30);
   }
 
   public void doubledCoins() {
-    this.coinModifyTimer = 50*(30);
+    this.coinModifyTimer = App.FRAME_RATE*(30);
   }
 
   //  Functions that change image to render/rotate. Please
@@ -317,10 +384,10 @@ public class Fish extends Entity {
   }
 
   public void renew() {
-    this.lifespan = 50*(random.nextInt(11)+30);
+    this.lifespan = App.FRAME_RATE*(random.nextInt(11)+30);
   }
 
   public int getLifespan(){
-    return lifespan/50;
+    return lifespan/App.FRAME_RATE;
   }
 }

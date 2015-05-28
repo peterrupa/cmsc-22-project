@@ -42,7 +42,7 @@ public class Game extends JPanel{
 
 		mouseState = "Food";
 		this.playerName = name;
-		this.money = 1000;
+		this.money = 100000;
 		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
 		this.foodNumber = 1000;
 		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
@@ -50,6 +50,8 @@ public class Game extends JPanel{
 		isPlaying = true; //run the game
 		gameOver = false;
 
+		//set panel settings
+		setLayout(null);
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
 		// Background Image
@@ -179,7 +181,7 @@ public class Game extends JPanel{
 				while (!gameOver) { //While not yet game over
 					repaint();
 					try {
-						Thread.sleep(1000 / App.FRAME_RATE); // delay and yield to other threads
+						Thread.sleep(1000 / App.FRAME_RATE);
 					} catch (InterruptedException ex) { }
 					// loop thread sleep until game if the game is paused
 					while(!isPlaying) { // if paused, sleep indefinitely
@@ -207,7 +209,7 @@ public class Game extends JPanel{
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(1000); // delay and yield to other threads
+						Thread.sleep(1000);
 					} catch (InterruptedException ex) { }
 					timer--;
 					while(!isPlaying) {
