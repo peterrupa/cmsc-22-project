@@ -209,123 +209,119 @@ public class Fish extends Entity {
   }
 
   public void update() {
-    // Search for nearby foods
-    if(this.age == this.maturePoint ) { //Maturing
-      mature();
-    }
-    if(this.age == this.coinTimer) { //On releasing coins
-      releaseCoin();
-    }
-    if(this.lifespan < 0){
-      die();
-    }
-
-    Food nearestFood = findNearestFood();
-    double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
-
-    if(nearestFood != null){
-      // Set destination location to the nearest food
-      this.destination.setLocation(nearestFood.getPosition().getX(), nearestFood.getPosition().getY());
-      this.actionPerforming = "food";
-      this.speed = FAST;
-
-      double fishEatLeftBound = fishX + (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER , fishEatRightBound = fishX - (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER;
-      double fishEatUpBound = fishY - (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER, fishEatDownBound = fishY + (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER;
-
-      double foodX = nearestFood.getPosition().getX(), foodY = nearestFood.getPosition().getY();
-      double foodLeftBound = foodX + (nearestFood.getWidth() / 2) - (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (nearestFood.getWidth() / 2) + (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER;
-      double foodUpBound = foodY - (nearestFood.getHeight() / 2) + (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (nearestFood.getHeight() / 2) - (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER;
-
-      // check if food is within eating range
-
-      if(fishEatLeftBound >= foodRightBound && fishEatRightBound <= foodLeftBound && fishEatDownBound >= foodUpBound && fishEatUpBound <= foodDownBound){
-        // change img to open mouth
-        if(getDirection()>=90 || getDirection()<-90) { //check direction if we need to flip
-          openMouthInverted();
-        } else {
-          openMouth();
-        }
-
+      // Search for nearby foods
+      if(this.age == this.maturePoint ) { //Maturing
+          mature();
       }
-      else{
-        if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-          closedMouthInverted();
-        } else {
-          closeMouth();
-        }
+      if(this.age == this.coinTimer) { //On releasing coins
+          releaseCoin();
       }
-    }
-    else if(nearestFood == null && actionPerforming == "food"){
-      // Case when from "food" to "idle"
-      this.actionPerforming = "idle";
-      this.speed = SLOW;
-      // change img to close mouth
-      if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-        closedMouthInverted();
+      if(this.lifespan < 0){
+          die();
+      }
+
+      Food nearestFood = findNearestFood();
+      double fishX = this.getPosition().getX(), fishY = this.getPosition().getY();
+
+      if(nearestFood != null){
+          // Set destination location to the nearest food
+          this.destination.setLocation(nearestFood.getPosition().getX(), nearestFood.getPosition().getY());
+          this.actionPerforming = "food";
+          this.speed = FAST;
+
+          double fishEatLeftBound = fishX + (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER , fishEatRightBound = fishX - (imgWidth / 2) * FISH_EAT_ZONE_MODIFIER;
+          double fishEatUpBound = fishY - (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER, fishEatDownBound = fishY + (imgHeight / 2) * FISH_EAT_ZONE_MODIFIER;
+
+          double foodX = nearestFood.getPosition().getX(), foodY = nearestFood.getPosition().getY();
+          double foodLeftBound = foodX + (nearestFood.getWidth() / 2) - (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (nearestFood.getWidth() / 2) + (nearestFood.getWidth() / 2) * FOOD_ZONE_MODIFIER;
+          double foodUpBound = foodY - (nearestFood.getHeight() / 2) + (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (nearestFood.getHeight() / 2) - (nearestFood.getHeight() / 2) * FOOD_ZONE_MODIFIER;
+
+          // check if food is within eating range
+
+          if(fishEatLeftBound >= foodRightBound && fishEatRightBound <= foodLeftBound && fishEatDownBound >= foodUpBound && fishEatUpBound <= foodDownBound){
+              // change img to open mouth
+              if(getDirection()>=90 || getDirection()<-90) { //check direction if we need to flip
+                  openMouthInverted();
+              } else {
+                  openMouth();
+              }
+
+          }
+          else{
+              if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
+                  closedMouthInverted();
+              } else {
+                  closeMouth();
+              }
+          }
+      }
+      else if(nearestFood == null && actionPerforming == "food"){
+          // Case when from "food" to "idle"
+          this.actionPerforming = "idle";
+          this.speed = SLOW;
+          // change img to close mouth
+          if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
+              closedMouthInverted();
+          } else {
+              closeMouth();
+          }
+          setRandomDestination();
       } else {
-        closeMouth();
+          if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
+              closedMouthInverted();
+          } else {
+              closeMouth();
+          }
       }
-      setRandomDestination();
-    } else {
-      if(this.getDirection()>=90 || this.getDirection()<-90) { //check direction if we need to flip
-        closedMouthInverted();
+      // Updating the direction used for image rendering
+      double x = this.position.getX(), y = this.position.getY();
+      double x2 = this.destination.getX(), y2 = this.destination.getY();
+      double dx = x2 - x, dy = y2 - y;
+      direction = Math.atan2(dy,dx) * 180 / Math.PI;
+
+      // moving the fish
+      // updates position
+      x += this.speed * Math.cos(Math.toRadians(direction));  // x-position
+      y += this.speed * Math.sin(Math.toRadians(direction));  // y-position
+      this.position.setLocation(x, y);
+
+      // check if there's a collision between fish and a food
+      ArrayList<Food> foods = App.getOngoingGame().getFoods();
+      for(int i = 0; i < foods.size(); i++){
+          //setting boundatries for fish collision with food
+          Food current = foods.get(i);
+          double fishLeftBound = fishX + (imgWidth / 2), fishRightBound = fishX - (imgWidth / 2);
+          double fishUpBound = fishY - (imgHeight / 2), fishDownBound = fishY + (imgHeight / 2);
+
+          double foodX = current.getPosition().getX(), foodY = current.getPosition().getY();
+          double foodLeftBound = foodX + (current.getWidth() / 2) - (current.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (current.getWidth() / 2) + (current.getWidth() / 2) * FOOD_ZONE_MODIFIER;
+          double foodUpBound = foodY - (current.getHeight() / 2) + (current.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (current.getHeight() / 2) - (current.getHeight() / 2) * FOOD_ZONE_MODIFIER;
+
+          // check if food is within eating range
+          if(fishLeftBound >= foodRightBound && fishRightBound <= foodLeftBound && fishDownBound >= foodUpBound && fishUpBound <= foodDownBound){
+              Utilities.playSFX("assets/sounds/sfx/bite_"+this.maturity+".wav");
+              this.eat(current);
+          }
+      }
+
+      // check if fish is at the destination point
+      if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
+          setRandomDestination();
+      }
+
+      //update fish statistics
+      this.age+=1;
+      if(hungerNulledTimer <= 0) { //for abstraction
+          this.lifespan-=1;
       } else {
-        closeMouth();
+          hungerNulledTimer-=1;
       }
-    }
-    // Updating the direction used for image rendering
-    double x = this.position.getX(), y = this.position.getY();
-    double x2 = this.destination.getX(), y2 = this.destination.getY();
-    double dx = x2 - x, dy = y2 - y;
-    direction = Math.atan2(dy,dx) * 180 / Math.PI;
-
-    // moving the fish
-    // updates position
-    x += this.speed * Math.cos(Math.toRadians(direction));  // x-position
-    y += this.speed * Math.sin(Math.toRadians(direction));  // y-position
-    this.position.setLocation(x, y);
-
-    // check if there's a collision between fish and a food
-    ArrayList<Food> foods = App.getOngoingGame().getFoods();
-
-    for(int i = 0; i < foods.size(); i++){
-      //setting boundatries for fish collision with food
-      Food current = foods.get(i);
-      double fishLeftBound = fishX + (imgWidth / 2), fishRightBound = fishX - (imgWidth / 2);
-      double fishUpBound = fishY - (imgHeight / 2), fishDownBound = fishY + (imgHeight / 2);
-
-      double foodX = current.getPosition().getX(), foodY = current.getPosition().getY();
-      double foodLeftBound = foodX + (current.getWidth() / 2) - (current.getWidth() / 2) * FOOD_ZONE_MODIFIER, foodRightBound = foodX - (current.getWidth() / 2) + (current.getWidth() / 2) * FOOD_ZONE_MODIFIER;
-      double foodUpBound = foodY - (current.getHeight() / 2) + (current.getHeight() / 2) * FOOD_ZONE_MODIFIER, foodDownBound = foodY + (current.getHeight() / 2) - (current.getHeight() / 2) * FOOD_ZONE_MODIFIER;
-
-      // check if food is within eating range
-      if(fishLeftBound >= foodRightBound && fishRightBound <= foodLeftBound && fishDownBound >= foodUpBound && fishUpBound <= foodDownBound){
-        Utilities.playSFX("assets/sounds/sfx/bite_"+this.maturity+".wav");
-        this.eat(current);
+      if(coinModifyTimer > 0) {
+          coinValueModifier = 2;
+          coinModifyTimer-=1;
+      } else {
+          coinValueModifier = 1;
       }
-    }
-
-    // check if fish is at the destination point
-    if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
-      setRandomDestination();
-    }
-
-    //update fish statistics
-    this.age+=1;
-    if(!(hungerNulledTimer > 0)) { //for abstraction
-      this.lifespan-=1;
-    }
-    coinValueModifier = 1;
-    if(coinModifyTimer > 0) {
-      coinValueModifier = 2;
-    }
-
-    if(hungerNulledTimer > 0) {
-      hungerNulledTimer-=1;
-    }
-    if(coinModifyTimer > 0) {
-      coinModifyTimer-=1;
-    }
   }
 
   public void nullHunger() {
