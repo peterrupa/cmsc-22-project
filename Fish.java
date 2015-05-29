@@ -19,7 +19,7 @@ public class Fish extends Entity {
   private final float JUVENILE_SIZE = 0.0631f;
   private final float ADULT_SIZE = 0.0831f;
 
-
+  private boolean isMainMenu; //true if it is a fish found in the Main Menu
   private int age;
   private int maturePoint; //age when fish shall mature;
   private int coinTimer; // age when fish shall spitCoin
@@ -61,16 +61,26 @@ public class Fish extends Entity {
 
   final Random random = new Random();
 
-  public Fish (Point2D.Double x){
+  public Fish (Point2D.Double x, boolean xa){
     // Constructs entity with coordinates and image
     super(x);
+    this.actionPerforming = "idle";
+    this.isMainMenu = xa;
     this.initialize();
   }
 
-  public Fish (){
+  public Fish (boolean xa){
     super();
+    this.actionPerforming = "idle";
+    this.isMainMenu = xa;
     this.initialize();
   }
+
+  // public Fish(Point2D.Double x,String name){
+  //   super();
+  //   this.actionPerforming = "MainMenu";
+  //   this.initialize();
+  // }
 
   public void initialize(){
     // load images if not yet loaded
@@ -109,7 +119,7 @@ public class Fish extends Entity {
     this.maturity = "hatchling";
     this.coinTimer = App.FRAME_RATE*(20 + random.nextInt(11)); //first coin will spawn 20-30 seconds later
     this.lifespan = App.FRAME_RATE*(random.nextInt(11) + 30); //30-40 seconds before dying
-    this.actionPerforming = "idle";
+
     this.speed = SLOW;
     this.hungerNulledTimer = 0;
       //timer for nullified hunger set to 0 seconds at start
@@ -124,6 +134,7 @@ public class Fish extends Entity {
     setDestination(new Point2D.Double(newPointX, newPointY));
 
     startThread();
+
   }
 
   public void releaseCoin(){
@@ -209,6 +220,7 @@ public class Fish extends Entity {
   }
 
   public void update() {
+    //   System.out.println("Updating");
       // Search for nearby foods
       if(this.age == this.maturePoint ) { //Maturing
           mature();
@@ -308,20 +320,30 @@ public class Fish extends Entity {
       if(x <= x2 + speed && x >= x2 - speed && y <= y2 + speed && y >= y2 - speed){
           setRandomDestination();
       }
+      if(!(this.isMainMenu())) {
+          //update fish statistics
+          this.age+=1;
+          if(hungerNulledTimer <= 0) { //for abstraction
+              this.lifespan-=1;
+          } else {
+              hungerNulledTimer-=1;
+          }
+          if(coinModifyTimer > 0) {
+              coinValueModifier = 2;
+              coinModifyTimer-=1;
+          } else {
+              coinValueModifier = 1;
+          }
+      }
 
-      //update fish statistics
-      this.age+=1;
-      if(hungerNulledTimer <= 0) { //for abstraction
-          this.lifespan-=1;
-      } else {
-          hungerNulledTimer-=1;
-      }
-      if(coinModifyTimer > 0) {
-          coinValueModifier = 2;
-          coinModifyTimer-=1;
-      } else {
-          coinValueModifier = 1;
-      }
+  }
+
+  public void convertToGameFish() {
+      this.isMainMenu = false;
+  }
+
+  public boolean isMainMenu() {
+      return isMainMenu;
   }
 
   public void nullHunger() {

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.imageio.*;
 import javax.sound.sampled.AudioInputStream;
@@ -19,11 +20,9 @@ public class Game extends JPanel{
 
     private int totalFishBought;
     private int fishDied;
-
     private int coinsSpent;
     private int foodBought;
     private int foodUsed;
-
     private int powerupInstaMatureBought;
     private int powerupInstaMatureUsed;
     private int powerupDoubleCoinsBought;
@@ -66,7 +65,6 @@ public class Game extends JPanel{
 	public Game(String name) {
 
 		gameHistory = readGameHistory(); //Load game history
-
 		mouseState = "Food";
 		this.playerName = name;
 		this.timer = 300;
@@ -74,9 +72,7 @@ public class Game extends JPanel{
 		gameOver = false;
 		this.panelMode = "mainMenu";
 		this.money = 1000;
-		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
 		this.foodNumber = 1000;
-		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
 
 		//set panel settings
 		setLayout(null);
@@ -92,6 +88,7 @@ public class Game extends JPanel{
 			System.out.println("Error in loading Aquaruim");
 		}
 
+		// Add list
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e){
@@ -153,7 +150,7 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(money >= 20) {
-					fish.add(new Fish());
+					fish.add(new Fish(false));
 					money-=20;
 				}
 			}
@@ -204,9 +201,19 @@ public class Game extends JPanel{
 			}
 		});
 
+		// Convert MainMenu fish to Game fish (they start to hunger and spawn coins)
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("S"), "startGameFish");
+		this.getActionMap().put("startGameFish", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				startGameFish();
+			}
+		});
+
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
+
 				while (!gameOver) { //While not yet game over
 					repaint();
 					try {
@@ -230,6 +237,7 @@ public class Game extends JPanel{
 			clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
+			// gamePause();
 			// clip.loop(Clip.LOOP_CONTINUOUSLY); //IF NEEDED LOOP, MOST LIKELY FOR MENU BGM
 		}
 		catch(Exception e){}
@@ -242,7 +250,7 @@ public class Game extends JPanel{
 						Thread.sleep(1000);
 					} catch (InterruptedException ex) { }
 					timer--;
-					System.out.println(timer);
+					// System.out.println(timer);
 					if(timer==0)
 						gameOver = true;  //END GAME AFTER 5 MINS
 					while(!isPlaying) {
@@ -355,9 +363,16 @@ public class Game extends JPanel{
 		g2d.dispose();
 	}
 
+	public void startGameFish() {
+		for(Fish x : fish) {
+			x.convertToGameFish();
+			System.out.println("Converted " + x + " to game Fish");
+		}
+	}
+
 	public void start(){
 		for(int i=0; i<2; i++) {
-			fish.add(new Fish(new Point2D.Double(r.nextInt(App.getScreenWidth()/2)+200, r.nextInt(App.getScreenHeight()/2)+200)));
+			fish.add(new Fish(new Point2D.Double(r.nextInt(App.getScreenWidth()/2)+200, r.nextInt(App.getScreenHeight()/2)+200), true));
 		}
 	}
 
