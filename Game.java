@@ -17,6 +17,24 @@ import java.util.*;
 public class Game extends JPanel{
 	private final long SCARY_TIMESTAMP = 214 * 1000000;
 
+    private int totalFishBought;
+    private int fishDied;
+
+    private int coinsSpent;
+    private int foodBought;
+    private int foodUsed;
+
+    private int powerupInstaMatureBought;
+    private int powerupInstaMatureUsed;
+    private int powerupDoubleCoinsBought;
+    private int powerupDoubleCoinsUsed;
+    private int powerupNullHungerBought;
+    private int powerupNullHungerUsed;
+    private int powerupHasteBought;
+    private int powerupHasteUsed;
+
+    private int gameTime; //possible if tank empties before 5 minutes is over. Does not count pauses.
+
 	private String playerName;
 	private int foodNumber;
 	private int money;
@@ -24,7 +42,7 @@ public class Game extends JPanel{
 
 	private ArrayList<Fish> fish = new ArrayList<Fish>();		//arraylist variables are the representations of the entities in the GUI
 	private ArrayList<Coin> coins = new ArrayList<Coin>();
-	private ArrayList<Food> foods = new ArrayList<Food>();
+	private ArrayList<Food> foods = new ArrayList<Food>(); // Food and poweruups go here
 	private static String mouseState; //to determine what kind of food shall be instantiated when the user clicks
 	private static boolean isPlaying; //if the game is paused or running
 	private static boolean gameOver; //if gameOver
@@ -36,19 +54,29 @@ public class Game extends JPanel{
 	private Random r = new Random();
 	private BufferedImage bgImg = null; //background image
 	private BufferedImage bgImgScary = null; //background image
+	private BufferedImage mainMenuBackground = null; //Main Menu image
+	private BufferedImage highScoresBackground = null; //Highscores image
+	private BufferedImage creditsBackground = null; //Credits image
+	private BufferedImage instructionsBackground = null; //Instructions image
+
+	private String panelMode; //Game, MainMenu, Shop,
+	public static GameHistory gameHistory;
 
 
 	public Game(String name) {
 
+		gameHistory = readGameHistory(); //Load game history
+
 		mouseState = "Food";
 		this.playerName = name;
-		this.money = 100000;
+		this.timer = 300;
+		isPlaying = true; //start the game paused
+		gameOver = false;
+		this.panelMode = "mainMenu";
+		this.money = 1000;
 		System.out.println("YOU ARE CURRENTLY IN MONEY CHEAT MODE");
 		this.foodNumber = 1000;
 		System.out.println("YOU ARE CURRENTLY IN FOOD CHEAT MODE");
-		this.timer = 300;
-		isPlaying = true; //run the game
-		gameOver = false;
 
 		//set panel settings
 		setLayout(null);
@@ -71,14 +99,15 @@ public class Game extends JPanel{
 				boolean clickedCoin = false; //flagger for click priority
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
-				if(isPlaying) { //clicks will only register if game is not paused
+				// Panel Mode checker
+				if(isPlaying) { //clicks will only register if game is not paused and if is in game panel
 					for(Coin x : coins) {
 						// checks each coin in the coin array for first instance where the click is within bounds
 						if(x.isWithinRange(pointClicked)) {
 							x.die(); // Auto increments money variable of player
 							clickedCoin = true;
 							Utilities.playSFX("assets/sounds/sfx/coin_click.wav");
-							System.out.println("You have " + money + " coins");
+							// System.out.println("You have " + money + " coins");
 							break;
 						} else {
 							clickedCoin = false;
@@ -190,9 +219,10 @@ public class Game extends JPanel{
 						} catch (InterruptedException ex) { }
 					}
 				}
+				saveGame();
 			}
-    };
-    updateThread.start();  // start the thread to run updates
+	    };
+	    updateThread.start();  // start the thread to run updates
 
 		//start bgm
 		try{
@@ -207,11 +237,14 @@ public class Game extends JPanel{
 		Thread timerThread = new Thread () { //thread for timer for game triggers and events (bgm triggers, etc)
 			@Override
 			public void run() {
-				while (true) {
+				while (!gameOver) {
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException ex) { }
 					timer--;
+					System.out.println(timer);
+					if(timer==0)
+						gameOver = true;  //END GAME AFTER 5 MINS
 					while(!isPlaying) {
 						try {
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
@@ -223,6 +256,49 @@ public class Game extends JPanel{
 		timerThread.start();  // start the thread to run updates
 	}
 
+	public void endGame() {
+		// Stops the Running game by flagging gameOver variable
+		// End game when tank is empty or if timer runs out.
+		gameOver = true;
+	}
+
+	public void saveGame() {
+
+		gameHistory.addPlayer(new Player("Matthew Marcos69" , this.money));
+
+		try{
+			FileOutputStream fos = new FileOutputStream("gameHistory.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(gameHistory);
+			oos.close();
+			System.out.println("Game saved successfully!");
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException Line 261 Game.java");
+		} catch (IOException e) {
+			System.out.println("IOException Line 263 Game.java");
+		}
+
+		return;
+	}
+
+	private GameHistory readGameHistory() {
+		// Read game history.ser. else return new instance
+		try{
+			FileInputStream fis = new FileInputStream("gameHistory.ser");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			GameHistory temp = (GameHistory)ois.readObject();
+			ois.close();
+			temp.printPlayers();
+			return temp;
+		}catch (FileNotFoundException e) {
+			System.out.println("Game History not found. A new one will be created when you exit");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return new GameHistory();
+	}
 	public void gamePause() {
 		if(isPlaying){
 			clipTime = clip.getMicrosecondPosition();
@@ -250,7 +326,7 @@ public class Game extends JPanel{
 
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
-    	g2d.drawImage(image, transform, null);
+			g2d.drawImage(image, transform, null);
 		}
 		//paint fish
 		for(int i = 0; i < fish.size(); i++){
@@ -259,9 +335,9 @@ public class Game extends JPanel{
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
 			transform.rotate(Math.toRadians(current.getDirection()), current.getWidth() / 2, current.getHeight() / 2); //rotates image based on direction
-  		g2d.drawImage(image, transform, null);
+			g2d.drawImage(image, transform, null);
 
-			// check if fish is dying, apply red tint
+			// check if fish is dying, apply green tint
 			if(current.getLifespan() <= 8){
 				g2d.drawImage(createGreenVersion(image, redTintModifier(current.getLifespan())), transform, null);
 			}
@@ -273,7 +349,7 @@ public class Game extends JPanel{
 			BufferedImage image = current.getImg();
 			transform.setToIdentity();
 			transform.translate(current.getPosition().getX() - current.getWidth() / 2, current.getPosition().getY() - current.getHeight() / 2);
-	    	g2d.drawImage(image, transform, null);
+			g2d.drawImage(image, transform, null);
 		}
 
 		g2d.dispose();
@@ -334,4 +410,8 @@ public class Game extends JPanel{
 	public ArrayList<Food> getFood() {
 		return this.foods;
 	}
+
+	// public Point2D.Double setPoint(double x, double y) {
+	// 	return new Point(100*x*App.getScreenWidth() , 100*y*App.getScreenHeight());
+	// }
 }

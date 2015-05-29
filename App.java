@@ -27,6 +27,7 @@ public class App {
 				// frame.setLayout(null);
 				frame.pack();
 				frame.setVisible(true);
+
 				// Do not refactor this!
 				Container cp = frame.getContentPane();
 				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
