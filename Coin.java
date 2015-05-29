@@ -36,7 +36,7 @@ public class Coin extends Entity {
 		try{
 			switch(value) {
 				case 1:
-				case 2: {
+				case 2: { //
 					img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/coins/bronzeMini4.png")),0.04f);
 				} break;
 				case 3:
