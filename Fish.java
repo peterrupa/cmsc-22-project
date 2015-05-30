@@ -158,7 +158,7 @@ public class Fish extends Entity {
 
             Point2D.Double coinPos = new Point2D.Double(this.getPosition().getX(), this.getPosition().getY());
             App.getOngoingGame().getCoins().add(new Coin(coinPos, coinValue*coinValueModifier));
-            coinTimer = (age + 20*App.FRAME_RATE + random.nextInt(11)*App.FRAME_RATE)/this.speedModifier; //next coin will spawn 20-30 seconds later divided by two if speedModifier = 2
+            coinTimer = age + (20*App.FRAME_RATE + random.nextInt(11)*App.FRAME_RATE)/this.speedModifier; //next coin will spawn 20-30 seconds later divided by two if speedModifier = 2
             // Pass current location and value (based on maturity level)
         }
 
