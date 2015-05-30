@@ -128,6 +128,10 @@ public class Game extends JPanel{
 								case "PowerupDoubleCoins": {
 									foods.add(new PowerupDoubleCoins(pointClicked));
 								} break;
+
+								case "PowerupHaste": {
+									foods.add(new PowerupHaste(pointClicked));
+								} break;
 							}
 							foodNumber-=1;
 						}
@@ -198,6 +202,15 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				mouseState = "PowerupDoubleCoins";
+			}
+		});
+
+		// Poweruphaste
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("B"), "PowerupHaste");
+		this.getActionMap().put("PowerupHaste", new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mouseState = "PowerupHaste";
 			}
 		});
 
