@@ -13,18 +13,30 @@ public class GameButton extends JButton{
 		try{
 			if(square){
 				img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset)), w);
-				img_hover = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_hover)), w);
-				img_disabled = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_disabled)), w);
-				img_pressed = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w);
+				if(img_hover != null){
+					img_hover = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_hover)), w);
+				}
+				if(img_disabled != null){
+					img_disabled = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_disabled)), w);
+				}
+				if(img_pressed != null){
+					img_pressed = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w);
+				}
 			}
 			else{
 				img = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset)), w, h);
-				img_hover = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_hover)), w, h);
-				img_disabled = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_disabled)), w, h);
-				img_pressed = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w, h);
+				if(img_hover != null){
+					img_hover = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_hover)), w, h);
+				}
+				if(img_disabled != null){
+					img_disabled = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_disabled)), w, h);
+				}
+				if(img_pressed != null){
+					img_pressed = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w, h);
+				}
 			}
 		}catch(Exception e){
-			System.out.println("Error in reading image!");
+			e.printStackTrace();
 		}
 
 		img_current = img;
@@ -52,7 +64,7 @@ public class GameButton extends JButton{
 		addMouseListener(new MouseListener(){
 			@Override
 			public void mouseEntered(MouseEvent e){
-				if(!disabled)
+				if(!disabled && img_hover != null)
 				img_current = img_hover;
 			}
 
@@ -64,13 +76,13 @@ public class GameButton extends JButton{
 
 			@Override
 			public void mouseReleased(MouseEvent e){
-				if(!disabled)
+				if(!disabled && img_hover != null)
 				img_current = img_hover;
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e){
-				if(!disabled)
+				if(!disabled && img_pressed != null)
 				img_current = img_pressed;
 			}
 

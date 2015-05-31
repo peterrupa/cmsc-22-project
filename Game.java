@@ -61,6 +61,8 @@ public class Game extends JPanel{
 	private String panelMode; //Game, MainMenu, Shop,
 	public static GameHistory gameHistory;
 
+	//store all buttons here
+	GameButton logo = null;
 
 	public Game(String name) {
 
@@ -97,9 +99,16 @@ public class Game extends JPanel{
 			}
 		});
 
-		add(test2);
+		logo = new GameButton(
+			"assets/img/logo/logo.png",
+			null,
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.06f), App.getScreenHeight() - (int)(App.getScreenHeight() * 0.12f), 0.09f, 0.09f, true
+		);
 
-		test2.setEnabled(false);
+		add(logo);
+		logo.setVisible(false);
 
 		// Background Image
 		try {
@@ -299,6 +308,20 @@ public class Game extends JPanel{
 		timerThread.start();  // start the thread to run updates
 	}
 
+	public void setPanel(String panel){
+		switch(panel){
+			case "mainMenu":
+				//add menu elements here
+				this.panelMode = "mainMenu";
+				break;
+			case "game":
+				//add ingame elements here
+				this.panelMode = "game";
+				logo.setVisible(true);
+				break;
+		}
+	}
+
 	public void endGame() {
 		// Stops the Running game by flagging gameOver variable
 		// End game when tank is empty or if timer runs out.
@@ -405,7 +428,7 @@ public class Game extends JPanel{
 	public void startGame() {
 		System.out.println("Starting game...");
 
-		panelMode = "game";
+		setPanel("game");
 
 		for(Fish x : fish) {
 			x.convertToGameFish();
