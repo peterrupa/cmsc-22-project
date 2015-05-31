@@ -78,18 +78,28 @@ public class Game extends JPanel{
 		setLayout(null);
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
-		////////////////////////////////////////
-		// GameButton test2 = new GameButton();
-		// test2.setBounds(250, 500, 100, 100);
-		//
-		// add(test2);
-		// test2.addActionListener(new ActionListener(){
-		// 	@Override
-		// 	public void actionPerformed(ActionEvent e){
-		// 		System.out.println("FUCK YEAH");
-		// 	}
-		// });
-		////////////////////////////////////////
+		//add all menu/ingame buttons
+
+		GameButton test2 = new GameButton(
+			"assets/img/buttons/food_normal.png",
+			"assets/img/buttons/food_hover.png",
+			"assets/img/buttons/food_disabled.png",
+			"assets/img/buttons/food_pressed.png",
+			500, 500, 0.07f, 0.07f, true
+		);
+
+		test2.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(!test2.disabled){
+					System.out.println("bleep");
+				}
+			}
+		});
+
+		add(test2);
+
+		test2.setEnabled(false);
 
 		// Background Image
 		try {
@@ -387,7 +397,7 @@ public class Game extends JPanel{
 			g2d.drawImage(image, transform, null);
 		}
 
-		super.paintComponents(g);  // paint background
+		super.paintComponents(g);
 
 		g2d.dispose();
 	}
