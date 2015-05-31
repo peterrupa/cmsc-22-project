@@ -309,7 +309,8 @@ public class Game extends JPanel{
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			GameHistory temp = (GameHistory)ois.readObject();
 			ois.close();
-			temp.printPlayers();
+			temp.getTopFive();
+			// temp.printPlayers();
 			return temp;
 		}catch (FileNotFoundException e) {
 			System.out.println("Game History not found. A new one will be created when you exit");

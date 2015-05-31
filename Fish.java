@@ -192,7 +192,7 @@ public class Fish extends Entity {
                 setAsset("adult");
                 break;
             }
-            System.out.println(this+" is maturing to "+maturity+"!");
+            // System.out.println(this+" is maturing to "+maturity+"!");
             maturePoint = (age + random.nextInt(21)*App.FRAME_RATE + 40*App.FRAME_RATE); //fish shall mature 40-60 seconds later
         }
 
