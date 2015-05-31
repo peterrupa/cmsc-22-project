@@ -24,7 +24,7 @@ public class App {
 				frame.setFocusable(true);
 				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				frame.setUndecorated(true);
-				// frame.setLayout(null);
+				frame.setLayout(null);
 				frame.pack();
 				frame.setVisible(true);
 

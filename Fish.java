@@ -87,22 +87,22 @@ public class Fish extends Entity {
     if(hatchling_closed_mouth == null || hatchling_open_mouth == null || hatchling_closed_mouth_inverted == null || hatchling_open_mouth_inverted == null){
       try{
         //hatchling
-        hatchling_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), HATCHLING_SIZE);
-        hatchling_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")), HATCHLING_SIZE);
-        hatchling_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")), HATCHLING_SIZE);
-        hatchling_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")), HATCHLING_SIZE);
+        hatchling_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/hatchling_close.png")), HATCHLING_SIZE);
+        hatchling_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/hatchling_open.png")), HATCHLING_SIZE);
+        hatchling_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/hatchling_close_i.png")), HATCHLING_SIZE);
+        hatchling_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/hatchling_open_i.png")), HATCHLING_SIZE);
 
         //juvenile
-        juvenile_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), JUVENILE_SIZE);
-        juvenile_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")), JUVENILE_SIZE);
-        juvenile_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")), JUVENILE_SIZE);
-        juvenile_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")), JUVENILE_SIZE);
+        juvenile_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/juvenile_close.png")), JUVENILE_SIZE);
+        juvenile_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/juvenile_open.png")), JUVENILE_SIZE);
+        juvenile_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/juvenile_close_i.png")), JUVENILE_SIZE);
+        juvenile_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/juvenile_open_i.png")), JUVENILE_SIZE);
 
         //adult
-        adult_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishClose.png")), ADULT_SIZE);
-        adult_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishOpen.png")), ADULT_SIZE);
-        adult_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvert.png")), ADULT_SIZE);
-        adult_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/fishInvertOpen.png")), ADULT_SIZE);
+        adult_closed_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/adult_close.png")), ADULT_SIZE);
+        adult_open_mouth = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/adult_open.png")), ADULT_SIZE);
+        adult_closed_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/adult_close_i.png")), ADULT_SIZE);
+        adult_open_mouth_inverted = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource("assets/img/fish/adult_open_i.png")), ADULT_SIZE);
       }
       catch(Exception e){}
     }

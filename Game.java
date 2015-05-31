@@ -18,21 +18,21 @@ import java.util.*;
 public class Game extends JPanel{
 	private final long SCARY_TIMESTAMP = 214 * 1000000;
 
-    private int totalFishBought;
-    private int fishDied;
-    private int coinsSpent;
-    private int foodBought;
-    private int foodUsed;
-    private int powerupInstaMatureBought;
-    private int powerupInstaMatureUsed;
-    private int powerupDoubleCoinsBought;
-    private int powerupDoubleCoinsUsed;
-    private int powerupNullHungerBought;
-    private int powerupNullHungerUsed;
-    private int powerupHasteBought;
-    private int powerupHasteUsed;
+  private int totalFishBought;
+  private int fishDied;
+  private int coinsSpent;
+  private int foodBought;
+  private int foodUsed;
+  private int powerupInstaMatureBought;
+  private int powerupInstaMatureUsed;
+  private int powerupDoubleCoinsBought;
+  private int powerupDoubleCoinsUsed;
+  private int powerupNullHungerBought;
+  private int powerupNullHungerUsed;
+  private int powerupHasteBought;
+  private int powerupHasteUsed;
 
-    private int gameTime; //possible if tank empties before 5 minutes is over. Does not count pauses.
+  private int gameTime; //possible if tank empties before 5 minutes is over. Does not count pauses.
 
 	private String playerName;
 	private int foodNumber;
@@ -78,6 +78,19 @@ public class Game extends JPanel{
 		setLayout(null);
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
+		////////////////////////////////////////
+		// GameButton test2 = new GameButton();
+		// test2.setBounds(250, 500, 100, 100);
+		//
+		// add(test2);
+		// test2.addActionListener(new ActionListener(){
+		// 	@Override
+		// 	public void actionPerformed(ActionEvent e){
+		// 		System.out.println("FUCK YEAH");
+		// 	}
+		// });
+		////////////////////////////////////////
+
 		// Background Image
 		try {
 			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
@@ -97,7 +110,7 @@ public class Game extends JPanel{
 				Point2D.Double pointClicked = new Point2D.Double(e.getX(), e.getY());
 
 				// Panel Mode checker
-				if(isPlaying) { //clicks will only register if game is not paused and if is in game panel
+				if(isPlaying && panelMode == "game") { //clicks will only register if game is not paused and if is in game panel
 					for(Coin x : coins) {
 						// checks each coin in the coin array for first instance where the click is within bounds
 						if(x.isWithinRange(pointClicked)) {
@@ -161,7 +174,7 @@ public class Game extends JPanel{
 		this.getActionMap().put("pause", new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				gamePause();
+					gamePause();
 			}
 		});
 
@@ -202,18 +215,17 @@ public class Game extends JPanel{
 		});
 
 		// Convert MainMenu fish to Game fish (they start to hunger and spawn coins)
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("S"), "startGameFish");
-		this.getActionMap().put("startGameFish", new AbstractAction(){
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("S"), "startGame");
+		this.getActionMap().put("startGame", new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				startGameFish();
+				startGame();
 			}
 		});
 
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
-
 				while (!gameOver) { //While not yet game over
 					repaint();
 					try {
@@ -321,8 +333,9 @@ public class Game extends JPanel{
 	/** Custom painting codes on this JPanel */
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);  // paint background
 		Graphics2D g2d = (Graphics2D) g;
+
+		super.paintComponent(g);  // paint background
 
 		transform.setToIdentity();
 		g2d.drawImage(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? bgImg: bgImgScary, transform, null);
@@ -360,10 +373,16 @@ public class Game extends JPanel{
 			g2d.drawImage(image, transform, null);
 		}
 
+		super.paintComponents(g);  // paint background
+
 		g2d.dispose();
 	}
 
-	public void startGameFish() {
+	public void startGame() {
+		System.out.println("Starting game...");
+
+		panelMode = "game";
+
 		for(Fish x : fish) {
 			x.convertToGameFish();
 			System.out.println("Converted " + x + " to game Fish");
