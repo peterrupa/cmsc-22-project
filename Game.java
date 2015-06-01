@@ -87,7 +87,9 @@ public class Game extends JPanel{
 	private GameButton creditsButton = null;
 	private GameButton exitButton = null;
 	private GameButton play = null;
+	private JTextField nameTextField = null;
 	private GameButton instructions = null;
+	private GameButton highScores = null;
 	private GameButton credits = null;
 	private GameButton mainMenuButton = null;
 
@@ -96,7 +98,7 @@ public class Game extends JPanel{
 	public Game(String name) {
 
 		gameHistory = readGameHistory(); //Load game history
-		mouseState = "Food";
+		mouseState = "food";
 		this.playerName = name;
 		this.timer = 300;
 		isPlaying = true; //start the game paused
@@ -454,12 +456,35 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				setPanel("mainMenu");
+				Utilities.playSFX("assets/sounds/sfx/button_click.wav");
 			}
 		});
 
 		mainMenuButton.setVisible(false);
 
 		add(mainMenuButton);
+
+		nameTextField = new JTextField(10);
+		nameTextField.setFont(new Font(Font.SANS_SERIF, Font.BOLD, (int)(App.getScreenHeight() * 0.08f)));
+		nameTextField.setHorizontalAlignment(JTextField.CENTER);
+		nameTextField.setBounds(
+			(int)(App.getScreenWidth() * 0.5f) - (int)(App.getScreenWidth() * 0.4f) / 2,
+			(int)(App.getScreenHeight() * 0.5f) - (int)(App.getScreenHeight() * 0.1f) / 2,
+			(int)(App.getScreenWidth() * 0.4f),
+			(int)(App.getScreenHeight() * 0.1f)
+		);
+		nameTextField.setVisible(false);
+
+		nameTextField.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(!nameTextField.getText().equals("")){
+					playerName = nameTextField.getText();
+					startGame();
+				}
+			}
+		});
+
+		add(nameTextField);
 
 		//play
 		play = new GameButton(
@@ -488,6 +513,18 @@ public class Game extends JPanel{
 
 		instructions.setVisible(false);
 		add(instructions);
+
+		//high scores
+		highScores = new HighScores(
+			"assets/img/screen/high_scores.png",
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.5f),
+			0.57f, 0.68f,
+			gameHistory.getTopFive()
+		);
+
+		highScores.setVisible(false);
+		add(highScores);
 
 		//credits
 		credits = new GameButton(
@@ -532,6 +569,7 @@ public class Game extends JPanel{
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "mainMenu"){
 					setPanel("play");
+					Utilities.playSFX("assets/sounds/sfx/button_click.wav");
 				}
 			}
 		});
@@ -554,6 +592,7 @@ public class Game extends JPanel{
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "mainMenu"){
 					setPanel("instructions");
+					Utilities.playSFX("assets/sounds/sfx/button_click.wav");
 				}
 			}
 		});
@@ -575,7 +614,8 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "mainMenu"){
-					System.out.println("HIGH SCORES");
+					setPanel("highScores");
+					Utilities.playSFX("assets/sounds/sfx/button_click.wav");
 				}
 			}
 		});
@@ -598,6 +638,7 @@ public class Game extends JPanel{
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "mainMenu"){
 					setPanel("credits");
+					Utilities.playSFX("assets/sounds/sfx/button_click.wav");
 				}
 			}
 		});
@@ -719,15 +760,6 @@ public class Game extends JPanel{
 			}
 		});
 
-		// Convert MainMenu fish to Game fish (they start to hunger and spawn coins)
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("S"), "startGame");
-		this.getActionMap().put("startGame", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				startGame();
-			}
-		});
-
 		try{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/menu.wav"));
 			menuClip = AudioSystem.getClip();
@@ -784,36 +816,42 @@ public class Game extends JPanel{
 				if(money >= 20) {
 					fish.add(new Fish(false));
 					money-=20;
+					coinsSpent+=20;
 				}
 				break;
 			case "food":
 				if(money >= 25) {
 					foodNumber += 25;
 					money-=25;
+					coinsSpent+=25;
 				}
 				break;
 			case "pauseHunger":
 				if(money >= 25) {
 					pauseHungerNumber += 5;
 					money-=25;
+					coinsSpent+=25;
 				}
 				break;
 			case "instaMature":
 				if(money >= 25) {
 					instaMatureNumber += 5;
 					money-=25;
+					coinsSpent+=25;
 				}
 				break;
 			case "doubleCoins":
 				if(money >= 25) {
 					doubleCoinsNumber += 5;
 					money-=25;
+					coinsSpent+=25;
 				}
 				break;
 			case "haste":
 				if(money >= 25) {
 					hasteNumber += 5;
 					money-=25;
+					coinsSpent+=25;
 				}
 				break;
 		}
@@ -850,7 +888,9 @@ public class Game extends JPanel{
 				exitButton.setVisible(true);
 
 				play.setVisible(false);
+				nameTextField.setVisible(false);
 				instructions.setVisible(false);
+				highScores.setVisible(false);
 				credits.setVisible(false);
 				mainMenuButton.setVisible(false);
 
@@ -880,15 +920,22 @@ public class Game extends JPanel{
 				highScoresButton.setVisible(false);
 				creditsButton.setVisible(false);
 				exitButton.setVisible(false);
-
+				play.setVisible(false);
+				nameTextField.setVisible(false);
 				break;
 			case "play":
 				this.panelMode = "play";
 				play.setVisible(true);
+				nameTextField.setVisible(true);
 				break;
 			case "instructions":
 				this.panelMode = "instructions";
 				instructions.setVisible(true);
+				mainMenuButton.setVisible(true);
+				break;
+			case "highScores":
+				this.panelMode = "highScores";
+				highScores.setVisible(true);
 				mainMenuButton.setVisible(true);
 				break;
 			case "credits":
@@ -907,7 +954,7 @@ public class Game extends JPanel{
 
 	public void saveGame() {
 
-		gameHistory.addPlayer(new Player("Matthew Marcos69" , this.money));
+		gameHistory.addPlayer(new Player(playerName , this.coinsSpent));
 
 		try{
 			FileOutputStream fos = new FileOutputStream("gameHistory.ser");
@@ -1068,13 +1115,10 @@ public class Game extends JPanel{
 	}
 
 	public void startGame() {
-		System.out.println("Starting game...");
-
 		setPanel("game");
 
 		for(Fish x : fish) {
 			x.convertToGameFish();
-			System.out.println("Converted " + x + " to game Fish");
 		}
 
 		Utilities.playSFX("assets/sounds/sfx/start_game.wav");

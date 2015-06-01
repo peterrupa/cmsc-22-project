@@ -30,7 +30,6 @@ public class GameHistory implements Serializable {
             //add all with max score to topFive
             for(Player f : players) {
                 if(f.getScore() == maxScore) {
-                    System.out.println("Rank " + Integer.toString((i+1)) + ": " + f.toString());
                     topFive.add(f);
                 }
             }
@@ -40,10 +39,8 @@ public class GameHistory implements Serializable {
         }
 
         try {
-            return topFive;
+            return new ArrayList<Player>(topFive);
         } finally {
-            // Ariel happened to me
-            System.out.println("Ariel is happening to me!");
             for(Player x: topFive) {
                 x.toString();
                 players.add(x);
@@ -58,12 +55,6 @@ public class GameHistory implements Serializable {
     public void addPlayer(Player player) {
         // readd top5 to players list for recalculation
         players.add(player);
-    }
-
-    public void printPlayers() {
-        for(Player x: players) {
-            System.out.println(x.toString());
-        }
     }
 
     public String getPlayer(int x) {
