@@ -78,6 +78,9 @@ public class Game extends JPanel{
 	GameButton highScoresButton = null;
 	GameButton creditsButton = null;
 	GameButton exitButton = null;
+	GameButton instructions = null;
+	GameButton credits = null;
+	GameButton mainMenuButton = null;
 
 	Thread timerThread;
 
@@ -277,6 +280,56 @@ public class Game extends JPanel{
 
 		//MENU ELEMENTS
 
+		//shared main menu button
+		mainMenuButton = new GameButton(
+			"assets/img/buttons/main_menu_normal.png",
+			"assets/img/buttons/main_menu_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.63f),
+			(int)(App.getScreenHeight() * 0.75f),
+			0.20f, 0.09f, false
+		);
+
+		mainMenuButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				setPanel("mainMenu");
+			}
+		});
+
+		mainMenuButton.setVisible(false);
+
+		add(mainMenuButton);
+
+		//instructions
+		instructions = new GameButton(
+			"assets/img/screen/instructions.png",
+			null,
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.5f),
+			0.57f, 0.68f, false
+		);
+
+		instructions.setVisible(false);
+		add(instructions);
+
+		//credits
+		credits = new GameButton(
+			"assets/img/screen/credits.png",
+			null,
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.5f),
+			0.57f, 0.68f, false
+		);
+
+		credits.setVisible(false);
+		add(credits);
+
 		//logo
 		menuLogo = new GameButton(
 			"assets/img/logo/menu_logo.png",
@@ -304,7 +357,9 @@ public class Game extends JPanel{
 		playButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				System.out.println("PLAY");
+				if(panelMode == "mainMenu"){
+					System.out.println("PLAY");
+				}
 			}
 		});
 
@@ -324,7 +379,9 @@ public class Game extends JPanel{
 		instructionsButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				System.out.println("INSTRUCTIONS");
+				if(panelMode == "mainMenu"){
+					setPanel("instructions");
+				}
 			}
 		});
 
@@ -344,7 +401,9 @@ public class Game extends JPanel{
 		highScoresButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				System.out.println("HIGH SCORES");
+				if(panelMode == "mainMenu"){
+					System.out.println("HIGH SCORES");
+				}
 			}
 		});
 
@@ -364,7 +423,9 @@ public class Game extends JPanel{
 		creditsButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				System.out.println("CREDITS");
+				if(panelMode == "mainMenu"){
+					setPanel("credits");
+				}
 			}
 		});
 
@@ -384,7 +445,9 @@ public class Game extends JPanel{
 		exitButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				System.exit(0);
+				if(panelMode == "mainMenu"){
+					System.exit(0);
+				}
 			}
 		});
 
@@ -632,6 +695,26 @@ public class Game extends JPanel{
 			case "mainMenu":
 				//add menu elements here
 				this.panelMode = "mainMenu";
+
+				logo.setVisible(false);
+				foodButton.setVisible(false);
+				fishButton.setVisible(false);
+				pauseHungerButton.setVisible(false);
+				instaMatureButton.setVisible(false);
+				doubleCoinsButton.setVisible(false);
+				hasteButton.setVisible(false);
+
+				menuLogo.setVisible(true);
+				playButton.setVisible(true);
+				instructionsButton.setVisible(true);
+				highScoresButton.setVisible(true);
+				creditsButton.setVisible(true);
+				exitButton.setVisible(true);
+
+				instructions.setVisible(false);
+				credits.setVisible(false);
+				mainMenuButton.setVisible(false);
+
 				break;
 			case "game":
 				//add ingame elements here
@@ -651,6 +734,16 @@ public class Game extends JPanel{
 				creditsButton.setVisible(false);
 				exitButton.setVisible(false);
 
+				break;
+			case "instructions":
+				this.panelMode = "instructions";
+				instructions.setVisible(true);
+				mainMenuButton.setVisible(true);
+				break;
+			case "credits":
+				this.panelMode = "credits";
+				credits.setVisible(true);
+				mainMenuButton.setVisible(true);
 				break;
 		}
 	}
