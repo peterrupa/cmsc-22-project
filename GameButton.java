@@ -102,7 +102,6 @@ public class GameButton extends JButton{
 	public void setEnabled(){
 		img_current = img;
 		disabled = false;
-		System.out.println("NOT HAPPEN");
 	}
 
 	public void setDisabled(){

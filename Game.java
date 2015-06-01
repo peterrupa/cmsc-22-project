@@ -36,6 +36,10 @@ public class Game extends JPanel{
 
 	private String playerName;
 	private int foodNumber;
+	private int pauseHungerNumber;
+	private int doubleCoinsNumber;
+	private int instaMatureNumber;
+	private int hasteNumber;
 	private int money;
 	private int timer;
 
@@ -45,24 +49,22 @@ public class Game extends JPanel{
 	private static String mouseState; //to determine what kind of food shall be instantiated when the user clicks
 	private static boolean isPlaying; //if the game is paused or running
 	private static boolean gameOver; //if gameOver
-	private long clipTime; //to determine where the clip has paused
-	private Clip clip;
+	private long clipTime; //to determine where the ingameClip has paused
+	private Clip menuClip;
+	private Clip ingameClip;
 	// Used to carry out the affine transform on images
 	private AffineTransform transform = new AffineTransform();
 
 	private Random r = new Random();
 	private BufferedImage bgImg = null; //background image
 	private BufferedImage bgImgScary = null; //background image
-	private BufferedImage mainMenuBackground = null; //Main Menu image
-	private BufferedImage highScoresBackground = null; //Highscores image
-	private BufferedImage creditsBackground = null; //Credits image
-	private BufferedImage instructionsBackground = null; //Instructions image
 
 	private String panelMode; //Game, MainMenu, Shop,
 	public static GameHistory gameHistory;
 
 	//store all buttons here
 	GameButton logo = null;
+	GameButton menuLogo = null;
 	GameButton foodButton = null;
 	GameButton fishButton = null;
 	GameButton pauseHungerButton = null;
@@ -70,6 +72,14 @@ public class Game extends JPanel{
 	GameButton instaMatureButton = null;
 	GameButton hasteButton = null;
 	GameButton muteButton = null;
+	GameButton coinCounter = null;
+	GameButton playButton = null;
+	GameButton instructionsButton = null;
+	GameButton highScoresButton = null;
+	GameButton creditsButton = null;
+	GameButton exitButton = null;
+
+	Thread timerThread;
 
 	public Game(String name) {
 
@@ -80,8 +90,12 @@ public class Game extends JPanel{
 		isPlaying = true; //start the game paused
 		gameOver = false;
 		this.panelMode = "mainMenu";
-		this.money = 19;
-		this.foodNumber = 1000;
+		this.money = 0;
+		this.foodNumber = 25;
+		this.pauseHungerNumber = 0;
+		this.instaMatureNumber = 0;
+		this.doubleCoinsNumber = 0;
+		this.hasteNumber = 0;
 
 		//set panel settings
 		setLayout(null);
@@ -104,12 +118,13 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(foodButton.isEnabled()){
-					System.out.println("buy food");
+					buy("food");
 				}
 			}
 		});
 
 		add(foodButton);
+		foodButton.setVisible(false);
 
 		//buy fish
 		fishButton = new GameButton(
@@ -132,6 +147,7 @@ public class Game extends JPanel{
 		});
 
 		add(fishButton);
+		fishButton.setVisible(false);
 
 		//pause hunger button
 		pauseHungerButton = new GameButton(
@@ -148,12 +164,13 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(pauseHungerButton.isEnabled()){
-					System.out.println("buy pause hunger");
+					buy("pauseHunger");
 				}
 			}
 		});
 
 		add(pauseHungerButton);
+		pauseHungerButton.setVisible(false);
 
 		//double coin button
 		doubleCoinsButton = new GameButton(
@@ -170,12 +187,13 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(doubleCoinsButton.isEnabled()){
-					System.out.println("buy double coin");
+					buy("doubleCoins");
 				}
 			}
 		});
 
 		add(doubleCoinsButton);
+		doubleCoinsButton.setVisible(false);
 
 		//insta mature button
 		instaMatureButton = new GameButton(
@@ -192,12 +210,13 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(instaMatureButton.isEnabled()){
-					System.out.println("buy insta mature");
+					buy("instaMature");
 				}
 			}
 		});
 
 		add(instaMatureButton);
+		instaMatureButton.setVisible(false);
 
 		//haste
 		hasteButton = new GameButton(
@@ -214,12 +233,13 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(hasteButton.isEnabled()){
-					System.out.println("buy haste");
+					buy("haste");
 				}
 			}
 		});
 
 		add(hasteButton);
+		hasteButton.setVisible(false);
 
 		//mute
 		muteButton = new GameButton(
@@ -255,6 +275,121 @@ public class Game extends JPanel{
 		add(logo);
 		logo.setVisible(false);
 
+		//MENU ELEMENTS
+
+		//logo
+		menuLogo = new GameButton(
+			"assets/img/logo/menu_logo.png",
+			null,
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.15f),
+			0.45f, 0.17f, false
+		);
+
+		add(menuLogo);
+
+		//play button
+		playButton = new GameButton(
+			"assets/img/buttons/menu_play_normal.png",
+			"assets/img/buttons/menu_play_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.35f),
+			0.20f, 0.09f, false
+		);
+
+		playButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				System.out.println("PLAY");
+			}
+		});
+
+		add(playButton);
+
+		//INSTRUCTIONS button
+		instructionsButton = new GameButton(
+			"assets/img/buttons/menu_instructions_normal.png",
+			"assets/img/buttons/menu_instructions_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.45f),
+			0.20f, 0.09f, false
+		);
+
+		instructionsButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				System.out.println("INSTRUCTIONS");
+			}
+		});
+
+		add(instructionsButton);
+
+		//high scores button
+		highScoresButton = new GameButton(
+			"assets/img/buttons/menu_high_scores_normal.png",
+			"assets/img/buttons/menu_high_scores_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.55f),
+			0.20f, 0.09f, false
+		);
+
+		highScoresButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				System.out.println("HIGH SCORES");
+			}
+		});
+
+		add(highScoresButton);
+
+		//credits button
+		creditsButton = new GameButton(
+			"assets/img/buttons/menu_credits_normal.png",
+			"assets/img/buttons/menu_credits_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.65f),
+			0.20f, 0.09f, false
+		);
+
+		creditsButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				System.out.println("CREDITS");
+			}
+		});
+
+		add(creditsButton);
+
+		//exit button
+		exitButton = new GameButton(
+			"assets/img/buttons/menu_exit_normal.png",
+			"assets/img/buttons/menu_exit_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.75f),
+			0.20f, 0.09f, false
+		);
+
+		exitButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				System.exit(0);
+			}
+		});
+
+		add(exitButton);
+
 		// Background Image
 		try {
 			bgImg = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource("assets/img/bg/bg-test.png")), 1f, 1f);
@@ -288,29 +423,41 @@ public class Game extends JPanel{
 						}
 					}
 					if(!clickedCoin) {
-						if(foodNumber > 0) {
-							switch(mouseState) {
-								case "Food": {
+						switch(mouseState) {
+							case "Food": {
+								if(foodNumber > 0){
 									foods.add(new Food(pointClicked));
-								} break;
+									foodNumber--;
+								}
+							} break;
 
-								case "PowerupInstaMature": {
+							case "PowerupInstaMature": {
+								if(instaMatureNumber > 0){
 									foods.add(new PowerupInstaMature(pointClicked));
-								} break;
+									instaMatureNumber--;
+								}
+							} break;
 
-								case "PowerupNullHunger": {
+							case "PowerupNullHunger": {
+								if(pauseHungerNumber > 0){
 									foods.add(new PowerupNullHunger(pointClicked));
-								} break;
+									pauseHungerNumber--;
+								}
+							} break;
 
-								case "PowerupDoubleCoins": {
+							case "PowerupDoubleCoins": {
+								if(doubleCoinsNumber > 0){
 									foods.add(new PowerupDoubleCoins(pointClicked));
-								} break;
+									doubleCoinsNumber--;
+								}
+							} break;
 
-								case "PowerupHaste": {
+							case "PowerupHaste": {
+								if(hasteNumber > 0){
 									foods.add(new PowerupHaste(pointClicked));
-								} break;
-							}
-							foodNumber-=1;
+									hasteNumber--;
+								}
+							} break;
 						}
 					}
 				}
@@ -388,6 +535,15 @@ public class Game extends JPanel{
 			}
 		});
 
+		try{
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/menu.wav"));
+			menuClip = AudioSystem.getClip();
+			menuClip.open(audioInputStream);
+			menuClip.start();
+			menuClip.loop(Clip.LOOP_CONTINUOUSLY); //IF NEEDED LOOP, MOST LIKELY FOR MENU BGM
+		}
+		catch(Exception e){}
+
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
@@ -409,18 +565,7 @@ public class Game extends JPanel{
 	    };
 	    updateThread.start();  // start the thread to run updates
 
-		//start bgm
-		try{
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/ingame.wav"));
-			clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
-			clip.start();
-			// gamePause();
-			// clip.loop(Clip.LOOP_CONTINUOUSLY); //IF NEEDED LOOP, MOST LIKELY FOR MENU BGM
-		}
-		catch(Exception e){}
-
-		Thread timerThread = new Thread () { //thread for timer for game triggers and events (bgm triggers, etc)
+		timerThread = new Thread () { //thread for timer for game triggers and events (bgm triggers, etc)
 			@Override
 			public void run() {
 				while (!gameOver) {
@@ -428,7 +573,6 @@ public class Game extends JPanel{
 						Thread.sleep(1000);
 					} catch (InterruptedException ex) { }
 					timer--;
-					// System.out.println(timer);
 					if(timer==0)
 						gameOver = true;  //END GAME AFTER 5 MINS
 					while(!isPlaying) {
@@ -439,7 +583,6 @@ public class Game extends JPanel{
 				}
 			}
 		};
-		timerThread.start();  // start the thread to run updates
 	}
 
 	public void buy(String s){
@@ -450,7 +593,38 @@ public class Game extends JPanel{
 					money-=20;
 				}
 				break;
+			case "food":
+				if(money >= 25) {
+					foodNumber += 25;
+					money-=25;
+				}
+				break;
+			case "pauseHunger":
+				if(money >= 25) {
+					pauseHungerNumber += 5;
+					money-=25;
+				}
+				break;
+			case "instaMature":
+				if(money >= 25) {
+					instaMatureNumber += 5;
+					money-=25;
+				}
+				break;
+			case "doubleCoins":
+				if(money >= 25) {
+					doubleCoinsNumber += 5;
+					money-=25;
+				}
+				break;
+			case "haste":
+				if(money >= 25) {
+					hasteNumber += 5;
+					money-=25;
+				}
+				break;
 		}
+		Utilities.playSFX("assets/sounds/sfx/buy.wav");
 	}
 
 	public void setPanel(String panel){
@@ -463,6 +637,20 @@ public class Game extends JPanel{
 				//add ingame elements here
 				this.panelMode = "game";
 				logo.setVisible(true);
+				foodButton.setVisible(true);
+				fishButton.setVisible(true);
+				pauseHungerButton.setVisible(true);
+				instaMatureButton.setVisible(true);
+				doubleCoinsButton.setVisible(true);
+				hasteButton.setVisible(true);
+
+				menuLogo.setVisible(false);
+				playButton.setVisible(false);
+				instructionsButton.setVisible(false);
+				highScoresButton.setVisible(false);
+				creditsButton.setVisible(false);
+				exitButton.setVisible(false);
+
 				break;
 		}
 	}
@@ -560,11 +748,11 @@ public class Game extends JPanel{
 	}
 	public void gamePause() {
 		if(isPlaying){
-			clipTime = clip.getMicrosecondPosition();
-			clip.stop();
+			clipTime = ingameClip.getMicrosecondPosition();
+			ingameClip.stop();
 		} else {
-			clip.setMicrosecondPosition(clipTime);
-			clip.start();
+			ingameClip.setMicrosecondPosition(clipTime);
+			ingameClip.start();
 		}
 		isPlaying = isPlaying?false:true;
 	}
@@ -577,7 +765,13 @@ public class Game extends JPanel{
 		super.paintComponent(g);  // paint background
 
 		transform.setToIdentity();
-		g2d.drawImage(clip.getMicrosecondPosition() < SCARY_TIMESTAMP? bgImg: bgImgScary, transform, null);
+
+		if(ingameClip == null || ingameClip.getMicrosecondPosition() < SCARY_TIMESTAMP){
+			g2d.drawImage(bgImg, transform, null);
+		}
+		else{
+			g2d.drawImage(bgImgScary, transform, null);
+		}
 
 		//paint food
 		for(int i = 0; i < foods.size(); i++){
@@ -626,6 +820,20 @@ public class Game extends JPanel{
 			x.convertToGameFish();
 			System.out.println("Converted " + x + " to game Fish");
 		}
+
+		Utilities.playSFX("assets/sounds/sfx/start_game.wav");
+
+		//start bgm
+		try{
+			menuClip.stop();
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/ingame.wav"));
+			ingameClip = AudioSystem.getClip();
+			ingameClip.open(audioInputStream);
+			ingameClip.start();
+		}
+		catch(Exception e){}
+
+		timerThread.start();  // start the thread to run updates
 	}
 
 	public void start(){

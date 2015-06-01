@@ -223,7 +223,7 @@ public class Fish extends Entity {
       this.imgHeight = img.getHeight();
     }
 
-    public void update() {
+    public synchronized void update() {
       //   System.out.println("Updating");
       // Search for nearby foods
       if(this.age == this.maturePoint ) { //Maturing
