@@ -63,6 +63,8 @@ public class Game extends JPanel{
 	public static GameHistory gameHistory;
 
 	//store all buttons here
+	private GameButton timesUpButton = null;
+	private GameButton timesUp = null;
 	private GameButton logo = null;
 	private GameButton menuLogo = null;
 	private GameButton foodButton = null;
@@ -95,11 +97,9 @@ public class Game extends JPanel{
 
 	private Thread timerThread;
 
-	public Game(String name) {
-
+	public void initialize(){
 		gameHistory = readGameHistory(); //Load game history
 		mouseState = "food";
-		this.playerName = name;
 		this.timer = 300;
 		isPlaying = true; //start the game paused
 		gameOver = false;
@@ -115,7 +115,50 @@ public class Game extends JPanel{
 		setLayout(null);
 		setSize(new Dimension(App.getScreenWidth(), App.getScreenHeight()));
 
+		if(menuClip != null){
+			menuClip.stop();
+		}
+
+		if(ingameClip != null){
+			ingameClip.stop();
+		}
+
 		//add all menu/ingame buttons
+
+		//times up
+		timesUpButton = new GameButton(
+			"assets/img/buttons/main_menu_normal.png",
+			"assets/img/buttons/main_menu_hover.png",
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.75f),
+			0.20f, 0.09f, false
+		);
+
+		timesUpButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				Utilities.playSFX("assets/sounds/sfx/button_click.wav");
+				replay();
+			}
+		});
+
+		timesUpButton.setVisible(false);
+		add(timesUpButton);
+
+		timesUp = new GameButton(
+			"assets/img/screen/times_up.png",
+			null,
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.5f),
+			0.57f, 0.68f, false
+		);
+
+		timesUp.setVisible(false);
+		add(timesUp);
 
 		//buy food
 		foodButton = new GameButton(
@@ -693,7 +736,6 @@ public class Game extends JPanel{
 							x.die(); // Auto increments money variable of player
 							clickedCoin = true;
 							Utilities.playSFX("assets/sounds/sfx/coin_click.wav");
-							// System.out.println("You have " + money + " coins");
 							break;
 						} else {
 							clickedCoin = false;
@@ -772,23 +814,23 @@ public class Game extends JPanel{
 		Thread updateThread = new Thread () {
 			@Override
 			public void run() { //Main game loop
-				while (!gameOver) { //While not yet game over
+				while(true){
 					update();
 					repaint();
-					try {
-						Thread.sleep(1000 / App.FRAME_RATE);
-					} catch (InterruptedException ex) { }
 					// loop thread sleep until game if the game is paused
 					while(!isPlaying) { // if paused, sleep indefinitely
 						try {
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
 						} catch (InterruptedException ex) { }
 					}
+
+					try {
+						Thread.sleep(1000 / App.FRAME_RATE);
+					} catch (InterruptedException ex) { }
 				}
-				saveGame();
 			}
-	    };
-	    updateThread.start();  // start the thread to run updates
+    };
+    updateThread.start();  // start the thread to run updates
 
 		timerThread = new Thread () { //thread for timer for game triggers and events (bgm triggers, etc)
 			@Override
@@ -798,8 +840,9 @@ public class Game extends JPanel{
 						Thread.sleep(1000);
 					} catch (InterruptedException ex) { }
 					timer--;
-					if(timer==0)
-						gameOver = true;  //END GAME AFTER 5 MINS
+					if(timer==0 && !gameOver){
+						endGame();  //END GAME AFTER 5 MINS
+					}
 					while(!isPlaying) {
 						try {
 							Thread.sleep(1000 / App.FRAME_RATE); //Pause the game
@@ -810,52 +853,58 @@ public class Game extends JPanel{
 		};
 	}
 
+	public Game() {
+		initialize();
+	}
+
 	public void buy(String s){
-		switch(s){
-			case "fish":
-				if(money >= 20) {
-					fish.add(new Fish(false));
-					money-=20;
-					coinsSpent+=20;
-				}
-				break;
-			case "food":
-				if(money >= 25) {
-					foodNumber += 25;
-					money-=25;
-					coinsSpent+=25;
-				}
-				break;
-			case "pauseHunger":
-				if(money >= 25) {
-					pauseHungerNumber += 5;
-					money-=25;
-					coinsSpent+=25;
-				}
-				break;
-			case "instaMature":
-				if(money >= 25) {
-					instaMatureNumber += 5;
-					money-=25;
-					coinsSpent+=25;
-				}
-				break;
-			case "doubleCoins":
-				if(money >= 25) {
-					doubleCoinsNumber += 5;
-					money-=25;
-					coinsSpent+=25;
-				}
-				break;
-			case "haste":
-				if(money >= 25) {
-					hasteNumber += 5;
-					money-=25;
-					coinsSpent+=25;
-				}
-				break;
+		if(this.panelMode == "game"){
+			switch(s){
+				case "fish":
+					if(money >= 20) {
+						fish.add(new Fish(false));
+						money-=20;
+						coinsSpent+=20;
+					}
+					break;
+				case "food":
+					if(money >= 25) {
+						foodNumber += 25;
+						money-=25;
+						coinsSpent+=25;
+					}
+					break;
+				case "pauseHunger":
+					if(money >= 25) {
+						pauseHungerNumber += 5;
+						money-=25;
+						coinsSpent+=25;
+					}
+					break;
+				case "instaMature":
+					if(money >= 25) {
+						instaMatureNumber += 5;
+						money-=25;
+						coinsSpent+=25;
+					}
+					break;
+				case "doubleCoins":
+					if(money >= 25) {
+						doubleCoinsNumber += 5;
+						money-=25;
+						coinsSpent+=25;
+					}
+					break;
+				case "haste":
+					if(money >= 25) {
+						hasteNumber += 5;
+						money-=25;
+						coinsSpent+=25;
+					}
+					break;
+			}
+			Utilities.playSFX("assets/sounds/sfx/buy.wav");
 		}
-		Utilities.playSFX("assets/sounds/sfx/buy.wav");
 	}
 
 	public void setPanel(String panel){
@@ -949,6 +998,15 @@ public class Game extends JPanel{
 	public void endGame() {
 		// Stops the Running game by flagging gameOver variable
 		// End game when tank is empty or if timer runs out.
+		if(!gameOver){
+			this.panelMode = "endGame";
+			timesUp.setVisible(true);
+			timesUpButton.setVisible(true);
+			for(Fish x: fish){
+				x.convertToMenuFish();
+			}
+			saveGame();
+		}
 		gameOver = true;
 	}
 
@@ -961,7 +1019,7 @@ public class Game extends JPanel{
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(gameHistory);
 			oos.close();
-			System.out.println("Game saved successfully!");
+
 		} catch (FileNotFoundException e) {
 			System.out.println("FileNotFoundException Line 261 Game.java");
 		} catch (IOException e) {
@@ -1041,7 +1099,7 @@ public class Game extends JPanel{
 			// temp.printPlayers();
 			return temp;
 		}catch (FileNotFoundException e) {
-			System.out.println("Game History not found. A new one will be created when you exit");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -1140,6 +1198,10 @@ public class Game extends JPanel{
 		for(int i=0; i<2; i++) {
 			fish.add(new Fish(new Point2D.Double(r.nextInt(App.getScreenWidth()/2)+200, r.nextInt(App.getScreenHeight()/2)+200), true));
 		}
+	}
+
+	private void replay(){
+		App.newGame();
 	}
 
 	private BufferedImage createGreenVersion(BufferedImage image, float f){

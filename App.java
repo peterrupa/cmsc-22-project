@@ -13,6 +13,7 @@ public class App {
 	private static Game ongoingGame;
 	private GameHistory history;
 	public static JFrame frame;
+	private static Container cp;
 	public App() throws Exception{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -29,15 +30,20 @@ public class App {
 				frame.setVisible(true);
 
 				// Do not refactor this!
-				Container cp = frame.getContentPane();
+				cp = frame.getContentPane();
 				cp.setSize(new Dimension(getScreenWidth(), getScreenHeight()));
 
-				ongoingGame = new Game("Zombiequarium");
-				ongoingGame.start();
-
-				cp.add(ongoingGame);
+				newGame();
 			}
 		});
+	}
+
+	public static void newGame(){
+		ongoingGame = new Game();
+		ongoingGame.start();
+
+		cp.removeAll();
+		cp.add(ongoingGame);
 	}
 
 	public static int getScreenWidth() {

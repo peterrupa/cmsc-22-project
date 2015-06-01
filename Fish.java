@@ -356,6 +356,10 @@ public class Fish extends Entity {
       this.isMainMenu = false;
     }
 
+    public void convertToMenuFish() {
+      this.isMainMenu = true;
+    }
+
     public boolean isMainMenu() {
       return isMainMenu;
     }
