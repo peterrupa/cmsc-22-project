@@ -71,7 +71,7 @@ public class GameButton extends JButton{
 
 			@Override
 			public void mouseExited(MouseEvent e){
-				if(!disabled){
+				if(!disabled && img_hover != null){
 					img_current = img;
 				}
 			}

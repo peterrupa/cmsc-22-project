@@ -169,7 +169,9 @@ public class Fish extends Entity {
     }
 
     public void eat(Food f){
-      f.die(this);
+      if(f.isAlive()){
+        f.die(this);
+      }
       //reset proper image if it was hungry
     }
     public void die() {
@@ -360,15 +362,15 @@ public class Fish extends Entity {
 
     public void haste() {
       // Add haste timer. Doubles speed and coin regeneration rate
-      this.hasteModifyTimer = App.FRAME_RATE*(15);
+      this.hasteModifyTimer = App.FRAME_RATE*(30);
     }
 
     public void nullHunger() {
-      this.hungerNulledTimer = App.FRAME_RATE*(30);
+      this.hungerNulledTimer = App.FRAME_RATE*(50);
     }
 
     public void doubledCoins() {
-      this.coinModifyTimer = App.FRAME_RATE*(30);
+      this.coinModifyTimer = App.FRAME_RATE*(50);
     }
 
     //  Functions that change image to render/rotate. Please

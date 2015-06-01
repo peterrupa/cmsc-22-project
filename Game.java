@@ -288,6 +288,7 @@ public class Game extends JPanel{
 		//counters
 		coinCounter = new Counter(
 			"assets/img/counters/coin_normal.png",
+			null,
 			(int)(App.getScreenWidth() * 0.5f),
 			(int)(App.getScreenHeight() * 0.06f),
 			0.10f, 0.08f, false
@@ -298,6 +299,7 @@ public class Game extends JPanel{
 
 		foodCounter = new Counter(
 			"assets/img/counters/food_normal.png",
+			"assets/img/counters/food_selected.png",
 			(int)(App.getScreenWidth() * 0.065f),
 			(int)(App.getScreenHeight() * 0.3f),
 			0.10f, 0.08f, false
@@ -307,6 +309,7 @@ public class Game extends JPanel{
 
 		pauseHungerCounter = new Counter(
 			"assets/img/counters/pause_hunger_normal.png",
+			"assets/img/counters/pause_hunger_selected.png",
 			(int)(App.getScreenWidth() * 0.065f),
 			(int)(App.getScreenHeight() * 0.4f),
 			0.10f, 0.08f, false
@@ -316,6 +319,7 @@ public class Game extends JPanel{
 
 		instaMatureCounter = new Counter(
 			"assets/img/counters/insta_mature_normal.png",
+			"assets/img/counters/insta_mature_selected.png",
 			(int)(App.getScreenWidth() * 0.065f),
 			(int)(App.getScreenHeight() * 0.5f),
 			0.10f, 0.08f, false
@@ -325,6 +329,7 @@ public class Game extends JPanel{
 
 		doubleCoinsCounter = new Counter(
 			"assets/img/counters/double_coins_normal.png",
+			"assets/img/counters/double_coins_selected.png",
 			(int)(App.getScreenWidth() * 0.065f),
 			(int)(App.getScreenHeight() * 0.6f),
 			0.10f, 0.08f, false
@@ -334,6 +339,7 @@ public class Game extends JPanel{
 
 		hasteCounter = new Counter(
 			"assets/img/counters/haste_normal.png",
+			"assets/img/counters/haste_selected.png",
 			(int)(App.getScreenWidth() * 0.065f),
 			(int)(App.getScreenHeight() * 0.7f),
 			0.10f, 0.08f, false
@@ -341,7 +347,78 @@ public class Game extends JPanel{
 
 		hasteCounter.setVisible(false);
 
+		foodCounter.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(!foodCounter.isSelected()){
+					mouseState = "food";
+					foodCounter.setSelected();
+					pauseHungerCounter.setUnselected();
+					instaMatureCounter.setUnselected();
+					doubleCoinsCounter.setUnselected();
+					hasteCounter.setUnselected();
+				}
+			}
+		});
+
+		pauseHungerCounter.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(!pauseHungerCounter.isSelected()){
+					mouseState = "pauseHunger";
+					foodCounter.setUnselected();
+					pauseHungerCounter.setSelected();
+					instaMatureCounter.setUnselected();
+					doubleCoinsCounter.setUnselected();
+					hasteCounter.setUnselected();
+				}
+			}
+		});
+
+		instaMatureCounter.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(!instaMatureCounter.isSelected()){
+					mouseState = "instaMature";
+					foodCounter.setUnselected();
+					pauseHungerCounter.setUnselected();
+					instaMatureCounter.setSelected();
+					doubleCoinsCounter.setUnselected();
+					hasteCounter.setUnselected();
+				}
+			}
+		});
+
+		doubleCoinsCounter.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(!doubleCoinsCounter.isSelected()){
+					mouseState = "doubleCoins";
+					foodCounter.setUnselected();
+					pauseHungerCounter.setUnselected();
+					instaMatureCounter.setUnselected();
+					doubleCoinsCounter.setSelected();
+					hasteCounter.setUnselected();
+				}
+			}
+		});
+
+		hasteCounter.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(!hasteCounter.isSelected()){
+					mouseState = "haste";
+					foodCounter.setUnselected();
+					pauseHungerCounter.setUnselected();
+					instaMatureCounter.setUnselected();
+					doubleCoinsCounter.setUnselected();
+					hasteCounter.setSelected();
+				}
+			}
+		});
+
 		add(foodCounter);
+		foodCounter.setSelected();
 		add(pauseHungerCounter);
 		add(instaMatureCounter);
 		add(doubleCoinsCounter);
@@ -556,35 +633,35 @@ public class Game extends JPanel{
 					}
 					if(!clickedCoin) {
 						switch(mouseState) {
-							case "Food": {
+							case "food": {
 								if(foodNumber > 0){
 									foods.add(new Food(pointClicked));
 									foodNumber--;
 								}
 							} break;
 
-							case "PowerupInstaMature": {
+							case "instaMature": {
 								if(instaMatureNumber > 0){
 									foods.add(new PowerupInstaMature(pointClicked));
 									instaMatureNumber--;
 								}
 							} break;
 
-							case "PowerupNullHunger": {
+							case "pauseHunger": {
 								if(pauseHungerNumber > 0){
 									foods.add(new PowerupNullHunger(pointClicked));
 									pauseHungerNumber--;
 								}
 							} break;
 
-							case "PowerupDoubleCoins": {
+							case "doubleCoins": {
 								if(doubleCoinsNumber > 0){
 									foods.add(new PowerupDoubleCoins(pointClicked));
 									doubleCoinsNumber--;
 								}
 							} break;
 
-							case "PowerupHaste": {
+							case "haste": {
 								if(hasteNumber > 0){
 									foods.add(new PowerupHaste(pointClicked));
 									hasteNumber--;
@@ -612,51 +689,6 @@ public class Game extends JPanel{
 				if(panelMode == "game"){
 					gamePause();
 				}
-			}
-		});
-
-		// Food
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("Z"), "Food");
-		this.getActionMap().put("Food", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				mouseState = "Food";
-			}
-		});
-
-		// PowerupInstaMature
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("X"), "PowerupInstaMature");
-		this.getActionMap().put("PowerupInstaMature", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				mouseState = "PowerupInstaMature";
-			}
-		});
-
-		// PowerupNullHunger
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("C"), "PowerupNullHunger");
-		this.getActionMap().put("PowerupNullHunger", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				mouseState = "PowerupNullHunger";
-			}
-		});
-
-		// PowerupDoubleCoins
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("V"), "PowerupDoubleCoins");
-		this.getActionMap().put("PowerupDoubleCoins", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				mouseState = "PowerupDoubleCoins";
-			}
-		});
-
-		// Poweruphaste
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("B"), "PowerupHaste");
-		this.getActionMap().put("PowerupHaste", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				mouseState = "PowerupHaste";
 			}
 		});
 
