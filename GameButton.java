@@ -97,7 +97,6 @@ public class GameButton extends JButton{
 
 	public void paintComponent(Graphics g){
 		g.drawImage(img_current, 0, 0, null);
-		super.paintComponents(g);
 	}
 
 	public void setEnabled(){
