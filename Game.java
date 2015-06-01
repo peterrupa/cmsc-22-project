@@ -63,6 +63,13 @@ public class Game extends JPanel{
 
 	//store all buttons here
 	GameButton logo = null;
+	GameButton foodButton = null;
+	GameButton fishButton = null;
+	GameButton pauseHungerButton = null;
+	GameButton doubleCoinsButton = null;
+	GameButton instaMatureButton = null;
+	GameButton hasteButton = null;
+	GameButton muteButton = null;
 
 	public Game(String name) {
 
@@ -73,7 +80,7 @@ public class Game extends JPanel{
 		isPlaying = true; //start the game paused
 		gameOver = false;
 		this.panelMode = "mainMenu";
-		this.money = 1000;
+		this.money = 19;
 		this.foodNumber = 1000;
 
 		//set panel settings
@@ -82,31 +89,167 @@ public class Game extends JPanel{
 
 		//add all menu/ingame buttons
 
-		final GameButton test2 = new GameButton(
+		//buy food
+		foodButton = new GameButton(
 			"assets/img/buttons/food_normal.png",
 			"assets/img/buttons/food_hover.png",
 			"assets/img/buttons/food_disabled.png",
 			"assets/img/buttons/food_pressed.png",
-			500, 500, 0.07f, 0.07f, true
+			(int)(App.getScreenWidth() * 0.2f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.08f, 0.08f, true
 		);
 
-		test2.addActionListener(new ActionListener(){
+		foodButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if(!test2.disabled){
-					System.out.println("bleep");
+				if(foodButton.isEnabled()){
+					System.out.println("buy food");
 				}
 			}
 		});
 
-		add(test2);
+		add(foodButton);
 
+		//buy fish
+		fishButton = new GameButton(
+			"assets/img/buttons/fish_normal.png",
+			"assets/img/buttons/fish_hover.png",
+			"assets/img/buttons/fish_disabled.png",
+			"assets/img/buttons/fish_pressed.png",
+			(int)(App.getScreenWidth() * 0.3f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.08f, 0.08f, true
+		);
+
+		fishButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(fishButton.isEnabled()){
+					buy("fish");
+				}
+			}
+		});
+
+		add(fishButton);
+
+		//pause hunger button
+		pauseHungerButton = new GameButton(
+			"assets/img/buttons/pause_hunger_normal.png",
+			"assets/img/buttons/pause_hunger_hover.png",
+			"assets/img/buttons/pause_hunger_disabled.png",
+			"assets/img/buttons/pause_hunger_pressed.png",
+			(int)(App.getScreenWidth() * 0.45f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.08f, 0.08f, true
+		);
+
+		pauseHungerButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(pauseHungerButton.isEnabled()){
+					System.out.println("buy pause hunger");
+				}
+			}
+		});
+
+		add(pauseHungerButton);
+
+		//double coin button
+		doubleCoinsButton = new GameButton(
+			"assets/img/buttons/double_coins_normal.png",
+			"assets/img/buttons/double_coins_hover.png",
+			"assets/img/buttons/double_coins_disabled.png",
+			"assets/img/buttons/double_coins_pressed.png",
+			(int)(App.getScreenWidth() * 0.55f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.08f, 0.08f, true
+		);
+
+		doubleCoinsButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(doubleCoinsButton.isEnabled()){
+					System.out.println("buy double coin");
+				}
+			}
+		});
+
+		add(doubleCoinsButton);
+
+		//insta mature button
+		instaMatureButton = new GameButton(
+			"assets/img/buttons/insta_mature_normal.png",
+			"assets/img/buttons/insta_mature_hover.png",
+			"assets/img/buttons/insta_mature_disabled.png",
+			"assets/img/buttons/insta_mature_pressed.png",
+			(int)(App.getScreenWidth() * 0.65f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.08f, 0.08f, true
+		);
+
+		instaMatureButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(instaMatureButton.isEnabled()){
+					System.out.println("buy insta mature");
+				}
+			}
+		});
+
+		add(instaMatureButton);
+
+		//haste
+		hasteButton = new GameButton(
+			"assets/img/buttons/haste_normal.png",
+			"assets/img/buttons/haste_hover.png",
+			"assets/img/buttons/haste_disabled.png",
+			"assets/img/buttons/haste_pressed.png",
+			(int)(App.getScreenWidth() * 0.75f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.08f, 0.08f, true
+		);
+
+		hasteButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(hasteButton.isEnabled()){
+					System.out.println("buy haste");
+				}
+			}
+		});
+
+		add(hasteButton);
+
+		//mute
+		muteButton = new GameButton(
+			"assets/img/buttons/unmute_normal.png",
+			"assets/img/buttons/unmute_hover.png",
+			null,
+			"assets/img/buttons/unmute_pressed.png",
+			App.getScreenWidth() - (int)(App.getScreenWidth() * 0.07f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.065f, 0.065f, true
+		);
+
+		muteButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				System.out.println("mute");
+			}
+		});
+
+		add(muteButton);
+
+		//logo
 		logo = new GameButton(
 			"assets/img/logo/logo.png",
 			null,
 			null,
 			null,
-			(int)(App.getScreenWidth() * 0.06f), App.getScreenHeight() - (int)(App.getScreenHeight() * 0.12f), 0.09f, 0.09f, true
+			(int)(App.getScreenWidth() * 0.07f),
+			App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
+			0.09f, 0.09f, true
 		);
 
 		add(logo);
@@ -182,18 +325,6 @@ public class Game extends JPanel{
 			public void mousePressed(MouseEvent e){}
 		});
 
-		// TEMPORARY, PARA LANG MAKAPAGLAGAY TAYO NG FOOD
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("A"), "newFish");
-		this.getActionMap().put("newFish", new AbstractAction(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				if(money >= 20) {
-					fish.add(new Fish(false));
-					money-=20;
-				}
-			}
-		});
-
 		// Pause
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "pause");
 		this.getActionMap().put("pause", new AbstractAction(){
@@ -261,6 +392,7 @@ public class Game extends JPanel{
 			@Override
 			public void run() { //Main game loop
 				while (!gameOver) { //While not yet game over
+					update();
 					repaint();
 					try {
 						Thread.sleep(1000 / App.FRAME_RATE);
@@ -310,6 +442,17 @@ public class Game extends JPanel{
 		timerThread.start();  // start the thread to run updates
 	}
 
+	public void buy(String s){
+		switch(s){
+			case "fish":
+				if(money >= 20) {
+					fish.add(new Fish(false));
+					money-=20;
+				}
+				break;
+		}
+	}
+
 	public void setPanel(String panel){
 		switch(panel){
 			case "mainMenu":
@@ -347,6 +490,53 @@ public class Game extends JPanel{
 		}
 
 		return;
+	}
+
+	private void update(){
+		if(money < 20){
+			if(fishButton.isEnabled()){
+				fishButton.setDisabled();
+			}
+		}
+		else{
+			if(!fishButton.isEnabled()){
+				fishButton.setEnabled();
+			}
+		}
+		if(money < 25){
+			if(foodButton.isEnabled()){
+				foodButton.setDisabled();
+			}
+			if(pauseHungerButton.isEnabled()){
+				pauseHungerButton.setDisabled();
+			}
+			if(instaMatureButton.isEnabled()){
+				instaMatureButton.setDisabled();
+			}
+			if(doubleCoinsButton.isEnabled()){
+				doubleCoinsButton.setDisabled();
+			}
+			if(hasteButton.isEnabled()){
+				hasteButton.setDisabled();
+			}
+		}
+		else{
+			if(!foodButton.isEnabled()){
+				foodButton.setEnabled();
+			}
+			if(!pauseHungerButton.isEnabled()){
+				pauseHungerButton.setEnabled();
+			}
+			if(!instaMatureButton.isEnabled()){
+				instaMatureButton.setEnabled();
+			}
+			if(!doubleCoinsButton.isEnabled()){
+				doubleCoinsButton.setEnabled();
+			}
+			if(!hasteButton.isEnabled()){
+				hasteButton.setEnabled();
+			}
+		}
 	}
 
 	private GameHistory readGameHistory() {

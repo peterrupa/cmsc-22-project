@@ -99,14 +99,18 @@ public class GameButton extends JButton{
 		g.drawImage(img_current, 0, 0, null);
 	}
 
-	public void setEnabled(boolean b){
-		if(b){
-			img_current = img;
-			disabled = false;
-		}
-		else{
-			img_current = img_disabled;
-			disabled = true;
-		}
+	public void setEnabled(){
+		img_current = img;
+		disabled = false;
+		System.out.println("NOT HAPPEN");
+	}
+
+	public void setDisabled(){
+		img_current = img_disabled;
+		disabled = true;
+	}
+
+	public boolean isEnabled(){
+		return !disabled;
 	}
 }
