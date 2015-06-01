@@ -73,6 +73,11 @@ public class Game extends JPanel{
 	GameButton hasteButton = null;
 	GameButton muteButton = null;
 	Counter coinCounter = null;
+	Counter foodCounter = null;
+	Counter pauseHungerCounter = null;
+	Counter instaMatureCounter = null;
+	Counter doubleCoinsCounter = null;
+	Counter hasteCounter = null;
 
 
 	GameButton playButton = null;
@@ -280,7 +285,7 @@ public class Game extends JPanel{
 		add(logo);
 		logo.setVisible(false);
 
-		//credits
+		//counters
 		coinCounter = new Counter(
 			"assets/img/counters/coin_normal.png",
 			(int)(App.getScreenWidth() * 0.5f),
@@ -290,6 +295,57 @@ public class Game extends JPanel{
 
 		coinCounter.setVisible(false);
 		add(coinCounter);
+
+		foodCounter = new Counter(
+			"assets/img/counters/food_normal.png",
+			(int)(App.getScreenWidth() * 0.065f),
+			(int)(App.getScreenHeight() * 0.3f),
+			0.10f, 0.08f, false
+		);
+
+		foodCounter.setVisible(false);
+
+		pauseHungerCounter = new Counter(
+			"assets/img/counters/pause_hunger_normal.png",
+			(int)(App.getScreenWidth() * 0.065f),
+			(int)(App.getScreenHeight() * 0.4f),
+			0.10f, 0.08f, false
+		);
+
+		pauseHungerCounter.setVisible(false);
+
+		instaMatureCounter = new Counter(
+			"assets/img/counters/insta_mature_normal.png",
+			(int)(App.getScreenWidth() * 0.065f),
+			(int)(App.getScreenHeight() * 0.5f),
+			0.10f, 0.08f, false
+		);
+
+		instaMatureCounter.setVisible(false);
+
+		doubleCoinsCounter = new Counter(
+			"assets/img/counters/double_coins_normal.png",
+			(int)(App.getScreenWidth() * 0.065f),
+			(int)(App.getScreenHeight() * 0.6f),
+			0.10f, 0.08f, false
+		);
+
+		doubleCoinsCounter.setVisible(false);
+
+		hasteCounter = new Counter(
+			"assets/img/counters/haste_normal.png",
+			(int)(App.getScreenWidth() * 0.065f),
+			(int)(App.getScreenHeight() * 0.7f),
+			0.10f, 0.08f, false
+		);
+
+		hasteCounter.setVisible(false);
+
+		add(foodCounter);
+		add(pauseHungerCounter);
+		add(instaMatureCounter);
+		add(doubleCoinsCounter);
+		add(hasteCounter);
 
 		//MENU ELEMENTS
 
@@ -718,7 +774,13 @@ public class Game extends JPanel{
 				instaMatureButton.setVisible(false);
 				doubleCoinsButton.setVisible(false);
 				hasteButton.setVisible(false);
+
 				coinCounter.setVisible(false);
+				foodCounter.setVisible(false);
+				pauseHungerCounter.setVisible(false);
+				instaMatureCounter.setVisible(false);
+				doubleCoinsCounter.setVisible(false);
+				hasteCounter.setVisible(false);
 
 				menuLogo.setVisible(true);
 				playButton.setVisible(true);
@@ -742,7 +804,13 @@ public class Game extends JPanel{
 				instaMatureButton.setVisible(true);
 				doubleCoinsButton.setVisible(true);
 				hasteButton.setVisible(true);
+
 				coinCounter.setVisible(true);
+				foodCounter.setVisible(true);
+				pauseHungerCounter.setVisible(true);
+				instaMatureCounter.setVisible(true);
+				doubleCoinsCounter.setVisible(true);
+				hasteCounter.setVisible(true);
 
 				menuLogo.setVisible(false);
 				playButton.setVisible(false);
@@ -793,6 +861,11 @@ public class Game extends JPanel{
 	private void update(){
 		//update money
 		coinCounter.setCount(money);
+		foodCounter.setCount(foodNumber);
+		pauseHungerCounter.setCount(pauseHungerNumber);
+		instaMatureCounter.setCount(instaMatureNumber);
+		doubleCoinsCounter.setCount(doubleCoinsNumber);
+		hasteCounter.setCount(hasteNumber);
 
 		//shop states
 		if(money < 20){
@@ -1005,8 +1078,4 @@ public class Game extends JPanel{
 	public ArrayList<Food> getFood() {
 		return this.foods;
 	}
-
-	// public Point2D.Double setPoint(double x, double y) {
-	// 	return new Point(100*x*App.getScreenWidth() , 100*y*App.getScreenHeight());
-	// }
 }
