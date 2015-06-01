@@ -82,7 +82,7 @@ public class Game extends JPanel{
 
 		//add all menu/ingame buttons
 
-		GameButton test2 = new GameButton(
+		final GameButton test2 = new GameButton(
 			"assets/img/buttons/food_normal.png",
 			"assets/img/buttons/food_hover.png",
 			"assets/img/buttons/food_disabled.png",
@@ -98,6 +98,8 @@ public class Game extends JPanel{
 				}
 			}
 		});
+
+		add(test2);
 
 		logo = new GameButton(
 			"assets/img/logo/logo.png",

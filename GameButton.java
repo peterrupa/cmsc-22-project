@@ -13,25 +13,25 @@ public class GameButton extends JButton{
 		try{
 			if(square){
 				img = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset)), w);
-				if(img_hover != null){
+				if(asset_hover != null){
 					img_hover = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_hover)), w);
 				}
-				if(img_disabled != null){
+				if(asset_disabled != null){
 					img_disabled = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_disabled)), w);
 				}
-				if(img_pressed != null){
+				if(asset_pressed != null){
 					img_pressed = Utilities.flexImageSquare(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w);
 				}
 			}
 			else{
 				img = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset)), w, h);
-				if(img_hover != null){
+				if(asset_hover != null){
 					img_hover = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_hover)), w, h);
 				}
-				if(img_disabled != null){
+				if(asset_disabled != null){
 					img_disabled = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_disabled)), w, h);
 				}
-				if(img_pressed != null){
+				if(asset_pressed != null){
 					img_pressed = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w, h);
 				}
 			}
@@ -64,26 +64,30 @@ public class GameButton extends JButton{
 		addMouseListener(new MouseListener(){
 			@Override
 			public void mouseEntered(MouseEvent e){
-				if(!disabled && img_hover != null)
-				img_current = img_hover;
+				if(!disabled && img_hover != null){
+					img_current = img_hover;
+				}
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e){
-				if(!disabled)
-				img_current = img;
+				if(!disabled){
+					img_current = img;
+				}
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e){
-				if(!disabled && img_hover != null)
-				img_current = img_hover;
+				if(!disabled && img_hover != null){
+					img_current = img_hover;
+				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e){
-				if(!disabled && img_pressed != null)
-				img_current = img_pressed;
+				if(!disabled && img_pressed != null){
+					img_current = img_pressed;
+				}
 			}
 
 			@Override
