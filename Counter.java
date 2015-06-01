@@ -58,6 +58,6 @@ public class Counter extends GameButton {
     super.paintComponent(g);
     g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, (int)(img.getHeight() * 0.6f)));
     g.setColor(Color.BLACK);
-    g.drawString(Integer.toString(count), (int)(img.getWidth() * 0.6f), (int)(img.getHeight() * 0.75f));
+    g.drawString(Integer.toString(count), (int)(img.getWidth() * 0.5f), (int)(img.getHeight() * 0.75f));
   }
 }

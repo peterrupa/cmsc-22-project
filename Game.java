@@ -63,33 +63,35 @@ public class Game extends JPanel{
 	public static GameHistory gameHistory;
 
 	//store all buttons here
-	GameButton logo = null;
-	GameButton menuLogo = null;
-	GameButton foodButton = null;
-	GameButton fishButton = null;
-	GameButton pauseHungerButton = null;
-	GameButton doubleCoinsButton = null;
-	GameButton instaMatureButton = null;
-	GameButton hasteButton = null;
-	GameButton muteButton = null;
-	Counter coinCounter = null;
-	Counter foodCounter = null;
-	Counter pauseHungerCounter = null;
-	Counter instaMatureCounter = null;
-	Counter doubleCoinsCounter = null;
-	Counter hasteCounter = null;
+	private GameButton logo = null;
+	private GameButton menuLogo = null;
+	private GameButton foodButton = null;
+	private GameButton fishButton = null;
+	private GameButton pauseHungerButton = null;
+	private GameButton doubleCoinsButton = null;
+	private GameButton instaMatureButton = null;
+	private GameButton hasteButton = null;
+	private GameButton muteButton = null;
+	private Counter coinCounter = null;
+	private Counter foodCounter = null;
+	private Counter pauseHungerCounter = null;
+	private Counter instaMatureCounter = null;
+	private Counter doubleCoinsCounter = null;
+	private Counter hasteCounter = null;
+	private Counter timerCounter = null;
 
 
-	GameButton playButton = null;
-	GameButton instructionsButton = null;
-	GameButton highScoresButton = null;
-	GameButton creditsButton = null;
-	GameButton exitButton = null;
-	GameButton instructions = null;
-	GameButton credits = null;
-	GameButton mainMenuButton = null;
+	private GameButton playButton = null;
+	private GameButton instructionsButton = null;
+	private GameButton highScoresButton = null;
+	private GameButton creditsButton = null;
+	private GameButton exitButton = null;
+	private GameButton play = null;
+	private GameButton instructions = null;
+	private GameButton credits = null;
+	private GameButton mainMenuButton = null;
 
-	Thread timerThread;
+	private Thread timerThread;
 
 	public Game(String name) {
 
@@ -424,6 +426,17 @@ public class Game extends JPanel{
 		add(doubleCoinsCounter);
 		add(hasteCounter);
 
+		timerCounter = new Counter(
+			"assets/img/counters/timer.png",
+			null,
+			App.getScreenWidth() - (int)(App.getScreenWidth() * 0.065f),
+			(int)(App.getScreenHeight() * 0.06f),
+			0.10f, 0.08f, false
+		);
+
+		timerCounter.setVisible(false);
+		add(timerCounter);
+
 		//MENU ELEMENTS
 
 		//shared main menu button
@@ -447,6 +460,20 @@ public class Game extends JPanel{
 		mainMenuButton.setVisible(false);
 
 		add(mainMenuButton);
+
+		//play
+		play = new GameButton(
+			"assets/img/screen/play.png",
+			null,
+			null,
+			null,
+			(int)(App.getScreenWidth() * 0.5f),
+			(int)(App.getScreenHeight() * 0.5f),
+			0.57f, 0.68f, false
+		);
+
+		play.setVisible(false);
+		add(play);
 
 		//instructions
 		instructions = new GameButton(
@@ -504,7 +531,7 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "mainMenu"){
-					System.out.println("PLAY");
+					setPanel("play");
 				}
 			}
 		});
@@ -813,6 +840,7 @@ public class Game extends JPanel{
 				instaMatureCounter.setVisible(false);
 				doubleCoinsCounter.setVisible(false);
 				hasteCounter.setVisible(false);
+				timerCounter.setVisible(false);
 
 				menuLogo.setVisible(true);
 				playButton.setVisible(true);
@@ -821,6 +849,7 @@ public class Game extends JPanel{
 				creditsButton.setVisible(true);
 				exitButton.setVisible(true);
 
+				play.setVisible(false);
 				instructions.setVisible(false);
 				credits.setVisible(false);
 				mainMenuButton.setVisible(false);
@@ -843,6 +872,7 @@ public class Game extends JPanel{
 				instaMatureCounter.setVisible(true);
 				doubleCoinsCounter.setVisible(true);
 				hasteCounter.setVisible(true);
+				timerCounter.setVisible(true);
 
 				menuLogo.setVisible(false);
 				playButton.setVisible(false);
@@ -851,6 +881,10 @@ public class Game extends JPanel{
 				creditsButton.setVisible(false);
 				exitButton.setVisible(false);
 
+				break;
+			case "play":
+				this.panelMode = "play";
+				play.setVisible(true);
 				break;
 			case "instructions":
 				this.panelMode = "instructions";
@@ -898,6 +932,9 @@ public class Game extends JPanel{
 		instaMatureCounter.setCount(instaMatureNumber);
 		doubleCoinsCounter.setCount(doubleCoinsNumber);
 		hasteCounter.setCount(hasteNumber);
+
+		//update timer
+		timerCounter.setCount(timer);
 
 		//shop states
 		if(money < 20){
