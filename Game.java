@@ -64,7 +64,7 @@ public class Game extends JPanel{
 
 	//store all buttons here
 	private GameButton timesUpButton = null;
-	private GameButton timesUp = null;
+	private TimesUp timesUp = null;
 	private GameButton logo = null;
 	private GameButton menuLogo = null;
 	private GameButton foodButton = null;
@@ -147,14 +147,11 @@ public class Game extends JPanel{
 		timesUpButton.setVisible(false);
 		add(timesUpButton);
 
-		timesUp = new GameButton(
+		timesUp = new TimesUp(
 			"assets/img/screen/times_up.png",
-			null,
-			null,
-			null,
 			(int)(App.getScreenWidth() * 0.5f),
 			(int)(App.getScreenHeight() * 0.5f),
-			0.57f, 0.68f, false
+			0.57f, 0.68f
 		);
 
 		timesUp.setVisible(false);
@@ -797,6 +794,7 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "game"){
+					System.out.println("PAUSED");
 					gamePause();
 				}
 			}
@@ -1040,6 +1038,9 @@ public class Game extends JPanel{
 
 		//update timer
 		timerCounter.setCount(timer);
+
+		timesUp.setName(playerName);
+		timesUp.setScore(coinsSpent);
 
 		//shop states
 		if(money < 20){
