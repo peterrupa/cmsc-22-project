@@ -35,9 +35,6 @@ public class GameButton extends JButton{
 					img_pressed = Utilities.flexImage(ImageIO.read(getClass().getClassLoader().getResource(asset_pressed)), w, h);
 				}
 			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 
 		img_current = img;
 
@@ -53,6 +50,7 @@ public class GameButton extends JButton{
 
 		x = x - (img.getWidth() / 2);
 		y = y - (img.getHeight() / 2);
+
 
 		if(square){
 			setBounds(x, y, width, width);
@@ -93,6 +91,9 @@ public class GameButton extends JButton{
 			@Override
 			public void mouseClicked(MouseEvent e){}
 		});
+    }catch(Exception e){
+        // e.printStackTrace();
+    }
 	}
 
 	public void paintComponent(Graphics g){

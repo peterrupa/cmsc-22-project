@@ -794,11 +794,23 @@ public class Game extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(panelMode == "game"){
-					System.out.println("PAUSED");
+					// System.out.println("PAUSED");
 					gamePause();
 				}
 			}
 		});
+
+
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("K"), "addmoney");
+        this.getActionMap().put("addmoney", new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(panelMode == "game"){
+                    // System.out.println("CHEAT ACTIVATED");
+                    addMoney(5000);
+                }
+            }
+        });
 
 		try{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("assets/sounds/bgm/menu.wav"));
