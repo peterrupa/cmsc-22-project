@@ -5,7 +5,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class Utilities {
-  public static BufferedImage flexImageSquare(BufferedImage image, float f) {
+public static BufferedImage flexImageSquare(BufferedImage image, float f) {
     int scaling = 100;
     int finalWidth = (int)(App.getScreenWidth() * f);
     int finalHeight = (int)(App.getScreenWidth() * f);
@@ -17,9 +17,9 @@ public class Utilities {
     g2d.drawImage(image, 0, 0, finalWidth, finalHeight, null);
 
     return resized;
-  }
+}
 
-  public static BufferedImage flexImage(BufferedImage image, float w, float h) {
+public static BufferedImage flexImage(BufferedImage image, float w, float h) {
     int scaling = 100;
     int finalWidth = (int)(App.getScreenWidth() * w);
     int finalHeight = (int)(App.getScreenHeight() * h);
@@ -31,15 +31,15 @@ public class Utilities {
     g2d.drawImage(image, 0, 0, finalWidth, finalHeight, null);
 
     return resized;
-  }
+}
 
-  public static void playSFX(String fileName){
+public static void playSFX(String fileName){
     try{
-      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Utilities.class.getResource(fileName));
-      Clip clip = AudioSystem.getClip();
-      clip.open(audioInputStream);
-      clip.start();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Utilities.class.getResource(fileName));
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        clip.start();
     }
-    catch(Exception e){}
-  }
+    catch(Exception e) {}
+}
 }

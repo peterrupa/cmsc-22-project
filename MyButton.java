@@ -10,10 +10,10 @@ import java.util.Random;
 
 @SuppressWarnings("serial") //make the linter/compiler shut up
 public class MyButton extends Button {
-    protected Point2D.Double position;
-	protected BufferedImage img = null;
+protected Point2D.Double position;
+protected BufferedImage img = null;
 
-    public MyButton (String filepath, String name, Point2D.Double position) {
-        
-    }
+public MyButton (String filepath, String name, Point2D.Double position) {
+
+}
 }
