@@ -304,14 +304,14 @@ public void initialize(){
         App.getScreenWidth() - (int)(App.getScreenWidth() * 0.07f),
         App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
         0.065f, 0.065f, true
-        );
+    );
 
     muteButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 System.out.println("mute");
             }
-        });
+    });
 
     add(muteButton);
 
@@ -324,7 +324,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.07f),
         App.getScreenHeight() - (int)(App.getScreenHeight() * 0.1f),
         0.09f, 0.09f, true
-        );
+    );
 
     add(logo);
     logo.setVisible(false);
@@ -377,7 +377,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.065f),
         (int)(App.getScreenHeight() * 0.6f),
         0.10f, 0.08f, false
-        );
+    );
 
     doubleCoinsCounter.setVisible(false);
 
@@ -387,79 +387,79 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.065f),
         (int)(App.getScreenHeight() * 0.7f),
         0.10f, 0.08f, false
-        );
+    );
 
     hasteCounter.setVisible(false);
 
     foodCounter.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(!foodCounter.isSelected()) {
-                    mouseState = "food";
-                    foodCounter.setSelected();
-                    pauseHungerCounter.setUnselected();
-                    instaMatureCounter.setUnselected();
-                    doubleCoinsCounter.setUnselected();
-                    hasteCounter.setUnselected();
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(!foodCounter.isSelected()) {
+                mouseState = "food";
+                foodCounter.setSelected();
+                pauseHungerCounter.setUnselected();
+                instaMatureCounter.setUnselected();
+                doubleCoinsCounter.setUnselected();
+                hasteCounter.setUnselected();
             }
-        });
+        }
+    });
 
     pauseHungerCounter.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(!pauseHungerCounter.isSelected()) {
-                    mouseState = "pauseHunger";
-                    foodCounter.setUnselected();
-                    pauseHungerCounter.setSelected();
-                    instaMatureCounter.setUnselected();
-                    doubleCoinsCounter.setUnselected();
-                    hasteCounter.setUnselected();
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(!pauseHungerCounter.isSelected()) {
+                mouseState = "pauseHunger";
+                foodCounter.setUnselected();
+                pauseHungerCounter.setSelected();
+                instaMatureCounter.setUnselected();
+                doubleCoinsCounter.setUnselected();
+                hasteCounter.setUnselected();
             }
-        });
+        }
+    });
 
     instaMatureCounter.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(!instaMatureCounter.isSelected()) {
-                    mouseState = "instaMature";
-                    foodCounter.setUnselected();
-                    pauseHungerCounter.setUnselected();
-                    instaMatureCounter.setSelected();
-                    doubleCoinsCounter.setUnselected();
-                    hasteCounter.setUnselected();
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(!instaMatureCounter.isSelected()) {
+                mouseState = "instaMature";
+                foodCounter.setUnselected();
+                pauseHungerCounter.setUnselected();
+                instaMatureCounter.setSelected();
+                doubleCoinsCounter.setUnselected();
+                hasteCounter.setUnselected();
             }
-        });
+        }
+    });
 
     doubleCoinsCounter.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(!doubleCoinsCounter.isSelected()) {
-                    mouseState = "doubleCoins";
-                    foodCounter.setUnselected();
-                    pauseHungerCounter.setUnselected();
-                    instaMatureCounter.setUnselected();
-                    doubleCoinsCounter.setSelected();
-                    hasteCounter.setUnselected();
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(!doubleCoinsCounter.isSelected()) {
+                mouseState = "doubleCoins";
+                foodCounter.setUnselected();
+                pauseHungerCounter.setUnselected();
+                instaMatureCounter.setUnselected();
+                doubleCoinsCounter.setSelected();
+                hasteCounter.setUnselected();
             }
-        });
+        }
+    });
 
     hasteCounter.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(!hasteCounter.isSelected()) {
-                    mouseState = "haste";
-                    foodCounter.setUnselected();
-                    pauseHungerCounter.setUnselected();
-                    instaMatureCounter.setUnselected();
-                    doubleCoinsCounter.setUnselected();
-                    hasteCounter.setSelected();
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(!hasteCounter.isSelected()) {
+                mouseState = "haste";
+                foodCounter.setUnselected();
+                pauseHungerCounter.setUnselected();
+                instaMatureCounter.setUnselected();
+                doubleCoinsCounter.setUnselected();
+                hasteCounter.setSelected();
             }
-        });
+        }
+    });
 
     add(foodCounter);
     foodCounter.setSelected();
@@ -474,7 +474,7 @@ public void initialize(){
         App.getScreenWidth() - (int)(App.getScreenWidth() * 0.065f),
         (int)(App.getScreenHeight() * 0.06f),
         0.10f, 0.08f, false
-        );
+    );
 
     timerCounter.setVisible(false);
     add(timerCounter);
@@ -490,7 +490,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.63f),
         (int)(App.getScreenHeight() * 0.75f),
         0.20f, 0.09f, false
-        );
+    );
 
     mainMenuButton.addActionListener(new ActionListener(){
             @Override
@@ -498,7 +498,7 @@ public void initialize(){
                 setPanel("mainMenu");
                 Utilities.playSFX("assets/sounds/sfx/button_click.wav");
             }
-        });
+    });
 
     mainMenuButton.setVisible(false);
 
@@ -512,7 +512,7 @@ public void initialize(){
         (int)(App.getScreenHeight() * 0.5f) - (int)(App.getScreenHeight() * 0.1f) / 2,
         (int)(App.getScreenWidth() * 0.4f),
         (int)(App.getScreenHeight() * 0.1f)
-        );
+    );
     nameTextField.setVisible(false);
 
     nameTextField.addActionListener(new ActionListener(){
@@ -522,7 +522,7 @@ public void initialize(){
                     startGame();
                 }
             }
-        });
+    });
 
     add(nameTextField);
 
@@ -535,7 +535,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.5f),
         0.57f, 0.68f, false
-        );
+    );
 
     play.setVisible(false);
     add(play);
@@ -549,7 +549,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.5f),
         0.57f, 0.68f, false
-        );
+    );
 
     instructions.setVisible(false);
     add(instructions);
@@ -561,7 +561,7 @@ public void initialize(){
         (int)(App.getScreenHeight() * 0.5f),
         0.57f, 0.68f,
         gameHistory.getTopFive()
-        );
+    );
 
     highScores.setVisible(false);
     add(highScores);
@@ -575,7 +575,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.5f),
         0.57f, 0.68f, false
-        );
+    );
 
     credits.setVisible(false);
     add(credits);
@@ -589,7 +589,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.15f),
         0.45f, 0.17f, false
-        );
+    );
 
     add(menuLogo);
 
@@ -605,14 +605,14 @@ public void initialize(){
         );
 
     playButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(panelMode == "mainMenu") {
-                    setPanel("play");
-                    Utilities.playSFX("assets/sounds/sfx/button_click.wav");
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(panelMode == "mainMenu") {
+                setPanel("play");
+                Utilities.playSFX("assets/sounds/sfx/button_click.wav");
             }
-        });
+        }
+    });
 
     add(playButton);
 
@@ -625,17 +625,17 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.45f),
         0.20f, 0.09f, false
-        );
+    );
 
     instructionsButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(panelMode == "mainMenu") {
-                    setPanel("instructions");
-                    Utilities.playSFX("assets/sounds/sfx/button_click.wav");
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(panelMode == "mainMenu") {
+                setPanel("instructions");
+                Utilities.playSFX("assets/sounds/sfx/button_click.wav");
             }
-        });
+        }
+    });
 
     add(instructionsButton);
 
@@ -648,17 +648,17 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.55f),
         0.20f, 0.09f, false
-        );
+    );
 
     highScoresButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(panelMode == "mainMenu") {
-                    setPanel("highScores");
-                    Utilities.playSFX("assets/sounds/sfx/button_click.wav");
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(panelMode == "mainMenu") {
+                setPanel("highScores");
+                Utilities.playSFX("assets/sounds/sfx/button_click.wav");
             }
-        });
+        }
+    });
 
     add(highScoresButton);
 
@@ -671,17 +671,17 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.65f),
         0.20f, 0.09f, false
-        );
+    );
 
     creditsButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(panelMode == "mainMenu") {
-                    setPanel("credits");
-                    Utilities.playSFX("assets/sounds/sfx/button_click.wav");
-                }
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(panelMode == "mainMenu") {
+                setPanel("credits");
+                Utilities.playSFX("assets/sounds/sfx/button_click.wav");
             }
-        });
+        }
+    });
 
     add(creditsButton);
 
@@ -694,7 +694,7 @@ public void initialize(){
         (int)(App.getScreenWidth() * 0.5f),
         (int)(App.getScreenHeight() * 0.75f),
         0.20f, 0.09f, false
-        );
+    );
 
     exitButton.addActionListener(new ActionListener(){
             @Override
